@@ -806,7 +806,7 @@ const WORDS = [
   { id:733, tutong:"Iyo / Nih", malay:"Ya", english:"Yes", cat:"Expressions", notation:"variant", note:"Variants: Iyo / Nih" },
   { id:734, tutong:"Yo", malay:"Yang", english:"That / Which (relative)", cat:"Expressions", notation:"", note:"" },
   { id:735, tutong:"Terimo Kasi", malay:"Terima Kasih", english:"Thank You", cat:"Expressions", notation:"", note:"" },
-  { id:736, tutong:"Samo samo", malay:"Sama sama", english:"You’re welcome", cat:"Expressions", notation:"", note:"" }
+  { id:736, tutong:"Samo samo", malay:"Sama sama", english:"You’re welcome", cat:"Expressions", notation:"", note:"" },
   { id:757, tutong:"Isok", malay:"Pakai", english:"To wear", cat:"Actions", notation:"", note:"Variant of Isu. Isok is used to instruct" },
   { id:759, tutong:"Isu", malay:"Pakai", english:"To wear", cat:"Actions", notation:"", note:"Variant of Isok" },
   { id:760, tutong:"Ayondai", malay:"Agatah", english:"Go", cat:"Actions", notation:"", note:"" },
