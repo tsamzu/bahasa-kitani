@@ -206,10 +206,12 @@ function render() {
   let filtered = WORDS.filter(w => {
     if (activeCat !== 'All' && w.cat !== activeCat) return false;
     if (!q) return true;
-    return w.tutong.toLowerCase().includes(q) ||
-           w.malay.toLowerCase().includes(q) ||
-           w.english.toLowerCase().includes(q) ||
-           (w.note && w.note.toLowerCase().includes(q));
+    function norm(s){return s.toLowerCase().replace(/[‘’`']/g,'').replace(/[^a-z0-9\s]/g,'')}
+    const nq = norm(q);
+    return norm(w.tutong).includes(nq) ||
+           norm(w.malay).includes(nq) ||
+           norm(w.english).includes(nq) ||
+           (w.note && norm(w.note).includes(nq));
   });
 
   if (sort === 'az')  filtered = [...filtered].sort((a,b) => a.tutong.localeCompare(b.tutong));
