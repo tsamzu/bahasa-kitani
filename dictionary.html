@@ -22,7 +22,8 @@
     body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
     /* HEADER */
-    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;position:sticky;top:0;z-index:200}
+    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;position:sticky;top:0;z-index:200}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:900px;margin:0 auto;padding:0 1.5rem;gap:1rem}
     .logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
     .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-style:italic;flex-shrink:0}
     .logo-text{line-height:1.1}
@@ -109,14 +110,16 @@
 <body>
 
 <header>
-  <a class="logo" href="index.html">
-    <div class="logo-icon">B</div>
-    <div class="logo-text">
-      <div class="logo-name">Bahasa Kitani</div>
-      <div class="logo-sub">Dictionary</div>
-    </div>
-  </a>
-  <a class="back-link" href="index.html">← Back to home</a>
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">B</div>
+      <div class="logo-text">
+        <div class="logo-name">Bahasa Kitani</div>
+        <div class="logo-sub">Dictionary</div>
+      </div>
+    </a>
+    <a class="back-link" href="index.html">← Back to home</a>
+  </div>
 </header>
 
 <div class="search-bar">
