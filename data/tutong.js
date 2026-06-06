@@ -805,4 +805,5 @@ const WORDS = [
   { id:732, tutong:"Saa", malay:"Wah / Lah / Mah", english:"Exclamation particle", cat:"Expressions", notation:"", note:"" },
   { id:733, tutong:"Iyo / Nih", malay:"Ya", english:"Yes", cat:"Expressions", notation:"variant", note:"Variants: Iyo / Nih" },
   { id:734, tutong:"Yo", malay:"Yang", english:"That / Which (relative)", cat:"Expressions", notation:"", note:"" },
+  { id:753, tutong:"Terimo Kasi", malay:"Terima Kasih", english:"Thank You", cat:"Expressions", notation:"", note:"" },
 ];
