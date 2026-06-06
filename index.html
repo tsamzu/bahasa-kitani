@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bahasa Kitani — Tutong Dictionary</title>
+  <meta name="description" content="A living dictionary of Bahasa Tutong, an indigenous language of Brunei Darussalam." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#F8F5F0;--surface:#FFF;--border:#E4DDD3;
+      --text:#1A1714;--muted:#A8998E;--sub:#6B6158;
+      --accent:#C4622D;--accent-l:#FAE9DE;--accent-d:#9E4B20;
+      --green:#3D6B5E;--green-l:#DFF0EB;
+      --purple:#5C4A7C;--purple-l:#EDE8F5;
+      --gold:#A07820;--gold-l:#F5EDD8;
+      --tag:#EDE9E2;--r:14px;--sidebar:230px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    /* ── HEADER ── */
+    header{background:var(--surface);border-bottom:1px solid var(--border);height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:300}
+    .logo{display:flex;align-items:center;gap:0.7rem;text-decoration:none}
+    .logo-icon{width:36px;height:36px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-style:italic;flex-shrink:0}
+    .logo-text{line-height:1.15}
+    .logo-name{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)}
+    .logo-sub{font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent)}
+    .header-nav{display:flex;gap:1.25rem;align-items:center}
+    .header-nav a{font-size:0.8rem;font-weight:500;color:var(--sub);text-decoration:none;transition:color .15s}
+    .header-nav a:hover{color:var(--accent)}
+    .cl-link{display:flex;align-items:center;gap:0.35rem;font-size:0.75rem;background:var(--accent-l);color:var(--accent);padding:0.3rem 0.75rem;border-radius:999px;font-weight:600;border:1px solid #EDD0BC;text-decoration:none!important;transition:all .15s!important}
+    .cl-link:hover{background:var(--accent)!important;color:#fff!important}
+
+    /* ── PAGE LAYOUT ── */
+    .page{display:flex;flex:1;max-width:1320px;margin:0 auto;width:100%}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sidebar);flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);padding:1.5rem 1rem;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
+    .sb-label{font-size:0.63rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.55rem;padding:0 0.35rem}
+    .sb-section{margin-bottom:1.75rem}
+    .tribe-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.48rem 0.6rem;border-radius:8px;border:none;background:none;font-family:'Outfit',sans-serif;font-size:0.83rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s;text-align:left}
+    .tribe-btn:hover{background:var(--bg);color:var(--text)}
+    .tribe-btn.active{background:var(--accent-l);color:var(--accent);font-weight:600}
+    .tribe-btn .badge{font-size:0.6rem;background:var(--tag);color:var(--muted);padding:0.1rem 0.38rem;border-radius:4px}
+    .tribe-btn.active .badge{background:var(--accent);color:#fff}
+    .tribe-dim{font-size:0.72rem;color:var(--muted);font-style:italic;padding:0.3rem 0.6rem}
+    .sb-btn{display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.4rem 0.6rem;border-radius:7px;border:none;background:none;font-family:'Outfit',sans-serif;font-size:0.8rem;color:var(--sub);cursor:pointer;text-align:left;transition:all .15s;text-decoration:none}
+    .sb-btn:hover{background:var(--bg);color:var(--text)}
+    .sb-btn.active{background:var(--accent-l);color:var(--accent);font-weight:600}
+
+    /* ── MAIN ── */
+    .main{flex:1;min-width:0;padding:2rem 2rem 4rem}
+
+    /* ── HERO ── */
+    .hero{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2.5rem 2.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 75% -10%,#FAE9DE55 0%,transparent 55%),radial-gradient(ellipse at 5% 110%,#DFF0EB33 0%,transparent 50%);pointer-events:none}
+    .hero-eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;position:relative}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-0.02em;line-height:1.08;margin-bottom:0.7rem;position:relative}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-desc{font-size:0.92rem;color:var(--sub);line-height:1.7;font-weight:300;max-width:520px;margin-bottom:1.25rem;position:relative}
+    .hero-disclaimer{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--gold);background:var(--gold-l);border:1px solid #E0C880;border-radius:999px;padding:0.28rem 0.8rem;margin-bottom:1.5rem;position:relative}
+    .hero-stats{display:flex;gap:2rem;flex-wrap:wrap;position:relative}
+    .hstat{display:flex;align-items:baseline;gap:0.35rem}
+    .hstat-n{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--accent);font-weight:700;line-height:1}
+    .hstat-l{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.09em;font-weight:500}
+    .hstat-div{width:1px;height:28px;background:var(--border);align-self:center}
+
+    /* ── SEARCH ── */
+    .search-wrap{position:relative;margin-bottom:1.5rem}
+    .search-wrap svg{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+    #search{width:100%;padding:0.9rem 1.1rem 0.9rem 2.8rem;border:1.5px solid var(--border);border-radius:12px;font-family:'Outfit',sans-serif;font-size:0.95rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    #search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+    #search::placeholder{color:var(--muted)}
+
+    /* ── SECTION HEADINGS ── */
+    .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;margin-top:2rem}
+    .sec-head:first-of-type{margin-top:0}
+    .sec-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);display:flex;align-items:center;gap:0.5rem}
+    .sec-title .icon{font-size:1rem}
+    .view-more-btn{font-size:0.78rem;font-weight:600;color:var(--accent);background:var(--accent-l);border:1px solid #EDD0BC;border-radius:999px;padding:0.28rem 0.85rem;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
+    .view-more-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* ── NUMBERS GRID ── */
+    .numbers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:0.5rem}
+    .num-cell{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:0.55rem 0.3rem;text-align:center;transition:border-color .15s,transform .15s;cursor:default}
+    .num-cell:hover{border-color:var(--accent);transform:translateY(-1px)}
+    .num-n{font-size:1.05rem;font-weight:700;color:var(--accent)}
+    .num-t{font-size:0.7rem;color:var(--sub);margin-top:0.12rem}
+    .numbers-note{font-size:0.74rem;color:var(--muted);font-style:italic;margin-top:0.65rem}
+    .numbers-hidden{display:none}
+
+    /* ── CATEGORY PREVIEW SECTIONS ── */
+    .cat-preview{margin-bottom:0.5rem}
+    .cat-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.75rem}
+    .cat-more-row{display:none;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.75rem;margin-top:0.75rem}
+    .cat-more-row.open{display:grid}
+
+    /* ── WORD CARDS ── */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.3rem;transition:box-shadow .2s,transform .2s;animation:fadeUp .3s ease both;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);opacity:0;transition:opacity .2s}
+    .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07);transform:translateY(-2px)}
+    .card:hover::before{opacity:1}
+    .card-word{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1.2;margin-bottom:0.15rem}
+    .card-div{height:1px;background:var(--border);margin:0.65rem 0}
+    .card-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.28rem}
+    .ltag{font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.15rem 0.38rem;border-radius:3px;flex-shrink:0}
+    .ltag.ms{background:var(--green-l);color:var(--green)}
+    .ltag.en{background:var(--accent-l);color:var(--accent)}
+    .card-tr{font-size:0.84rem;color:var(--sub)}
+    .card-foot{display:flex;gap:0.35rem;flex-wrap:wrap;margin-top:0.65rem}
+    .card-note{font-size:0.7rem;color:var(--muted);font-style:italic;margin-top:0.4rem;line-height:1.4}
+    .ntag{display:inline-flex;font-size:0.62rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.16rem 0.45rem;border-radius:4px}
+    .ntag-cat{background:var(--tag);color:var(--muted)}
+    .ntag-loanword{color:#7C5C2E;background:#F5ECD8;border:1px solid #E8D5B0}
+    .ntag-clarify{color:var(--purple);background:var(--purple-l);border:1px solid #CFC5E8}
+    .ntag-variant{color:var(--green);background:var(--green-l);border:1px solid #B0D8D8}
+
+    /* ── FULL DICTIONARY ── */
+    .dict-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-top:2rem}
+    .dict-section-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+    .dict-tabs{display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:1.1rem}
+    .dtab{padding:0.3rem 0.8rem;border-radius:999px;border:1.5px solid var(--border);background:var(--bg);font-family:'Outfit',sans-serif;font-size:0.76rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s;white-space:nowrap}
+    .dtab:hover{border-color:var(--accent);color:var(--accent)}
+    .dtab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .dict-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem}
+    .dict-count{font-size:0.76rem;color:var(--muted)}
+    .dict-count span{font-weight:600;color:var(--sub)}
+    .dict-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:0.85rem}
+    .dict-empty{text-align:center;padding:3rem 1rem;display:none}
+    .dict-empty h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--sub);margin-bottom:0.35rem}
+    .dict-empty p{font-size:0.83rem;color:var(--muted)}
+
+    /* ── PHRASEBOOK ── */
+    .phrase-sec{margin-top:2rem}
+    .phrase-filters{display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.9rem}
+    .pftab{padding:0.28rem 0.75rem;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-family:'Outfit',sans-serif;font-size:0.74rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s}
+    .pftab:hover{border-color:var(--accent);color:var(--accent)}
+    .pftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .phrases-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0.85rem}
+    .phrase-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;transition:box-shadow .2s}
+    .phrase-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.06)}
+    .phrase-tutong{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.55rem;line-height:1.35}
+    .phrase-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.25rem;font-size:0.82rem}
+    .phrase-text{color:var(--sub)}
+    .phrase-cat{display:inline-flex;margin-top:0.6rem;font-size:0.62rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;background:var(--tag);color:var(--muted);padding:0.15rem 0.45rem;border-radius:4px}
+
+    /* ── FEEDBACK ── */
+    .feedback-sec{margin-top:2rem}
+    .feedback-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem}
+    .feedback-box h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:0.3rem}
+    .feedback-box .fb-desc{font-size:0.85rem;color:var(--sub);margin-bottom:1.25rem;line-height:1.6}
+    .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+    .fb-full{grid-column:1/-1}
+    .fg{display:flex;flex-direction:column;gap:0.3rem}
+    .fg label{font-size:0.67rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+    .fg input,.fg select,.fg textarea{padding:0.68rem 0.9rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.86rem;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+    .fg textarea{resize:vertical;min-height:95px}
+    .fb-submit{margin-top:0.85rem;padding:0.8rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:background .2s}
+    .fb-submit:hover{background:var(--accent-d)}
+    .fb-ok{display:none;align-items:center;gap:0.5rem;margin-top:0.75rem;font-size:0.82rem;color:var(--green);background:var(--green-l);padding:0.6rem 0.9rem;border-radius:8px;border:1px solid #B0D8D8}
+
+    /* ── DISCLAIMER BAR ── */
+    .disclaimer{background:var(--gold-l);border:1px solid #E0C880;border-radius:var(--r);padding:0.9rem 1.2rem;font-size:0.8rem;color:var(--gold);line-height:1.6;margin-bottom:1.5rem}
+    .disclaimer strong{color:#7A5C10}
+
+    /* ── CHANGELOG MODAL ── */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border-radius:16px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:2rem;position:relative;animation:fadeUp .25s ease}
+    .modal-close{position:absolute;top:1rem;right:1rem;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:none;cursor:pointer;font-size:1rem;color:var(--sub);display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .modal-close:hover{background:var(--bg);color:var(--accent);border-color:var(--accent)}
+    .modal h2{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.3rem}
+    .modal-sub{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem}
+    .cl-entry{padding:1.1rem 0;border-bottom:1px solid var(--border)}
+    .cl-entry:last-child{border-bottom:none}
+    .cl-ver{display:inline-flex;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;background:var(--accent-l);color:var(--accent);padding:0.15rem 0.45rem;border-radius:4px;margin-bottom:0.4rem}
+    .cl-date{font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem}
+    .cl-title{font-family:'Playfair Display',serif;font-size:0.95rem;margin-bottom:0.45rem}
+    .cl-list{list-style:none;display:flex;flex-direction:column;gap:0.22rem}
+    .cl-list li{font-size:0.8rem;color:var(--sub);display:flex;align-items:flex-start;gap:0.4rem;line-height:1.5}
+    .cl-list li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:0.5rem}
+    .cltag{display:inline-flex;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.1rem 0.32rem;border-radius:3px;flex-shrink:0;margin-top:0.05rem}
+    .cltag-add{background:var(--green-l);color:var(--green)}
+    .cltag-fix{background:var(--purple-l);color:var(--purple)}
+    .cltag-new{background:var(--accent-l);color:var(--accent)}
+
+    /* ── FOOTER ── */
+    footer{background:var(--text);color:#D4CFC7;padding:2.5rem 2rem}
+    .footer-inner{max-width:1320px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:2rem}
+    .footer-brand .logo-name{color:#F8F5F0;font-size:1.1rem}
+    .footer-tagline{font-size:0.8rem;color:#A09890;line-height:1.6;margin-top:0.6rem;max-width:280px}
+    .footer-social{display:inline-flex;align-items:center;gap:0.4rem;background:#2A2420;border:1px solid #3D3530;border-radius:7px;padding:0.5rem 0.9rem;font-size:0.8rem;font-weight:500;color:#D4CFC7;text-decoration:none;transition:all .15s;margin-top:1rem}
+    .footer-social:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+    .footer-col h5{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#A09890;margin-bottom:0.75rem}
+    .footer-col a{display:block;font-size:0.8rem;color:#D4CFC7;text-decoration:none;margin-bottom:0.4rem;transition:color .15s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1320px;margin:1.5rem auto 0;padding-top:1.5rem;border-top:1px solid #2E2825;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
+    .footer-bottom p{font-size:0.73rem;color:#6B6158}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:900px){.sidebar{display:none}.main{padding:1.5rem 1.25rem 3rem}}
+    @media(max-width:600px){.hero{padding:1.75rem 1.25rem 1.5rem}.hero-stats{gap:1rem}.hstat-div{display:none}.fb-grid{grid-template-columns:1fr}.footer-inner{flex-direction:column}}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">B</div>
+    <div class="logo-text">
+      <div class="logo-name">Bahasa Kitani</div>
+      <div class="logo-sub">Dictionary</div>
+    </div>
+  </a>
+  <nav class="header-nav">
+    <a href="#numbers-sec">Numbers</a>
+    <a href="#dict-sec">Dictionary</a>
+    <a href="#phrasebook">Phrasebook</a>
+    <a href="#feedback">Feedback</a>
+    <a href="#" onclick="openChangelog(event)" class="cl-link">📋 Changelog</a>
+  </nav>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Languages</div>
+      <button class="tribe-btn active">Tutong <span class="badge" id="sb-count">152</span></button>
+      <div class="tribe-dim">Coming soon:</div>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Belait</button>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Dusun</button>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Bisaya</button>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Murut</button>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Kedayan</button>
+      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Iban</button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Jump to</div>
+      <a class="sb-btn" href="#numbers-sec">🔢 Numbers</a>
+      <a class="sb-btn" href="#body-preview">🧍 Body</a>
+      <a class="sb-btn" href="#animals-preview">🐾 Animals</a>
+      <a class="sb-btn" href="#food-preview">🍚 Food & Drink</a>
+      <a class="sb-btn" href="#fruits-preview">🍌 Fruits</a>
+      <a class="sb-btn" href="#actions-preview">🏃 Actions</a>
+      <a class="sb-btn" href="#dict-sec">📚 Full Dictionary</a>
+      <a class="sb-btn" href="#phrasebook">💬 Phrasebook</a>
+      <a class="sb-btn" href="#feedback">✉️ Feedback</a>
+      <a class="sb-btn" href="#" onclick="openChangelog(event)">📋 Changelog</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <p class="hero-eyebrow">Brunei Darussalam · Indigenous Languages</p>
+      <h1>The <em>Tutong</em><br>Dictionary</h1>
+      <p class="hero-desc">A living reference for Bahasa Tutong — an indigenous language of the Tutong district of Brunei Darussalam — with translations in Bahasa Melayu and English.</p>
+      <div class="hero-disclaimer">⚠️ Community-sourced · Some entries may need verification · <a href="#feedback" style="color:var(--gold);font-weight:600;margin-left:0.3rem">Help improve it →</a></div>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-n" id="stat-words">734</span><span class="hstat-l">Words</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-n">30</span><span class="hstat-l">Numbers</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-n">18</span><span class="hstat-l">Phrases</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-n">3</span><span class="hstat-l">Languages</span></div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      <strong>Note:</strong> This dictionary is a community project. Some entries may contain inaccuracies or reflect regional dialect differences.
+      Entries tagged <strong>Regional Variant</strong> or <strong>Needs Clarification</strong> are still being verified.
+      The authoritative reference is the <em>Kamus Tutong-Melayu, Melayu-Tutong</em> (Dewan Bahasa dan Pustaka Brunei, 1991).
+    </div>
+
+    <!-- ── NUMBERS SECTION ── -->
+    <div id="numbers-sec">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🔢</span> Numbers 1–30</div>
+        <button class="view-more-btn" id="num-toggle" onclick="toggleNumbers()">Show all 30</button>
+      </div>
+      <!-- First 10 always visible -->
+      <div class="numbers-grid" id="num-grid-main"></div>
+      <!-- 11–30 hidden until expanded -->
+      <div class="numbers-grid numbers-hidden" id="num-grid-more" style="margin-top:0.5rem"></div>
+      <p class="numbers-note">Pattern: <strong>balas</strong> = belas (teens) &nbsp;·&nbsp; <strong>pulu</strong> = puluh (tens)</p>
+    </div>
+
+    <!-- ── CATEGORY PREVIEWS ── -->
+    <!-- Body -->
+    <div id="body-preview" class="cat-preview">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🧍</span> Body — Betulu</div>
+        <button class="view-more-btn" onclick="toggleCat('body')">View more</button>
+      </div>
+      <div class="cat-preview-grid" id="body-main"></div>
+      <div class="cat-more-row" id="body-more"></div>
+    </div>
+
+    <!-- Animals -->
+    <div id="animals-preview" class="cat-preview">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🐾</span> Animals — Binatang</div>
+        <button class="view-more-btn" onclick="toggleCat('animals')">View more</button>
+      </div>
+      <div class="cat-preview-grid" id="animals-main"></div>
+      <div class="cat-more-row" id="animals-more"></div>
+    </div>
+
+    <!-- Food & Drink -->
+    <div id="food-preview" class="cat-preview">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🍚</span> Food & Drink</div>
+        <button class="view-more-btn" onclick="toggleCat('food')">View more</button>
+      </div>
+      <div class="cat-preview-grid" id="food-main"></div>
+      <div class="cat-more-row" id="food-more"></div>
+    </div>
+
+    <!-- Fruits -->
+    <div id="fruits-preview" class="cat-preview">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🍌</span> Fruits — Buwa Tempatan</div>
+        <button class="view-more-btn" onclick="toggleCat('fruits')">View more</button>
+      </div>
+      <div class="cat-preview-grid" id="fruits-main"></div>
+      <div class="cat-more-row" id="fruits-more"></div>
+    </div>
+
+    <!-- Actions -->
+    <div id="actions-preview" class="cat-preview">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">🏃</span> Actions</div>
+        <button class="view-more-btn" onclick="toggleCat('actions')">View more</button>
+      </div>
+      <div class="cat-preview-grid" id="actions-main"></div>
+      <div class="cat-more-row" id="actions-more"></div>
+    </div>
+
+    <!-- ── FULL DICTIONARY ── -->
+    <div class="dict-section" id="dict-sec">
+      <div class="dict-section-title">📚 Full Dictionary — Search & Browse All Words</div>
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search" type="text" placeholder="Search in Tutong, Malay or English…" autocomplete="off" />
+      </div>
+      <!-- Category tabs -->
+      <div class="dict-tabs" id="dict-tabs"></div>
+      <!-- Toolbar -->
+      <div class="dict-toolbar">
+        <p class="dict-count">Showing <span id="dict-count">—</span> entries</p>
+      </div>
+      <!-- Grid -->
+      <div class="dict-grid" id="dict-grid"></div>
+      <div class="dict-empty" id="dict-empty">
+        <h3>No results found</h3>
+        <p>Try a different search term or select a different category.</p>
+      </div>
+    </div>
+
+    <!-- ── PHRASEBOOK ── -->
+    <div class="phrase-sec" id="phrasebook">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">💬</span> Phrasebook</div>
+      </div>
+      <div class="phrase-filters" id="phrase-filters"></div>
+      <div class="phrases-grid" id="phrases-grid"></div>
+    </div>
+
+    <!-- ── FEEDBACK ── -->
+    <div class="feedback-sec" id="feedback">
+      <div class="sec-head">
+        <div class="sec-title"><span class="icon">✉️</span> Send Feedback</div>
+      </div>
+      <div class="feedback-box">
+        <h3>Help us improve this dictionary</h3>
+        <p class="fb-desc">Found a mistake? Know a missing word? All feedback is reviewed and helps the whole community.</p>
+        <div class="fb-grid">
+          <div class="fg"><label>Your Name</label><input type="text" id="fb-name" placeholder="e.g. Ahmad" /></div>
+          <div class="fg"><label>Email (optional)</label><input type="email" id="fb-email" placeholder="you@email.com" /></div>
+          <div class="fg fb-full"><label>Feedback Type</label>
+            <select id="fb-type">
+              <option value="correction">Correction — fix an existing entry</option>
+              <option value="new-word">New Word — add a missing entry</option>
+              <option value="dialect">Dialect Variant — I know another form</option>
+              <option value="general">General feedback</option>
+            </select>
+          </div>
+          <div class="fg fb-full"><label>Your Message</label>
+            <textarea id="fb-message" placeholder="Describe the correction or new word..."></textarea>
+          </div>
+        </div>
+        <button class="fb-submit" onclick="submitFeedback()">Send Feedback →</button>
+        <div class="fb-ok" id="fb-ok">✓ Thank you! Your feedback has been sent.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- CHANGELOG MODAL -->
+<div class="modal-overlay" id="cl-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeChangelog()">✕</button>
+    <h2>Changelog</h2>
+    <p class="modal-sub">Every update to the Bahasa Kitani dictionary, newest first.</p>
+    <div class="cl-entry"><span class="cl-ver">v0.6</span><div class="cl-date">June 2025</div><div class="cl-title">Airtable Import — 582 New Entries</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>582 new entries imported from Airtable community database</li><li><span class="cltag cltag-add">Add</span>New categories covered: Family terms, Verbs, Colours, Emotions, Nature, Body (extended), Food & Taste</li><li><span class="cltag cltag-new">New</span>Total dictionary now 734 words + 30 numbers + 18 phrases</li><li><span class="cltag cltag-fix">Fix</span>Regional variant notation applied to all multi-form entries from Airtable</li></ul></div>
+        <div class="cl-entry"><span class="cl-ver">v0.5</span><div class="cl-date">June 2025</div><div class="cl-title">Rebranded & Restructured</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Rebranded to Bahasa Kitani Dictionary</li><li><span class="cltag cltag-new">New</span>Separated data into tutong.js</li><li><span class="cltag cltag-new">New</span>Admin dashboard & feedback manager</li><li><span class="cltag cltag-new">New</span>Phrasebook (18 phrases), changelog modal, sidebar</li><li><span class="cltag cltag-fix">Fix</span>Homepage now shows category previews with View More</li></ul></div>
+    <div class="cl-entry"><span class="cl-ver">v0.4</span><div class="cl-date">June 2025</div><div class="cl-title">Major Expansion — @anak_tutong Images</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>Numbers 1–30</li><li><span class="cltag cltag-add">Add</span>23 animals, 19 fruits, 15 kitchen items, 22 body parts</li><li><span class="cltag cltag-fix">Fix</span>Regional variant notation applied throughout</li></ul></div>
+    <div class="cl-entry"><span class="cl-ver">v0.3</span><div class="cl-date">June 2025</div><div class="cl-title">Cross-referencing & Notation System</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Loanword, Regional Variant, Needs Clarification tags</li><li><span class="cltag cltag-add">Add</span>16 entries from handwritten learning sheet</li><li><span class="cltag cltag-add">Add</span>Words from blog and Lanjutan image</li></ul></div>
+    <div class="cl-entry"><span class="cl-ver">v0.2</span><div class="cl-date">June 2025</div><div class="cl-title">Kitchen Expansion & Data Cleanup</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>Kitchen vocabulary: Mian, Bubpur, Puta, Ebpa, Kudut and more</li><li><span class="cltag cltag-fix">Fix</span>Several entry corrections from native speaker input</li></ul></div>
+    <div class="cl-entry"><span class="cl-ver">v0.1</span><div class="cl-date">June 2025</div><div class="cl-title">Initial Release — 54 entries</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Launched with trilingual entries: Tutong · Malay · English</li><li><span class="cltag cltag-new">New</span>Live search and category filters</li></ul></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">B</div>
+        <div class="logo-text">
+          <div class="logo-name">Bahasa Kitani</div>
+          <div class="logo-sub">Dictionary</div>
+        </div>
+      </div>
+      <p class="footer-tagline">A community-driven effort to document and preserve indigenous languages of Brunei Darussalam for future generations.</p>
+      <a class="footer-social" href="https://jomqr.my/sam" target="_blank" rel="noopener">🔗 Follow Sam's Socials</a>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <a href="#numbers-sec">Numbers</a>
+      <a href="#body-preview">Body</a>
+      <a href="#animals-preview">Animals</a>
+      <a href="#food-preview">Food & Drink</a>
+      <a href="#dict-sec">Full Dictionary</a>
+      <a href="#phrasebook">Phrasebook</a>
+    </div>
+    <div class="footer-col">
+      <h5>Site</h5>
+      <a href="#feedback">Send Feedback</a>
+      <a href="#" onclick="openChangelog(event)">Changelog</a>
+      <a href="admin/">Admin ↗</a>
+      <a href="admin/feedback.html">Feedback Manager ↗</a>
+    </div>
+    <div class="footer-col">
+      <h5>Reference</h5>
+      <a href="#">Kamus Tutong-Melayu</a>
+      <a href="#">DBP Brunei, 1991</a>
+      <a href="#">@anak_tutong</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Bahasa Kitani Dictionary · bahasa-kitani.xyz</p>
+    <p>Data sourced from community contributions and the DBP Kamus Tutong-Melayu (1991). Not all entries have been verified by a linguist.</p>
+  </div>
+</footer>
+
+<script src="data/tutong.js"></script>
+<script>
+// ── HELPERS ──
+function makeCard(w) {
+  let tags = `<span class="ntag ntag-cat">${w.cat}</span>`;
+  if (w.notation==='loanword') tags+=`<span class="ntag ntag-loanword">Loanword</span>`;
+  if (w.notation==='clarify')  tags+=`<span class="ntag ntag-clarify">Needs Clarification</span>`;
+  if (w.notation==='variant')  tags+=`<span class="ntag ntag-variant">Regional Variant</span>`;
+  const note = w.note ? `<div class="card-note">${w.note}</div>` : '';
+  return `<div class="card">
+    <div class="card-word">${w.tutong}</div>
+    <div class="card-div"></div>
+    <div class="card-row"><span class="ltag ms">MS</span><span class="card-tr">${w.malay}</span></div>
+    <div class="card-row"><span class="ltag en">EN</span><span class="card-tr">${w.english}</span></div>
+    <div class="card-foot">${tags}</div>${note}
+  </div>`;
+}
+
+function fillGrid(id, words) {
+  document.getElementById(id).innerHTML = words.map(makeCard).join('');
+}
+
+// ── NUMBERS ──
+function initNumbers() {
+  const main = document.getElementById('num-grid-main');
+  const more = document.getElementById('num-grid-more');
+  main.innerHTML = NUMBERS.slice(0,10).map(([n,t])=>`<div class="num-cell"><div class="num-n">${n}</div><div class="num-t">${t}</div></div>`).join('');
+  more.innerHTML = NUMBERS.slice(10).map(([n,t])=>`<div class="num-cell"><div class="num-n">${n}</div><div class="num-t">${t}</div></div>`).join('');
+}
+
+let numsExpanded = false;
+function toggleNumbers() {
+  numsExpanded = !numsExpanded;
+  const more = document.getElementById('num-grid-more');
+  const btn  = document.getElementById('num-toggle');
+  more.style.display = numsExpanded ? 'grid' : 'none';
+  btn.textContent = numsExpanded ? 'Show less' : 'Show all 30';
+}
+
+// ── CATEGORY PREVIEWS ──
+const PREVIEW_CATS = [
+  { key:'body',    cat:'Body',         mainId:'body-main',    moreId:'body-more'    },
+  { key:'animals', cat:'Animals',      mainId:'animals-main', moreId:'animals-more' },
+  { key:'food',    cat:'Food & Drink', mainId:'food-main',    moreId:'food-more'    },
+  { key:'fruits',  cat:'Fruits',       mainId:'fruits-main',  moreId:'fruits-more'  },
+  { key:'actions', cat:'Actions',      mainId:'actions-main', moreId:'actions-more' },
+];
+const PREVIEW_COUNT = 4; // cards shown before "View more"
+const expandedCats = {};
+
+function initPreviews() {
+  PREVIEW_CATS.forEach(pc => {
+    const words = WORDS.filter(w => w.cat === pc.cat);
+    fillGrid(pc.mainId, words.slice(0, PREVIEW_COUNT));
+    fillGrid(pc.moreId, words.slice(PREVIEW_COUNT));
+    expandedCats[pc.key] = false;
+  });
+}
+
+function toggleCat(key) {
+  const pc  = PREVIEW_CATS.find(p => p.key === key);
+  const more = document.getElementById(pc.moreId);
+  const btn  = more.previousElementSibling.querySelector('.view-more-btn') ||
+               more.closest('.cat-preview').querySelector('.view-more-btn');
+  expandedCats[key] = !expandedCats[key];
+  more.classList.toggle('open', expandedCats[key]);
+  // find the button in the sec-head above
+  const allBtns = more.closest('.cat-preview').querySelectorAll('.view-more-btn');
+  allBtns.forEach(b => b.textContent = expandedCats[key] ? 'Show less' : 'View more');
+}
+
+// ── FULL DICTIONARY ──
+let dictCat = 'All';
+
+function initDictTabs() {
+  const el = document.getElementById('dict-tabs');
+  CATEGORIES.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'dtab' + (cat === 'All' ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => {
+      dictCat = cat;
+      document.querySelectorAll('.dtab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      renderDict();
+    };
+    el.appendChild(b);
+  });
+}
+
+function renderDict() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const filtered = WORDS.filter(w => {
+    if (dictCat !== 'All' && w.cat !== dictCat) return false;
+    if (!q) return true;
+    return w.tutong.toLowerCase().includes(q) || w.malay.toLowerCase().includes(q) || w.english.toLowerCase().includes(q);
+  });
+  const grid  = document.getElementById('dict-grid');
+  const empty = document.getElementById('dict-empty');
+  const count = document.getElementById('dict-count');
+  count.textContent = filtered.length;
+  if (filtered.length === 0) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = filtered.map((w,i) => {
+    const c = makeCard(w);
+    return c.replace('<div class="card">', `<div class="card" style="animation-delay:${Math.min(i*.02,.35)}s">`);
+  }).join('');
+  document.getElementById('sb-count').textContent = WORDS.length;
+  document.getElementById('stat-words').textContent = WORDS.length;
+}
+
+document.getElementById('search').addEventListener('input', renderDict);
+
+// ── PHRASEBOOK ──
+const PHRASE_CATS = ['all','Food & Drink','Daily Life','Weather','Kitchen'];
+let phraseTab = 'all';
+
+function initPhrases() {
+  const pf = document.getElementById('phrase-filters');
+  PHRASE_CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'pftab' + (c==='all' ? ' active' : '');
+    b.textContent = c==='all' ? 'All Phrases' : c;
+    b.onclick = () => {
+      phraseTab = c;
+      document.querySelectorAll('.pftab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderPhrases();
+    };
+    pf.appendChild(b);
+  });
+  renderPhrases();
+}
+
+function renderPhrases() {
+  const data = phraseTab==='all' ? PHRASES : PHRASES.filter(p=>p.cat===phraseTab);
+  document.getElementById('phrases-grid').innerHTML = data.map((p,i)=>`
+    <div class="phrase-card" style="animation:fadeUp .3s ease ${Math.min(i*.03,.3)}s both">
+      <div class="phrase-tutong">${p.tutong}</div>
+      <div class="phrase-row"><span class="ltag ms">MS</span><span class="phrase-text">${p.malay}</span></div>
+      <div class="phrase-row"><span class="ltag en">EN</span><span class="phrase-text">${p.english}</span></div>
+      <span class="phrase-cat">${p.cat}</span>
+    </div>`).join('');
+}
+
+// ── CHANGELOG ──
+function openChangelog(e) { e.preventDefault(); document.getElementById('cl-modal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeChangelog()  { document.getElementById('cl-modal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('cl-modal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeChangelog(); });
+
+// ── FEEDBACK ──
+function submitFeedback() {
+  const msg = document.getElementById('fb-message').value.trim();
+  if (!msg) { alert('Please enter your feedback.'); return; }
+  const name  = document.getElementById('fb-name').value.trim() || 'Anonymous';
+  const email = document.getElementById('fb-email').value.trim() || 'Not provided';
+  const type  = document.getElementById('fb-type').value;
+  const label = {correction:'Correction','new-word':'New Word',dialect:'Dialect Variant',general:'General'}[type];
+  window.location.href = `mailto:izz.zu@icloud.com?subject=${encodeURIComponent('[Bahasa Kitani] '+label)}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nType: '+label+'\n\n'+msg)}`;
+  document.getElementById('fb-ok').style.display = 'flex';
+  document.getElementById('fb-message').value = '';
+}
+
+// ── BOOT ──
+initNumbers();
+initPreviews();
+initDictTabs();
+initPhrases();
+renderDict();
+</script>
+</body>
+</html>
