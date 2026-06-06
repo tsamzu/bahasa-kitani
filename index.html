@@ -21,7 +21,8 @@
     body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
     /* ── HEADER ── */
-    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;position:sticky;top:0;z-index:300}
+    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;position:sticky;top:0;z-index:300}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1320px;margin:0 auto;padding:0 1.5rem;gap:1rem}
     .logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none;flex-shrink:0}
     .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-style:italic;flex-shrink:0}
     .logo-text{line-height:1.1}
@@ -231,23 +232,25 @@
 
 <!-- HEADER -->
 <header>
-  <a class="logo" href="#">
-    <div class="logo-icon">B</div>
-    <div class="logo-text">
-      <div class="logo-name">Bahasa Kitani</div>
-      <div class="logo-sub">Dictionary</div>
-    </div>
-  </a>
-  <nav class="header-nav">
-    <a href="#numbers-sec">Numbers</a>
-    <a href="#previews">Dictionary</a>
-    <a href="#phrasebook">Phrasebook</a>
-    <a href="#feedback">Feedback</a>
-    <a href="#" onclick="openChangelog(event)" class="cl-link">📋 Changelog</a>
-  </nav>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">B</div>
+      <div class="logo-text">
+        <div class="logo-name">Bahasa Kitani</div>
+        <div class="logo-sub">Dictionary</div>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="#numbers-sec">Numbers</a>
+      <a href="#previews">Dictionary</a>
+      <a href="#phrasebook">Phrasebook</a>
+      <a href="#feedback">Feedback</a>
+      <a href="#" onclick="openChangelog(event)" class="cl-link">📋 Changelog</a>
+    </nav>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </header>
 
 <!-- MOBILE MENU -->
