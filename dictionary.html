@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Full Dictionary — Bahasa Kitani</title>
+  <meta name="description" content="Browse all 734 words in the Bahasa Tutong dictionary." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#F8F5F0;--surface:#FFF;--border:#E4DDD3;
+      --text:#1A1714;--muted:#A8998E;--sub:#6B6158;
+      --accent:#C4622D;--accent-l:#FAE9DE;--accent-d:#9E4B20;
+      --green:#3D6B5E;--green-l:#DFF0EB;
+      --purple:#5C4A7C;--purple-l:#EDE8F5;
+      --tag:#EDE9E2;--r:14px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    /* ── HEADER ── */
+    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;position:sticky;top:0;z-index:200}
+    .logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+    .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-style:italic;flex-shrink:0}
+    .logo-text{line-height:1.1}
+    .logo-name{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--text)}
+    .logo-sub{font-size:0.55rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent)}
+    .back-link{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;font-weight:500;color:var(--sub);text-decoration:none;transition:color .15s;white-space:nowrap}
+    .back-link:hover{color:var(--accent)}
+
+    /* ── STICKY SEARCH BAR ── */
+    .search-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;position:sticky;top:56px;z-index:199}
+    .search-inner{max-width:900px;margin:0 auto;position:relative}
+    .search-inner svg{position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+    #search{width:100%;padding:0.8rem 1rem 0.8rem 2.6rem;border:1.5px solid var(--border);border-radius:11px;font-family:'Outfit',sans-serif;font-size:0.92rem;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    #search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+    #search::placeholder{color:var(--muted)}
+
+    /* ── FILTER TABS ── */
+    .filters{background:var(--bg);border-bottom:1px solid var(--border);padding:0.6rem 1.25rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none;position:sticky;top:calc(56px + 57px);z-index:198}
+    .filters::-webkit-scrollbar{display:none}
+    .filters-inner{max-width:900px;margin:0 auto;display:flex;gap:0.4rem}
+    .ftab{flex-shrink:0;padding:0.3rem 0.8rem;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-family:'Outfit',sans-serif;font-size:0.76rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s}
+    .ftab:hover{border-color:var(--accent);color:var(--accent)}
+    .ftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+    /* ── MAIN ── */
+    .main{flex:1;max-width:900px;margin:0 auto;width:100%;padding:1.5rem 1.25rem 4rem}
+
+    /* ── TOOLBAR ── */
+    .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}
+    .result-count{font-size:0.78rem;color:var(--muted)}
+    .result-count span{font-weight:600;color:var(--sub)}
+    .sort-select{padding:0.32rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Outfit',sans-serif;font-size:0.76rem;color:var(--sub);background:var(--surface);outline:none;cursor:pointer}
+    .sort-select:focus{border-color:var(--accent)}
+
+    /* ── GRID ── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.85rem}
+
+    /* ── CARDS ── */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;transition:box-shadow .2s,transform .2s;animation:fadeUp .25s ease both;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);opacity:0;transition:opacity .2s}
+    .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07);transform:translateY(-2px)}
+    .card:hover::before{opacity:1}
+    .card-word{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text);line-height:1.2;margin-bottom:0.12rem}
+    .card-div{height:1px;background:var(--border);margin:0.6rem 0}
+    .card-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.25rem}
+    .ltag{font-size:0.57rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.14rem 0.36rem;border-radius:3px;flex-shrink:0}
+    .ltag.ms{background:var(--green-l);color:var(--green)}
+    .ltag.en{background:var(--accent-l);color:var(--accent)}
+    .card-tr{font-size:0.83rem;color:var(--sub)}
+    .card-foot{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.6rem}
+    .card-note{font-size:0.68rem;color:var(--muted);font-style:italic;margin-top:0.35rem;line-height:1.4}
+    .ntag{display:inline-flex;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.14rem 0.42rem;border-radius:4px}
+    .ntag-cat{background:var(--tag);color:var(--muted)}
+    .ntag-loanword{color:#7C5C2E;background:#F5ECD8;border:1px solid #E8D5B0}
+    .ntag-clarify{color:var(--purple);background:var(--purple-l);border:1px solid #CFC5E8}
+    .ntag-variant{color:var(--green);background:var(--green-l);border:1px solid #B0D8D8}
+
+    /* ── EMPTY ── */
+    .empty{text-align:center;padding:4rem 1rem;display:none}
+    .empty h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--sub);margin-bottom:0.4rem}
+    .empty p{font-size:0.85rem;color:var(--muted)}
+
+    /* ── LOAD MORE ── */
+    .load-more-wrap{text-align:center;margin-top:1.5rem}
+    .load-more-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .2s}
+    .load-more-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── BACK TO TOP ── */
+    .back-top{position:fixed;bottom:1.5rem;right:1.25rem;width:40px;height:40px;background:var(--accent);color:#fff;border:none;border-radius:50%;font-size:1rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(196,98,45,.4);transition:background .2s;z-index:100}
+    .back-top.visible{display:flex}
+    .back-top:hover{background:var(--accent-d)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:500px){.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:360px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">B</div>
+    <div class="logo-text">
+      <div class="logo-name">Bahasa Kitani</div>
+      <div class="logo-sub">Dictionary</div>
+    </div>
+  </a>
+  <a class="back-link" href="index.html">← Back to home</a>
+</header>
+
+<!-- STICKY SEARCH -->
+<div class="search-bar">
+  <div class="search-inner">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search in Tutong, Malay or English…" autocomplete="off" />
+  </div>
+</div>
+
+<!-- CATEGORY FILTERS -->
+<div class="filters">
+  <div class="filters-inner" id="filters-inner"></div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="toolbar">
+    <p class="result-count">Showing <span id="count">—</span> entries</p>
+    <select class="sort-select" id="sort-select" onchange="render()">
+      <option value="default">Sort: Default</option>
+      <option value="az">Sort: A → Z</option>
+      <option value="za">Sort: Z → A</option>
+      <option value="cat">Sort: Category</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">
+    <h3>No results found</h3>
+    <p>Try a different search term or select a different category.</p>
+  </div>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+    <button class="load-more-btn" onclick="loadMore()">Load more words ↓</button>
+  </div>
+</main>
+
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="data/tutong.js"></script>
+<script>
+const CATEGORIES = ["All","Body","Animals","Food & Drink","Fruits","Actions","People","Time","Place & Direction","Home","Nature","Question Words","Expressions"];
+const PAGE_SIZE = 48;
+let activeCat = 'All';
+let page = 1;
+let currentResults = [];
+
+// ── PRE-FILL SEARCH FROM URL PARAMS ──
+const urlParams = new URLSearchParams(window.location.search);
+const qParam = urlParams.get('q');
+if (qParam) {
+  document.getElementById('search').value = qParam;
+}
+
+// ── BUILD FILTER TABS ──
+function initFilters() {
+  const el = document.getElementById('filters-inner');
+  CATEGORIES.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'ftab' + (cat === 'All' ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      page = 1;
+      document.querySelectorAll('.ftab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      render();
+    };
+    el.appendChild(b);
+  });
+}
+
+// ── CARD BUILDER ──
+function makeCard(w, delay) {
+  let tags = `<span class="ntag ntag-cat">${w.cat}</span>`;
+  if (w.notation==='loanword') tags+=`<span class="ntag ntag-loanword">Loanword</span>`;
+  if (w.notation==='clarify')  tags+=`<span class="ntag ntag-clarify">Needs Clarification</span>`;
+  if (w.notation==='variant')  tags+=`<span class="ntag ntag-variant">Regional Variant</span>`;
+  const note = w.note ? `<div class="card-note">${w.note}</div>` : '';
+  return `<div class="card" style="animation-delay:${delay||0}s">
+    <div class="card-word">${w.tutong}</div>
+    <div class="card-div"></div>
+    <div class="card-row"><span class="ltag ms">MS</span><span class="card-tr">${w.malay}</span></div>
+    <div class="card-row"><span class="ltag en">EN</span><span class="card-tr">${w.english}</span></div>
+    <div class="card-foot">${tags}</div>${note}
+  </div>`;
+}
+
+// ── RENDER ──
+function render() {
+  const q    = document.getElementById('search').value.toLowerCase().trim();
+  const sort = document.getElementById('sort-select').value;
+
+  let filtered = WORDS.filter(w => {
+    if (activeCat !== 'All' && w.cat !== activeCat) return false;
+    if (!q) return true;
+    return w.tutong.toLowerCase().includes(q) ||
+           w.malay.toLowerCase().includes(q) ||
+           w.english.toLowerCase().includes(q) ||
+           (w.note && w.note.toLowerCase().includes(q));
+  });
+
+  if (sort === 'az')  filtered = [...filtered].sort((a,b) => a.tutong.localeCompare(b.tutong));
+  if (sort === 'za')  filtered = [...filtered].sort((a,b) => b.tutong.localeCompare(a.tutong));
+  if (sort === 'cat') filtered = [...filtered].sort((a,b) => a.cat.localeCompare(b.cat) || a.tutong.localeCompare(b.tutong));
+
+  currentResults = filtered;
+  const grid  = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const count = document.getElementById('count');
+  const lmw   = document.getElementById('load-more-wrap');
+
+  count.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    lmw.style.display = 'none';
+    return;
+  }
+
+  empty.style.display = 'none';
+  const visible = filtered.slice(0, PAGE_SIZE * page);
+  grid.innerHTML = visible.map((w,i) => makeCard(w, Math.min(i*.015,.4))).join('');
+  lmw.style.display = filtered.length > visible.length ? 'block' : 'none';
+}
+
+function loadMore() {
+  page++;
+  const visible = currentResults.slice(0, PAGE_SIZE * page);
+  const grid = document.getElementById('grid');
+  const newCards = currentResults.slice(PAGE_SIZE * (page-1), PAGE_SIZE * page);
+  newCards.forEach((w,i) => {
+    const div = document.createElement('div');
+    div.innerHTML = makeCard(w, i*.015);
+    grid.appendChild(div.firstChild);
+  });
+  if (currentResults.length <= PAGE_SIZE * page) {
+    document.getElementById('load-more-wrap').style.display = 'none';
+  }
+}
+
+// ── SEARCH ──
+document.getElementById('search').addEventListener('input', () => { page = 1; render(); });
+
+// ── BACK TO TOP ──
+window.addEventListener('scroll', () => {
+  document.getElementById('back-top').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── BOOT ──
+initFilters();
+render();
+</script>
+</body>
+</html>
