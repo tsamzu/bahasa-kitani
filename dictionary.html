@@ -6,6 +6,8 @@
   <title>Full Dictionary — Bahasa Kitani</title>
   <meta name="description" content="Browse all 734 words in the Bahasa Tutong dictionary." />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Load data FIRST before anything else -->
+  <script src="data/tutong.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -19,7 +21,7 @@
     html{scroll-behavior:smooth}
     body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
-    /* ── HEADER ── */
+    /* HEADER */
     header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;position:sticky;top:0;z-index:200}
     .logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
     .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-style:italic;flex-shrink:0}
@@ -29,7 +31,7 @@
     .back-link{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;font-weight:500;color:var(--sub);text-decoration:none;transition:color .15s;white-space:nowrap}
     .back-link:hover{color:var(--accent)}
 
-    /* ── STICKY SEARCH BAR ── */
+    /* STICKY SEARCH */
     .search-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;position:sticky;top:56px;z-index:199}
     .search-inner{max-width:900px;margin:0 auto;position:relative}
     .search-inner svg{position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
@@ -37,7 +39,7 @@
     #search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
     #search::placeholder{color:var(--muted)}
 
-    /* ── FILTER TABS ── */
+    /* FILTER TABS */
     .filters{background:var(--bg);border-bottom:1px solid var(--border);padding:0.6rem 1.25rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none;position:sticky;top:calc(56px + 57px);z-index:198}
     .filters::-webkit-scrollbar{display:none}
     .filters-inner{max-width:900px;margin:0 auto;display:flex;gap:0.4rem}
@@ -45,20 +47,20 @@
     .ftab:hover{border-color:var(--accent);color:var(--accent)}
     .ftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
-    /* ── MAIN ── */
+    /* MAIN */
     .main{flex:1;max-width:900px;margin:0 auto;width:100%;padding:1.5rem 1.25rem 4rem}
 
-    /* ── TOOLBAR ── */
+    /* TOOLBAR */
     .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}
     .result-count{font-size:0.78rem;color:var(--muted)}
     .result-count span{font-weight:600;color:var(--sub)}
     .sort-select{padding:0.32rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Outfit',sans-serif;font-size:0.76rem;color:var(--sub);background:var(--surface);outline:none;cursor:pointer}
     .sort-select:focus{border-color:var(--accent)}
 
-    /* ── GRID ── */
+    /* GRID */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.85rem}
 
-    /* ── CARDS ── */
+    /* CARDS */
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;transition:box-shadow .2s,transform .2s;animation:fadeUp .25s ease both;position:relative;overflow:hidden}
     .card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);opacity:0;transition:opacity .2s}
     .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07);transform:translateY(-2px)}
@@ -78,30 +80,34 @@
     .ntag-clarify{color:var(--purple);background:var(--purple-l);border:1px solid #CFC5E8}
     .ntag-variant{color:var(--green);background:var(--green-l);border:1px solid #B0D8D8}
 
-    /* ── EMPTY ── */
+    /* EMPTY */
     .empty{text-align:center;padding:4rem 1rem;display:none}
     .empty h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--sub);margin-bottom:0.4rem}
     .empty p{font-size:0.85rem;color:var(--muted)}
 
-    /* ── LOAD MORE ── */
+    /* ERROR */
+    .error-box{background:#FAEAEA;border:1px solid #F0C0C0;border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:1rem;display:none}
+    .error-box h3{font-size:0.95rem;font-weight:600;color:#B83232;margin-bottom:0.3rem}
+    .error-box p{font-size:0.82rem;color:#B83232;line-height:1.6}
+    .error-box code{background:rgba(0,0,0,.06);padding:0.1rem 0.35rem;border-radius:4px;font-family:monospace;font-size:0.78rem}
+
+    /* LOAD MORE */
     .load-more-wrap{text-align:center;margin-top:1.5rem}
     .load-more-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .2s}
     .load-more-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-    /* ── BACK TO TOP ── */
+    /* BACK TO TOP */
     .back-top{position:fixed;bottom:1.5rem;right:1.25rem;width:40px;height:40px;background:var(--accent);color:#fff;border:none;border-radius:50%;font-size:1rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(196,98,45,.4);transition:background .2s;z-index:100}
     .back-top.visible{display:flex}
     .back-top:hover{background:var(--accent-d)}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
     @media(max-width:500px){.grid{grid-template-columns:1fr 1fr}}
     @media(max-width:360px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <a class="logo" href="index.html">
     <div class="logo-icon">B</div>
@@ -113,7 +119,6 @@
   <a class="back-link" href="index.html">← Back to home</a>
 </header>
 
-<!-- STICKY SEARCH -->
 <div class="search-bar">
   <div class="search-inner">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -121,13 +126,15 @@
   </div>
 </div>
 
-<!-- CATEGORY FILTERS -->
 <div class="filters">
   <div class="filters-inner" id="filters-inner"></div>
 </div>
 
-<!-- MAIN -->
 <main class="main">
+  <div class="error-box" id="error-box">
+    <h3>⚠️ Could not load dictionary data</h3>
+    <p>The file <code>data/tutong.js</code> could not be found. Make sure it has been uploaded to your GitHub repository at the correct path.</p>
+  </div>
   <div class="toolbar">
     <p class="result-count">Showing <span id="count">—</span> entries</p>
     <select class="sort-select" id="sort-select" onchange="render()">
@@ -149,32 +156,40 @@
 
 <button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="data/tutong.js"></script>
 <script>
-const CATEGORIES = ["All","Body","Animals","Food & Drink","Fruits","Actions","People","Time","Place & Direction","Home","Nature","Question Words","Expressions"];
+const CATS = ["All","Body","Animals","Food & Drink","Fruits","Actions","People","Time","Place & Direction","Home","Nature","Question Words","Expressions"];
 const PAGE_SIZE = 48;
 let activeCat = 'All';
 let page = 1;
 let currentResults = [];
 
-// ── PRE-FILL SEARCH FROM URL PARAMS ──
-const urlParams = new URLSearchParams(window.location.search);
-const qParam = urlParams.get('q');
-if (qParam) {
-  document.getElementById('search').value = qParam;
+function norm(s) { return s.toLowerCase().replace(/'/g, ''); }
+
+function makeCard(w, delay) {
+  let tags = '<span class="ntag ntag-cat">' + w.cat + '</span>';
+  if (w.notation === 'loanword') tags += '<span class="ntag ntag-loanword">Loanword</span>';
+  if (w.notation === 'clarify')  tags += '<span class="ntag ntag-clarify">Needs Clarification</span>';
+  if (w.notation === 'variant')  tags += '<span class="ntag ntag-variant">Regional Variant</span>';
+  var note = w.note ? '<div class="card-note">' + w.note + '</div>' : '';
+  return '<div class="card" style="animation-delay:' + (delay||0) + 's">' +
+    '<div class="card-word">' + w.tutong + '</div>' +
+    '<div class="card-div"></div>' +
+    '<div class="card-row"><span class="ltag ms">MS</span><span class="card-tr">' + w.malay + '</span></div>' +
+    '<div class="card-row"><span class="ltag en">EN</span><span class="card-tr">' + w.english + '</span></div>' +
+    '<div class="card-foot">' + tags + '</div>' + note +
+    '</div>';
 }
 
-// ── BUILD FILTER TABS ──
 function initFilters() {
-  const el = document.getElementById('filters-inner');
-  CATEGORIES.forEach(cat => {
-    const b = document.createElement('button');
+  var el = document.getElementById('filters-inner');
+  CATS.forEach(function(cat) {
+    var b = document.createElement('button');
     b.className = 'ftab' + (cat === 'All' ? ' active' : '');
     b.textContent = cat;
-    b.onclick = () => {
+    b.onclick = function() {
       activeCat = cat;
       page = 1;
-      document.querySelectorAll('.ftab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.ftab').forEach(function(x) { x.classList.remove('active'); });
       b.classList.add('active');
       render();
     };
@@ -182,47 +197,29 @@ function initFilters() {
   });
 }
 
-// ── CARD BUILDER ──
-function makeCard(w, delay) {
-  let tags = `<span class="ntag ntag-cat">${w.cat}</span>`;
-  if (w.notation==='loanword') tags+=`<span class="ntag ntag-loanword">Loanword</span>`;
-  if (w.notation==='clarify')  tags+=`<span class="ntag ntag-clarify">Needs Clarification</span>`;
-  if (w.notation==='variant')  tags+=`<span class="ntag ntag-variant">Regional Variant</span>`;
-  const note = w.note ? `<div class="card-note">${w.note}</div>` : '';
-  return `<div class="card" style="animation-delay:${delay||0}s">
-    <div class="card-word">${w.tutong}</div>
-    <div class="card-div"></div>
-    <div class="card-row"><span class="ltag ms">MS</span><span class="card-tr">${w.malay}</span></div>
-    <div class="card-row"><span class="ltag en">EN</span><span class="card-tr">${w.english}</span></div>
-    <div class="card-foot">${tags}</div>${note}
-  </div>`;
-}
-
-// ── RENDER ──
 function render() {
-  const q    = document.getElementById('search').value.toLowerCase().trim();
-  const sort = document.getElementById('sort-select').value;
+  var q = document.getElementById('search').value.trim();
+  var nq = norm(q);
+  var sort = document.getElementById('sort-select').value;
 
-  let filtered = WORDS.filter(w => {
+  var filtered = WORDS.filter(function(w) {
     if (activeCat !== 'All' && w.cat !== activeCat) return false;
     if (!q) return true;
-    function norm(s){return s.toLowerCase().replace(/'/g,'')}
-    const nq = norm(q);
-    return norm(w.tutong).includes(nq) ||
-           norm(w.malay).includes(nq) ||
-           norm(w.english).includes(nq) ||
-           (w.note && norm(w.note).includes(nq));
+    return norm(w.tutong).indexOf(nq) >= 0 ||
+           norm(w.malay).indexOf(nq) >= 0 ||
+           norm(w.english).indexOf(nq) >= 0 ||
+           (w.note && norm(w.note).indexOf(nq) >= 0);
   });
 
-  if (sort === 'az')  filtered = [...filtered].sort((a,b) => a.tutong.localeCompare(b.tutong));
-  if (sort === 'za')  filtered = [...filtered].sort((a,b) => b.tutong.localeCompare(a.tutong));
-  if (sort === 'cat') filtered = [...filtered].sort((a,b) => a.cat.localeCompare(b.cat) || a.tutong.localeCompare(b.tutong));
+  if (sort === 'az')  filtered = filtered.slice().sort(function(a,b){ return a.tutong.localeCompare(b.tutong); });
+  if (sort === 'za')  filtered = filtered.slice().sort(function(a,b){ return b.tutong.localeCompare(a.tutong); });
+  if (sort === 'cat') filtered = filtered.slice().sort(function(a,b){ return a.cat.localeCompare(b.cat) || a.tutong.localeCompare(b.tutong); });
 
   currentResults = filtered;
-  const grid  = document.getElementById('grid');
-  const empty = document.getElementById('empty');
-  const count = document.getElementById('count');
-  const lmw   = document.getElementById('load-more-wrap');
+  var grid  = document.getElementById('grid');
+  var empty = document.getElementById('empty');
+  var count = document.getElementById('count');
+  var lmw   = document.getElementById('load-more-wrap');
 
   count.textContent = filtered.length;
 
@@ -234,19 +231,20 @@ function render() {
   }
 
   empty.style.display = 'none';
-  const visible = filtered.slice(0, PAGE_SIZE * page);
-  grid.innerHTML = visible.map((w,i) => makeCard(w, Math.min(i*.015,.4))).join('');
+  var visible = filtered.slice(0, PAGE_SIZE * page);
+  grid.innerHTML = visible.map(function(w, i) {
+    return makeCard(w, Math.min(i * 0.015, 0.4));
+  }).join('');
   lmw.style.display = filtered.length > visible.length ? 'block' : 'none';
 }
 
 function loadMore() {
   page++;
-  const visible = currentResults.slice(0, PAGE_SIZE * page);
-  const grid = document.getElementById('grid');
-  const newCards = currentResults.slice(PAGE_SIZE * (page-1), PAGE_SIZE * page);
-  newCards.forEach((w,i) => {
-    const div = document.createElement('div');
-    div.innerHTML = makeCard(w, i*.015);
+  var newItems = currentResults.slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page);
+  var grid = document.getElementById('grid');
+  newItems.forEach(function(w, i) {
+    var div = document.createElement('div');
+    div.innerHTML = makeCard(w, i * 0.015);
     grid.appendChild(div.firstChild);
   });
   if (currentResults.length <= PAGE_SIZE * page) {
@@ -254,17 +252,29 @@ function loadMore() {
   }
 }
 
-// ── SEARCH ──
-document.getElementById('search').addEventListener('input', () => { page = 1; render(); });
+document.getElementById('search').addEventListener('input', function() { page = 1; render(); });
 
-// ── BACK TO TOP ──
-window.addEventListener('scroll', () => {
-  document.getElementById('back-top').classList.toggle('visible', window.scrollY > 400);
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('back-top');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
 });
 
-// ── BOOT ──
-initFilters();
-render();
+// Boot — check data loaded correctly
+window.addEventListener('load', function() {
+  if (typeof WORDS === 'undefined' || !WORDS || WORDS.length === 0) {
+    document.getElementById('error-box').style.display = 'block';
+    document.getElementById('count').textContent = '0';
+    return;
+  }
+  // Pre-fill search from URL e.g. dictionary.html?q=mian
+  var params = new URLSearchParams(window.location.search);
+  var q = params.get('q');
+  if (q) document.getElementById('search').value = q;
+
+  initFilters();
+  render();
+});
 </script>
 </body>
 </html>
