@@ -206,7 +206,7 @@ function render() {
   let filtered = WORDS.filter(w => {
     if (activeCat !== 'All' && w.cat !== activeCat) return false;
     if (!q) return true;
-    function norm(s){return s.toLowerCase().replace(/[‘’`']/g,'').replace(/[^a-z0-9\s]/g,'')}
+    function norm(s){return s.toLowerCase().replace(/'/g,'')}
     const nq = norm(q);
     return norm(w.tutong).includes(nq) ||
            norm(w.malay).includes(nq) ||
