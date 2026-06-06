@@ -576,7 +576,7 @@ document.getElementById('search').addEventListener('input', function() {
     return;
   }
 
-  function normalise(s){return s.toLowerCase().replace(/[\u2018\u2019\u0060']/g,'').replace(/[^a-z0-9\s]/g,'')}
+  function normalise(s){return s.toLowerCase().replace(/'/g,'')}
   const nq = normalise(q);
   const results = WORDS.filter(w =>
     normalise(w.tutong).includes(nq) ||
