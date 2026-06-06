@@ -150,7 +150,7 @@ const WORDS = [
   { id:84,  tutong:"Temuad",                    malay:"Naik",             english:"To go up / Ascend",     cat:"Actions",        notation:"",        note:"" },
   { id:85,  tutong:"Tenakod",                   malay:"Panjat",           english:"To climb",              cat:"Actions",        notation:"",        note:"" },
   { id:86,  tutong:"Encurit / Ncurit / Curit",  malay:"Turun",            english:"To go down / Descend",  cat:"Actions",        notation:"variant", note:"Encurit, Ncurit and Curit are regional variants" },
-  { id:87,  tutong:"Jelit",                     malay:"Pakai",            english:"To use / To wear",      cat:"Actions",        notation:"",        note:"" },
+  { id:87,  tutong:"Jelit",                     malay:"Ambuyat",            english:"Ambuyat (a national Bruneian dish",      cat:"Food & Drink",        notation:"",        note:"" },
   { id:88,  tutong:"Puru",                      malay:"Suruh",            english:"To instruct / Tell",    cat:"Actions",        notation:"",        note:"" },
   { id:89,  tutong:"Petilu",                    malay:"Tunjuk",           english:"To point / Show",       cat:"Actions",        notation:"",        note:"" },
   { id:90,  tutong:"Rubau",                     malay:"Teriak",           english:"To shout",              cat:"Actions",        notation:"",        note:"Pronounced: ghu-baw (R carries a G sound)" },
