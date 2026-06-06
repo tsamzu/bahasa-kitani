@@ -261,7 +261,7 @@
   <a href="#feedback" onclick="closeMenu()">✉️ Feedback</a>
   <a href="#" onclick="openChangelog(event);closeMenu()">📋 Changelog</a>
   <a href="dictionary.html">🔍 Full Dictionary</a>
-  <a href="admin/index.html">⚙️ Admin</a>
+  <a href="admin/admin.html">⚙️ Admin</a>
 </div>
 
 <!-- PAGE -->
@@ -306,11 +306,11 @@
       <p class="hero-desc">A living reference for Bahasa Tutong — an indigenous language of the Tutong district of Brunei Darussalam — with translations in Bahasa Melayu and English.</p>
       <div class="hero-disclaimer">⚠️ Community-sourced · Some entries may need verification · <a href="#feedback" style="color:var(--gold);font-weight:600;margin-left:0.3rem">Help improve it →</a></div>
       <div class="hero-stats">
-        <div class="hstat"><span class="hstat-n">734</span><span class="hstat-l">Words</span></div>
+        <div class="hstat"><span class="hstat-n" id="stat-words">734</span><span class="hstat-l">Words</span></div>
         <div class="hstat-div"></div>
-        <div class="hstat"><span class="hstat-n">30</span><span class="hstat-l">Numbers</span></div>
+        <div class="hstat"><span class="hstat-n" id="stat-numbers">30</span><span class="hstat-l">Numbers</span></div>
         <div class="hstat-div"></div>
-        <div class="hstat"><span class="hstat-n">18</span><span class="hstat-l">Phrases</span></div>
+        <div class="hstat"><span class="hstat-n" id="stat-phrases">18</span><span class="hstat-l">Phrases</span></div>
         <div class="hstat-div"></div>
         <div class="hstat"><span class="hstat-n">3</span><span class="hstat-l">Languages</span></div>
       </div>
@@ -472,7 +472,7 @@
       <h5>Site</h5>
       <a href="#feedback">Send Feedback</a>
       <a href="#" onclick="openChangelog(event)">Changelog</a>
-      <a href="admin/index.html">Admin ↗</a>
+      <a href="admin/admin.html">Admin ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -664,6 +664,12 @@ initNumbers();
 initPreviews();
 renderRandom();
 initPhrases();
+// Auto-update counters from actual data
+document.getElementById('stat-words').textContent   = WORDS.length;
+document.getElementById('stat-numbers').textContent = NUMBERS.length;
+document.getElementById('stat-phrases').textContent = PHRASES.length;
+if (document.getElementById('sb-count'))
+  document.getElementById('sb-count').textContent = WORDS.length;
 </script>
 </body>
 </html>
