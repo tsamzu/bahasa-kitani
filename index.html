@@ -258,7 +258,7 @@
   <a href="#feedback" onclick="closeMenu()">✉️ Feedback</a>
   <a href="#" onclick="openChangelog(event);closeMenu()">📋 Changelog</a>
   <a href="dictionary.html">🔍 Full Dictionary</a>
-  <a href="admin/index.html">⚙️ Admin</a>
+  <a href="admin/admin.html">⚙️ Admin</a>
 </div>
 
 <!-- PAGE -->
@@ -434,7 +434,7 @@
     <button class="modal-close" onclick="closeChangelog()">✕</button>
     <h2>Changelog</h2>
     <p class="modal-sub">Every update to the Bahasa Kitani dictionary, newest first.</p>
-    <div class="cl-entry"><span class="cl-ver">v0.6</span><div class="cl-date">June 2025</div><div class="cl-title">Airtable Import — 582 New Entries</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>582 new entries imported from Airtable community database</li><li><span class="cltag cltag-new">New</span>Total dictionary now 734 words + 30 numbers + 18 phrases</li><li><span class="cltag cltag-fix">Fix</span>Regional variant notation applied to all multi-form entries</li></ul></div>
+    <div class="cl-entry"><span class="cl-ver">v0.6</span><div class="cl-date">June 2025</div><div class="cl-title">582 New Entries Added</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>582 new entries added from community database</li><li><span class="cltag cltag-new">New</span>Total dictionary now 734 words + 30 numbers + 18 phrases</li><li><span class="cltag cltag-fix">Fix</span>Regional variant notation applied to all multi-form entries</li></ul></div>
     <div class="cl-entry"><span class="cl-ver">v0.5</span><div class="cl-date">June 2025</div><div class="cl-title">Rebranded & Restructured</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Rebranded to Bahasa Kitani Dictionary</li><li><span class="cltag cltag-new">New</span>Admin dashboard, feedback manager, phrasebook, changelog modal</li><li><span class="cltag cltag-new">New</span>Sidebar with tribe/language switcher</li></ul></div>
     <div class="cl-entry"><span class="cl-ver">v0.4</span><div class="cl-date">June 2025</div><div class="cl-title">Major Expansion — @anak_tutong Images</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>Numbers 1–30, 23 animals, 19 fruits, 15 kitchen items, 22 body parts</li><li><span class="cltag cltag-fix">Fix</span>Regional variant notation applied throughout</li></ul></div>
     <div class="cl-entry"><span class="cl-ver">v0.3</span><div class="cl-date">June 2025</div><div class="cl-title">Notation System</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Loanword, Regional Variant, Needs Clarification tags</li><li><span class="cltag cltag-add">Add</span>16 entries from handwritten learning sheet + blog sources</li></ul></div>
@@ -469,7 +469,7 @@
       <h5>Site</h5>
       <a href="#feedback">Send Feedback</a>
       <a href="#" onclick="openChangelog(event)">Changelog</a>
-      <a href="admin/index.html">Admin ↗</a>
+      <a href="admin/admin.html">Admin ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -576,10 +576,12 @@ document.getElementById('search').addEventListener('input', function() {
     return;
   }
 
+  function normalise(s){return s.toLowerCase().replace(/[\u2018\u2019\u0060']/g,'').replace(/[^a-z0-9\s]/g,'')}
+  const nq = normalise(q);
   const results = WORDS.filter(w =>
-    w.tutong.toLowerCase().includes(q) ||
-    w.malay.toLowerCase().includes(q) ||
-    w.english.toLowerCase().includes(q)
+    normalise(w.tutong).includes(nq) ||
+    normalise(w.malay).includes(nq) ||
+    normalise(w.english).includes(nq)
   );
 
   note.style.display = 'block';
