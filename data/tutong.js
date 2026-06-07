@@ -50,7 +50,7 @@ const PHRASES = [
   { id:10, tutong:"Mian Jelit isu appi",                         malay:"Makan ambuyat pakai candas",                        english:"Eat ambuyat using the candas",                 cat:"Food & Drink"},
   { id:11, tutong:"Tod aluh, mian bumpur, puta, gulai atau daging", malay:"Tengah hari, makan nasi, ikan, gulai atau daging", english:"At noon, eat rice, fish, curry or meat",    cat:"Food & Drink"},
   { id:12, tutong:"Mumba sambut, teh atau kopi dan macam-macam lakanon", malay:"Minum pagi, teh atau kopi dan macam-macam kueh", english:"Morning drink  -  tea or coffee with snacks", cat:"Food & Drink"},
-  { id:13, tutong:"Bila kula batu, mumba empa",                 malay:"Bila haus, minum air",                              english:"When thirsty, drink water",                    cat:"Food & Drink"},
+  { id:13, tutong:"Bila kula batuk, mumba empa",                 malay:"Bila haus, minum air",                              english:"When thirsty, drink water",                    cat:"Food & Drink"},
   { id:14, tutong:"Ituh dapur",                                  malay:"Ini dapur",                                         english:"This is the kitchen",                          cat:"Kitchen"     },
   { id:15, tutong:"Dapur alan kapasak",                          malay:"Dapur tempat memasak",                              english:"The kitchen is a place to cook",               cat:"Kitchen"     },
   { id:16, tutong:"Daboh untuk masak bumpur",                    malay:"Periuk untuk memasak nasi",                         english:"The pot is for cooking rice",                  cat:"Kitchen"     },
@@ -157,7 +157,7 @@ const WORDS = [
   { id:91,  tutong:"Padung",                    malay:"Beria",            english:"To defecate",           cat:"Actions",        notation:"",        note:"" },
   { id:92,  tutong:"Selimba",                   malay:"Kamih / Bekamih",  english:"To urinate / To pee",   cat:"Actions",        notation:"",        note:"" },
   { id:93,  tutong:"Buyon",                     malay:"Lapar",            english:"Hungry",                cat:"Actions",        notation:"",        note:"" },
-  { id:94,  tutong:"Kula batak",                malay:"Haus",             english:"Thirsty",               cat:"Actions",        notation:"",        note:"" },
+  { id:94,  tutong:"Kula batuk",                malay:"Haus",             english:"Thirsty",               cat:"Actions",        notation:"",        note:"" },
   { id:95,  tutong:"Baus",                      malay:"Kelanguan / Jemu", english:"Bored / Fed up",        cat:"Actions",        notation:"",        note:"" },
   // ── PEOPLE ──
   { id:96,  tutong:"Jaie",                      malay:"Saya",             english:"I / Me",                cat:"People",         notation:"",        note:"" },
