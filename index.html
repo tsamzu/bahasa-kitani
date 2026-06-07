@@ -275,7 +275,7 @@
   <aside class="sidebar">
     <div class="sb-section">
       <div class="sb-label">Languages</div>
-      <button class="tribe-btn active">Tutong <span class="badge" id="sb-count">734</span></button>
+      <button class="tribe-btn active">Tutong <span class="badge" id="sb-count">—</span></button>
       <div class="tribe-dim">Coming soon:</div>
       <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Belait</button>
       <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Dusun</button>
@@ -309,9 +309,9 @@
       <h1>The <em>Tutong</em><br>Dictionary</h1>
       <p class="hero-desc">A living reference for Bahasa Tutong — an indigenous language of the Tutong district of Brunei Darussalam — with translations in Bahasa Melayu and English.</p>
       <div class="hero-stats">
-        <div class="hstat"><span class="hstat-n" id="stat-words">734</span><span class="hstat-l">Words</span></div>
+        <div class="hstat"><span class="hstat-n" id="stat-words">—</span><span class="hstat-l">Words</span></div>
         <div class="hstat-div"></div>
-        <div class="hstat"><span class="hstat-n" id="stat-phrases">18</span><span class="hstat-l">Phrases</span></div>
+        <div class="hstat"><span class="hstat-n" id="stat-phrases">—</span><span class="hstat-l">Phrases</span></div>
         <div class="hstat-div"></div>
         <div class="hstat"><span class="hstat-n">3</span><span class="hstat-l">Languages</span></div>
       </div>
@@ -489,7 +489,6 @@
   </div>
 </footer>
 
-<script src="data/tutong.js"></script>
 <script>
 // ── MOBILE MENU ──
 function toggleMenu() {
@@ -668,15 +667,18 @@ function submitFeedback() {
 }
 
 // ── BOOT ──
+function updateCounters() {
+  if (typeof WORDS === 'undefined') return;
+  document.getElementById('stat-words').textContent   = WORDS.length;
+  document.getElementById('stat-phrases').textContent = PHRASES.length;
+  var sb = document.getElementById('sb-count');
+  if (sb) sb.textContent = WORDS.length;
+}
 initNumbers();
 initPreviews();
 renderRandom();
 initPhrases();
-// Auto-update counters from actual data
-document.getElementById('stat-words').textContent   = WORDS.length;
-document.getElementById('stat-phrases').textContent = PHRASES.length;
-if (document.getElementById('sb-count'))
-  document.getElementById('sb-count').textContent = WORDS.length;
+updateCounters();
 </script>
 </body>
 </html>
