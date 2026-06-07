@@ -208,6 +208,10 @@
     .footer-col a:hover{color:#fff}
     .footer-bottom{max-width:1320px;margin:1.25rem auto 0;padding-top:1.25rem;border-top:1px solid #2E2825;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.6rem}
     .footer-bottom p{font-size:0.7rem;color:#6B6158}
+    .footer-license{background:#111;border-top:1px solid #2E2825;padding:0.75rem 1.5rem}
+    .footer-license-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:0.6rem;font-size:0.7rem;color:#6B6158;line-height:1.6}
+    .footer-license-inner strong{color:#A09890;font-weight:600}
+    .license-icon{font-size:0.85rem;flex-shrink:0}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -261,7 +265,7 @@
   <a href="#feedback" onclick="closeMenu()">✉️ Feedback</a>
   <a href="#" onclick="openChangelog(event);closeMenu()">📋 Changelog</a>
   <a href="dictionary.html">🔍 Full Dictionary</a>
-  <a href="admin/admin.html">⚙️ Admin</a>
+  <a href="admin/index.html">⚙️ Admin</a>
 </div>
 
 <!-- PAGE -->
@@ -470,12 +474,18 @@
       <h5>Site</h5>
       <a href="#feedback">Send Feedback</a>
       <a href="#" onclick="openChangelog(event)">Changelog</a>
-      <a href="admin/admin.html">Admin ↗</a>
+      <a href="admin/index.html">Admin ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© 2025 Bahasa Kitani Dictionary · bahasa-kitani.xyz</p>
     <p>Data sourced from community contributions and DBP Kamus Tutong-Melayu (1991).</p>
+  </div>
+  <div class="footer-license">
+    <div class="footer-license-inner">
+      <span class="license-icon">📚</span>
+      <span>This dictionary is free for <strong>education and personal research only.</strong> Commercial use of any content is not permitted without written permission. · <a href="mailto:izz.zu@icloud.com" style="color:#A09890;text-decoration:underline">Contact us</a></span>
+    </div>
   </div>
 </footer>
 
