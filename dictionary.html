@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Full Dictionary — Bahasa Kitani</title>
   <meta name="description" content="Browse all 734 words in the Bahasa Tutong dictionary." />
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjQzQ2MjJEIi8+PHRleHQgeD0iOTAiIHk9IjEyOCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTEwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CPC90ZXh0Pjwvc3ZnPg==" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjQzQ2MjJEIi8+PHRleHQgeD0iOTAiIHk9IjEyOCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTEwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CPC90ZXh0Pjwvc3ZnPg==" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Bahasa Kitani" />
+  <meta name="theme-color" content="#C4622D" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <!-- Load data FIRST before anything else -->
   <script src="data/tutong.js"></script>
@@ -105,6 +111,9 @@
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:500px){.grid{grid-template-columns:1fr 1fr}}
     @media(max-width:360px){.grid{grid-template-columns:1fr}}
+    .footer-license{background:#111;border-top:1px solid #2E2825;padding:0.75rem 1.5rem;position:sticky;bottom:0;display:none}
+    .footer-license-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:0.6rem;font-size:0.7rem;color:#6B6158;line-height:1.6}
+    .footer-license-inner strong{color:#A09890;font-weight:600}
   </style>
 </head>
 <body>
@@ -279,5 +288,11 @@ window.addEventListener('load', function() {
   render();
 });
 </script>
+  <div class="footer-license">
+    <div class="footer-license-inner">
+      <span>📚</span>
+      <span>Free for <strong>education and personal research only.</strong> Commercial use not permitted. · <a href="mailto:izz.zu@icloud.com" style="color:#A09890;text-decoration:underline">Contact</a></span>
+    </div>
+  </div>
 </body>
 </html>
