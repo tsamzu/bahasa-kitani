@@ -56,6 +56,7 @@ const PHRASES = [
   { id:16, tutong:"Daboh untuk masak bumpur",                    malay:"Periuk untuk memasak nasi",                         english:"The pot is for cooking rice",                  cat:"Kitchen"     },
   { id:17, tutong:"Dalam dapur ada: daboh, kudut, awuk, appi dan macam-macam atin", malay:"Dalam dapur ada periuk, pinggan, sudu, candas dan lain-lain", english:"In the kitchen: a pot, plate, spoon, candas and more", cat:"Kitchen"},
   { id:18, tutong:"Jaie mandu kuluh",                            malay:"Saya mandi dahulu",                                 english:"I will bathe first",                           cat:"Daily Life"  },
+  { id:20, tutong:"Jiyu umu pelakau metuka jayi ga nabai?", malay:"Kau mahu memandu kerita ku ke Bandar?", english:"Do you want to drive my car to town?", cat:"Daily Life" },
 ];
 
 const WORDS = [
