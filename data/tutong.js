@@ -810,4 +810,5 @@ const WORDS = [
   { id:759, tutong:"Isu", malay:"Pakai", english:"To wear", cat:"Actions", notation:"", note:"Variant of Isok" },
   { id:760, tutong:"Ayondai", malay:"Agatah", english:"Go", cat:"Actions", notation:"", note:"" },
   { id:761, tutong:"Ga", malay:"Ke", english:"To (direction)", cat:"Place & Direction", notation:"", note:"" },
+  { id:761, tutong:"Nabai", malay:"Bandar", english:"Town", cat:"Place & Direction", notation:"", note:"" },
 ];
