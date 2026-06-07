@@ -191,6 +191,7 @@
 
   <div class="tabnav">
     <button class="tabnav-btn active" onclick="showTab('add',this)">➕ Add Word</button>
+    <button class="tabnav-btn" onclick="showTab('phrase',this)">💬 Add Phrase</button>
     <button class="tabnav-btn" onclick="showTab('feedback',this)">✉️ Feedback</button>
     <button class="tabnav-btn" onclick="showTab('guide',this)">📖 Guide</button>
   </div>
@@ -278,6 +279,70 @@
       <div class="copy-row">
         <button class="copy-btn" id="copy-btn" onclick="copyCode()">📋 Copy Code</button>
         <a class="gh-btn" id="gh-link" href="https://github.com/tsamzu/bahasa-kitani/edit/main/data/tutong.js" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PHRASE -->
+  <div class="page" id="tab-phrase">
+    <p class="page-title">Add a New Phrase</p>
+    <p class="page-sub">Fill the form → Generate → Copy code → Paste into GitHub above the <code>];</code> of the PHRASES array.</p>
+
+    <div class="howto">
+      <h4>📱 Phone steps:</h4>
+      <ol>
+        <li>Fill the form and tap <strong>Generate Code</strong></li>
+        <li>Tap <strong>Copy Code</strong> — saves to your clipboard</li>
+        <li>Tap <strong>Open GitHub</strong> — goes to your data file</li>
+        <li>Tap the pencil ✏️ to edit</li>
+        <li>Find the <code>const PHRASES = [</code> section</li>
+        <li>Scroll to its closing <code>];</code> and paste above it</li>
+        <li>Tap <strong>Commit changes</strong> → done ✓</li>
+      </ol>
+    </div>
+
+    <div class="next-id-pill">Next phrase ID: <strong id="next-phrase-id-val">19</strong></div>
+
+    <div class="form-card">
+      <div class="fg">
+        <label>Tutong Phrase *</label>
+        <input type="text" id="p-tutong" placeholder="e.g. Lawu alu ituh" oninput="updatePhrasePreview()" autocomplete="off" />
+      </div>
+      <div class="fg">
+        <label>Malay Translation *</label>
+        <input type="text" id="p-malay" placeholder="e.g. Hari ini panas" oninput="updatePhrasePreview()" autocomplete="off" />
+      </div>
+      <div class="fg">
+        <label>English Translation *</label>
+        <input type="text" id="p-english" placeholder="e.g. It is hot today" oninput="updatePhrasePreview()" autocomplete="off" />
+      </div>
+      <div class="fg" style="margin-bottom:0">
+        <label>Category *</label>
+        <select id="p-cat" onchange="updatePhrasePreview()">
+          <option value="">— Select a category —</option>
+          <option value="Food & Drink">Food & Drink</option>
+          <option value="Daily Life">Daily Life</option>
+          <option value="Weather">Weather</option>
+          <option value="Kitchen">Kitchen</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generatePhrase()">Generate Code →</button>
+        <button class="btn btn-secondary" onclick="clearPhraseForm()">Clear</button>
+      </div>
+    </div>
+
+    <div class="preview-label">Live Preview</div>
+    <div class="preview-card" id="phrase-preview-card">
+      <div style="font-size:0.82rem;color:var(--muted);font-style:italic">Start typing above to see a preview...</div>
+    </div>
+
+    <div class="output-section" id="phrase-output-section">
+      <div class="preview-label" style="margin-top:1.25rem">Generated Code — Copy this ↓</div>
+      <div class="output-box" id="phrase-output-box"></div>
+      <div class="copy-row">
+        <button class="copy-btn" id="phrase-copy-btn" onclick="copyPhraseCode()">📋 Copy Code</button>
+        <a class="gh-btn" href="https://github.com/tsamzu/bahasa-kitani/edit/main/data/tutong.js" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </div>
   </div>
@@ -570,10 +635,63 @@ function renderFb() {
   ).join('');
 }
 
+// ── PHRASES ──
+function updatePhrasePreview() {
+  var tutong  = document.getElementById('p-tutong').value.trim()  || '—';
+  var malay   = document.getElementById('p-malay').value.trim()   || '—';
+  var english = document.getElementById('p-english').value.trim() || '—';
+  var cat     = document.getElementById('p-cat').value            || 'Category';
+  document.getElementById('phrase-preview-card').innerHTML =
+    '<div class="preview-word">' + tutong + '</div>' +
+    '<div class="preview-row"><span class="ltag ms">MS</span><span class="preview-tr">' + malay + '</span></div>' +
+    '<div class="preview-row"><span class="ltag en">EN</span><span class="preview-tr">' + english + '</span></div>' +
+    '<div class="preview-foot"><span class="ntag ntag-cat">' + cat + '</span></div>';
+}
+
+function generatePhrase() {
+  var tutong  = document.getElementById('p-tutong').value.trim();
+  var malay   = document.getElementById('p-malay').value.trim();
+  var english = document.getElementById('p-english').value.trim();
+  var cat     = document.getElementById('p-cat').value;
+  if (!tutong || !malay || !english || !cat) { toast('⚠️ Please fill in all required fields'); return; }
+  var nextId = parseInt(localStorage.getItem('bk_next_phrase_id') || '19');
+  var line = '  { id:' + nextId + ', tutong:"' + tutong + '", malay:"' + malay + '", english:"' + english + '", cat:"' + cat + '" },';
+  document.getElementById('phrase-output-box').textContent = line;
+  document.getElementById('phrase-output-section').style.display = 'block';
+  document.getElementById('phrase-copy-btn').textContent = '📋 Copy Code';
+  document.getElementById('phrase-copy-btn').classList.remove('copied');
+  localStorage.setItem('bk_next_phrase_id', nextId + 1);
+  document.getElementById('next-phrase-id-val').textContent = nextId + 1;
+  setTimeout(function(){ document.getElementById('phrase-output-section').scrollIntoView({behavior:'smooth',block:'nearest'}); }, 150);
+}
+
+function copyPhraseCode() {
+  var code = document.getElementById('phrase-output-box').textContent;
+  var btn  = document.getElementById('phrase-copy-btn');
+  var ok = function() {
+    btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+    toast('✓ Code copied! Paste into the PHRASES section in GitHub.');
+    setTimeout(function(){ btn.textContent = '📋 Copy Code'; btn.classList.remove('copied'); }, 2500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(ok).catch(function(){ fallbackCopy(code, ok); });
+  } else { fallbackCopy(code, ok); }
+}
+
+function clearPhraseForm() {
+  ['p-tutong','p-malay','p-english'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('p-cat').value = '';
+  document.getElementById('phrase-output-section').style.display = 'none';
+  document.getElementById('phrase-preview-card').innerHTML = '<div style="font-size:0.82rem;color:var(--muted);font-style:italic">Start typing above to see a preview...</div>';
+  document.getElementById('p-tutong').focus();
+}
+
 // ── INIT ──
 function init() {
-  const nextId = parseInt(localStorage.getItem('bk_next_id') || '758');
+  var nextId = parseInt(localStorage.getItem('bk_next_id') || '758');
   document.getElementById('next-id-val').textContent = nextId;
+  var nextPhraseId = parseInt(localStorage.getItem('bk_next_phrase_id') || '19');
+  document.getElementById('next-phrase-id-val').textContent = nextPhraseId;
   renderFb();
 }
 
