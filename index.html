@@ -176,6 +176,11 @@
     .footer-license-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:0.6rem;font-size:0.7rem;color:#6B6158;line-height:1.6}
     .footer-license-inner strong{color:#A09890;font-weight:600}
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .kofi-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+    .kofi-text h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.35rem}
+    .kofi-text p{font-size:0.82rem;color:var(--sub);line-height:1.6;max-width:420px}
+    .kofi-btn{display:inline-flex;align-items:center;gap:0.5rem;background:#FF5E5B;color:#fff;text-decoration:none;padding:0.78rem 1.4rem;border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:600;transition:background .2s;white-space:nowrap;flex-shrink:0}
+    .kofi-btn:hover{background:#e54e4b}
     @media(max-width:900px){.sidebar{display:none}.main{padding:1.25rem 1rem 3rem}}
     @media(max-width:640px){.header-nav{display:none}.hamburger{display:flex}.hero{padding:1.5rem 1.25rem 1.25rem}.hero-stats{gap:1rem}.hstat-div{display:none}.fb-grid{grid-template-columns:1fr}.dict-cta{flex-direction:column;align-items:flex-start}.footer-inner{flex-direction:column;gap:1.25rem}}
   </style>
@@ -366,6 +371,17 @@
     <div class="cl-entry"><span class="cl-ver">v0.5</span><div class="cl-date">June 2025</div><div class="cl-title">Rebranded & Restructured</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Rebranded to Bahasa Kitani Dictionary</li><li><span class="cltag cltag-new">New</span>Admin dashboard, feedback manager, phrasebook, changelog</li></ul></div>
     <div class="cl-entry"><span class="cl-ver">v0.1</span><div class="cl-date">June 2025</div><div class="cl-title">Initial Release</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Launched with trilingual entries: Tutong · Malay · English</li></ul></div>
   </div>
+
+    <!-- KO-FI SUPPORT -->
+    <div class="kofi-section">
+      <div class="kofi-text">
+        <h3>&#9749; Support Bahasa Kitani</h3>
+        <p>This dictionary is free for everyone. If it has been useful to you, consider buying us a coffee — it helps keep the server running and supports the addition of more indigenous languages.</p>
+      </div>
+      <a class="kofi-btn" href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener">&#9749; Buy us a coffee</a>
+    </div>
+
+  </main>
 </div>
 
 <footer>
@@ -394,6 +410,7 @@
       <h5>Site</h5>
       <a href="#feedback">Send Feedback</a>
       <a href="#" onclick="openChangelog(event)">Changelog</a>
+      <a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener">&#9749; Support us</a>
       <a href="admin/index.html">Admin ↗</a>
     </div>
   </div>
