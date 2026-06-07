@@ -1,5 +1,5 @@
 // ============================================================
-// BAHASA KITANI — TUTONG WORD DATA
+// BAHASA KITANI  -  TUTONG WORD DATA
 // ============================================================
 // HOW TO ADD A WORD MANUALLY (if you're not using the admin):
 //   1. Copy any entry below
@@ -49,14 +49,13 @@ const PHRASES = [
   { id:9,  tutong:"Mian dengan awuk",                            malay:"Makan dengan sudu",                                 english:"Eat with a spoon",                             cat:"Food & Drink"},
   { id:10, tutong:"Mian Jelit isu appi",                         malay:"Makan ambuyat pakai candas",                        english:"Eat ambuyat using the candas",                 cat:"Food & Drink"},
   { id:11, tutong:"Tod aluh, mian bumpur, puta, gulai atau daging", malay:"Tengah hari, makan nasi, ikan, gulai atau daging", english:"At noon, eat rice, fish, curry or meat",    cat:"Food & Drink"},
-  { id:12, tutong:"Mumba sambut, teh atau kopi dan macam-macam lakanon", malay:"Minum pagi, teh atau kopi dan macam-macam kueh", english:"Morning drink — tea or coffee with snacks", cat:"Food & Drink"},
+  { id:12, tutong:"Mumba sambut, teh atau kopi dan macam-macam lakanon", malay:"Minum pagi, teh atau kopi dan macam-macam kueh", english:"Morning drink  -  tea or coffee with snacks", cat:"Food & Drink"},
   { id:13, tutong:"Bila kula batak, mumba empa",                 malay:"Bila haus, minum air",                              english:"When thirsty, drink water",                    cat:"Food & Drink"},
   { id:14, tutong:"Ituh dapur",                                  malay:"Ini dapur",                                         english:"This is the kitchen",                          cat:"Kitchen"     },
   { id:15, tutong:"Dapur alan kapasak",                          malay:"Dapur tempat memasak",                              english:"The kitchen is a place to cook",               cat:"Kitchen"     },
   { id:16, tutong:"Daboh untuk masak bumpur",                    malay:"Periuk untuk memasak nasi",                         english:"The pot is for cooking rice",                  cat:"Kitchen"     },
   { id:17, tutong:"Dalam dapur ada: daboh, kudut, awuk, appi dan macam-macam atin", malay:"Dalam dapur ada periuk, pinggan, sudu, candas dan lain-lain", english:"In the kitchen: a pot, plate, spoon, candas and more", cat:"Kitchen"},
   { id:18, tutong:"Jaie mandu kuluh",                            malay:"Saya mandi dahulu",                                 english:"I will bathe first",                           cat:"Daily Life"  },
-  { id:19, tutong:"Jiyu umu mumba empa lawu?",                            malay:"Kau mahu minum air panas?",                                 english:"Do you want to drink hot water?",                           cat:"Daily Life"  },
 ];
 
 const WORDS = [
@@ -810,6 +809,6 @@ const WORDS = [
   { id:757, tutong:"Isok", malay:"Pakai", english:"To wear", cat:"Actions", notation:"", note:"Variant of Isu. Isok is used to instruct" },
   { id:759, tutong:"Isu", malay:"Pakai", english:"To wear", cat:"Actions", notation:"", note:"Variant of Isok" },
   { id:760, tutong:"Ayondai", malay:"Agatah", english:"Go", cat:"Actions", notation:"", note:"" },
+
   { id:761, tutong:"Ga", malay:"Ke", english:"To (direction)", cat:"Place & Direction", notation:"", note:"" },
-  { id:761, tutong:"Nabai", malay:"Bandar", english:"Town", cat:"Place & Direction", notation:"", note:"" },
 ];
