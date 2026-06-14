@@ -553,7 +553,7 @@ function submitFeedback(){
   var type=document.getElementById('fb-type').value;
   var labels={correction:'Correction','new-word':'New Word',dialect:'Dialect Variant',general:'General'};
   var label=labels[type];
-  window.location.href='mailto:izz.zu@icloud.com?subject='+encodeURIComponent('[Bahasa Kitani] '+label)+'&body='+encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nType: '+label+'\n\n'+msg);
+  window.location.href='mailto:sam@bahasa-kitani.xyz?subject='+encodeURIComponent('[Bahasa Kitani] '+label)+'&body='+encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nType: '+label+'\n\n'+msg);
   document.getElementById('fb-ok').style.display='flex';
   document.getElementById('fb-message').value='';
 }
