@@ -2,7 +2,7 @@
 const VERSION = '2.0.0';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
-const CORE = ['./', './index.html', './dictionary.html', './styles.css', './core.js', './app.js', './data/tutong.js', './favicon.svg', './manifest.webmanifest'];
+const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './data/tutong.js', './favicon.svg', './manifest.webmanifest'];
 const CORE_URLS = new Set(CORE.map(path => new URL(path, self.registration.scope).href));
 
 self.addEventListener('install', event => {
