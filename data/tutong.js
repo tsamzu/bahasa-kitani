@@ -812,5 +812,5 @@ const WORDS = [
   { id:760, tutong:"Ayondai", malay:"Agatah", english:"Go", cat:"Actions", notation:"", note:"" },
 
   { id:761, tutong:"Ga", malay:"Ke", english:"To (direction)", cat:"Place & Direction", notation:"", note:"" },
-  { id:761, tutong:"Munung manuk", malay:"Paruh Burung", english:"Bird's Beak", cat:"Animals", notation:"", note:"" },
+  { id:762, tutong:"Munung manuk", malay:"Paruh Burung", english:"Bird's Beak", cat:"Animals", notation:"", note:"" },
 ];
