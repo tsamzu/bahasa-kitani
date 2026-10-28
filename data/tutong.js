@@ -813,8 +813,8 @@ const WORDS = [
 
   { id:761, tutong:"Ga", malay:"Ke", english:"To (direction)", cat:"Place & Direction", notation:"", note:"" },
   { id:762, tutong:"Munung manuk", malay:"Paruh Burung", english:"Bird's Beak", cat:"Animals", notation:"", note:"" },
-    {"id":763,"tutong":"Biru","malay":"Biru","english":"Blue","cat":"Expressions","notation":"","note":""},
-    {"id":764,"tutong":"Butul","malay":"Botol","english":"Bottle","cat":"Food & Drink","notation":"","note":""},
-    {"id":765,"tutong":"Bulan","malay":"Bulan","english":"Month","cat":"Time","notation":"","note":""},
+  { id:763, tutong:"Biru", malay:"Biru", english:"Blue", cat:"Expressions", notation:"", note:""},
+  { id:764, tutong:"Butul", malay:"Botol", english:"Bottle", cat:"Food & Drink", notation:"",note:""},
+  { id:765, tutong:"Bulan", malay:"Bulan", english:"Month", cat:"Time", notation:"",note:""},
   
 ];
