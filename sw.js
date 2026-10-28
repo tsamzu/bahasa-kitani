@@ -1,8 +1,8 @@
 /* Bump VERSION with each release that changes cached files. */
-const VERSION = '2.2.1';
+const VERSION = '2.2.2';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
-const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './manifest.webmanifest'];
+const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './assets/bahasa-tutong-badge.svg', './manifest.webmanifest'];
 const CORE_URLS = new Set(CORE.map(path => new URL(path, self.registration.scope).href));
 
 self.addEventListener('install', event => {
