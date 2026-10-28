@@ -160,10 +160,10 @@ const WORDS = [
   { id:94,  tutong:"Kula batuk",                malay:"Haus",             english:"Thirsty",               cat:"Actions",        notation:"",        note:"" },
   { id:95,  tutong:"Baus",                      malay:"Kelanguan / Jemu", english:"Bored / Fed up",        cat:"Actions",        notation:"",        note:"" },
   // ── PEOPLE ──
-  { id:96,  tutong:"Jaie",                      malay:"Saya",             english:"I / Me",                cat:"People",         notation:"",        note:"" },
+  { id:96,  tutong:"Jayi/Jaie",                      malay:"Saya",             english:"I / Me",                cat:"People",         notation:"",        note:"" },
   { id:97,  tutong:"Jami",                      malay:"Kami",             english:"We / Us",               cat:"People",         notation:"",        note:"" },
   { id:98,  tutong:"Jimu",                      malay:"Kamu",             english:"You (formal)",          cat:"People",         notation:"",        note:"" },
-  { id:99,  tutong:"Jiyu",                      malay:"Kau",              english:"You (informal)",        cat:"People",         notation:"",        note:"" },
+  { id:99,  tutong:"Jiyu/Jiu",                      malay:"Kau",              english:"You (informal)",        cat:"People",         notation:"",        note:"" },
   { id:100, tutong:"Ido",                       malay:"Dorang",           english:"They / Them",           cat:"People",         notation:"",        note:"" },
   { id:101, tutong:"Layie",                     malay:"Lelaki",           english:"Male / Man",            cat:"People",         notation:"",        note:"" },
   { id:102, tutong:"Turis",                     malay:"Perempuan",        english:"Female / Woman",        cat:"People",         notation:"",        note:"" },
