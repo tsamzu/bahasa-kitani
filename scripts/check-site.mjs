@@ -28,7 +28,11 @@ for (const key of ['WORDS', 'PHRASES']) {
   assert.equal(entries.length, new Set(entries.map(entry => entry.id)).size, `Duplicate IDs in ${key}`);
   for (const entry of entries) for (const field of ['tutong', 'malay', 'english', 'cat']) assert.equal(typeof entry[field], 'string', `${key} ${entry.id} has invalid ${field}`);
 }
-assert.equal(context.dataset.NUMBERS.length, 30);
+assert(context.dataset.NUMBERS.length > 0, 'The number list must not be empty');
+assert.equal(context.dataset.NUMBERS.length, new Set(context.dataset.NUMBERS.map(item => item[0])).size, 'Number values must be unique');
+for (const item of context.dataset.NUMBERS) {
+  assert(Array.isArray(item) && item.length === 2 && Number.isSafeInteger(item[0]) && item[0] > 0 && typeof item[1] === 'string' && item[1].trim(), 'Invalid number entry');
+}
 for (const path of ['admin/index.html', 'admin/feedback']) {
   for (const [index, match] of [...read(path).matchAll(/<script>([\s\S]*?)<\/script>/g)].entries()) new vm.Script(match[1], { filename: `${path} inline ${index}` });
 }
@@ -41,4 +45,4 @@ for (const match of admin.matchAll(/\b(?:src|href)="([^"#]+)"/g)) {
   if (/^(https?:|mailto:|data:)/.test(value)) continue;
   assert(existsSync(resolve(root, 'admin', value.split(/[?#]/)[0])), 'Missing editor asset: ' + value);
 }
-console.log(`Site checks passed: ${context.dataset.WORDS.length} words, ${context.dataset.PHRASES.length} phrases, 30 numbers, ${ids.length} unique HTML IDs.`);
+console.log(`Site checks passed: ${context.dataset.WORDS.length} words, ${context.dataset.PHRASES.length} phrases, ${context.dataset.NUMBERS.length} numbers, ${ids.length} unique HTML IDs.`);

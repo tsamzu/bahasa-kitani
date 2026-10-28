@@ -136,3 +136,9 @@ test('phrase proposals use their own IDs and preserve the word dictionary',()=>{
   assert.equal(applied.entry.id,9);assert.equal(loaded.phrases.length,2);
   assert.deepEqual(plain(loaded.words),corpus.words);
 });
+test('every complete dictionary spelling can find itself, including slash variants',()=>{
+  const catalog=vm.createContext({});
+  vm.runInContext(readFileSync(new URL('../data/tutong.js',import.meta.url),'utf8')+';globalThis.words=WORDS;',catalog);
+  for(const entry of catalog.words) assert(BK.findWords(catalog.words,{query:entry.tutong,fuzzy:false}).results.some(item=>item.id===entry.id),'Cannot find '+entry.tutong);
+  assert.equal(BK.findWords([word],{query:'Empa/Eppa'}).results[0].id,7);
+});

@@ -1,5 +1,5 @@
 /* Bump VERSION with each release that changes cached files. */
-const VERSION = '2.2.0';
+const VERSION = '2.2.1';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
 const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './manifest.webmanifest'];
