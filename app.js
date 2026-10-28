@@ -13,7 +13,7 @@
   const daysList = value => Array.isArray(value) && value.every(key => typeof key === 'string' && BK.dateForKey(key));
   const lessonWords = [735, 733, 306, 159, 49, 117, 149, 150].map(id => WORDS.find(word => word.id === id)).filter(Boolean);
   const state = {
-    route: 'home', dictionaryCategory: 'All', dictionaryPage: 1, savedOnly: false,
+    route: 'home', dictionaryCategory: 'All', dictionaryPage: 1, savedOnly: false, dictionaryLanguage: 'all',
     saved: new Set(store.read('bk-saved', [], idList).filter(id => validIds.has(id))),
     learned: new Set(store.read('bk-learned', [], idList).filter(id => validIds.has(id))),
     days: store.read('bk-days', [], daysList),
@@ -50,7 +50,7 @@
     const next = routes.includes(route) ? route : 'home'; state.route = next;
     if (next === 'dictionary' && typeof query === 'string') {
       state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.savedOnly = false;
-      $('#dictionary-search').value = query; $('#dictionary-sort').value = 'default';
+      $('#dictionary-search').value = query; $('#dictionary-sort').value = 'default'; state.dictionaryLanguage = 'all'; $('#dictionary-language').value = 'all';
     }
     $$('.view').forEach(view => { const active = view.dataset.view === next; view.hidden = !active; view.classList.toggle('active', active); });
     $$('[data-route]').forEach(link => {
@@ -176,15 +176,19 @@
     $$('#dictionary-categories button').forEach(button => button.addEventListener('click', () => { state.dictionaryCategory = button.dataset.cat; state.dictionaryPage = 1; renderDictionary(); }));
     $('#dictionary-search').addEventListener('input', () => { state.dictionaryPage = 1; renderDictionary(); });
     $('#dictionary-sort').addEventListener('change', () => { state.dictionaryPage = 1; renderDictionary(); });
+    $('#dictionary-language').addEventListener('change', () => { state.dictionaryLanguage = $('#dictionary-language').value; state.dictionaryPage = 1; renderDictionary(); });
     $('#saved-filter').addEventListener('click', () => { state.savedOnly = !state.savedOnly; state.dictionaryPage = 1; if (state.savedOnly) { state.dictionaryCategory = 'All'; $('#dictionary-search').value = ''; } renderDictionary(); });
     $('#dictionary-more').addEventListener('click', () => { state.dictionaryPage++; renderDictionary(); });
   }
   function renderDictionary() {
-    const results = BK.searchWords(WORDS, { query: $('#dictionary-search').value, category: state.dictionaryCategory, savedOnly: state.savedOnly, saved: state.saved, sort: $('#dictionary-sort').value });
+    const matches = BK.findWords(WORDS, { query: $('#dictionary-search').value, category: state.dictionaryCategory, savedOnly: state.savedOnly, saved: state.saved, sort: $('#dictionary-sort').value, language: state.dictionaryLanguage });
+    const results = matches.results;
     const visible = results.slice(0, state.dictionaryPage * 48);
     $$('#dictionary-categories button').forEach(button => { const active = button.dataset.cat === state.dictionaryCategory; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
     $('#saved-filter').classList.toggle('active', state.savedOnly); $('#saved-filter').setAttribute('aria-pressed', String(state.savedOnly));
-    $('#dictionary-result-label').textContent = `Showing ${visible.length} of ${results.length} entries`;
+    $('#dictionary-result-label').textContent = (matches.approximate ? 'Closest spellings: ' : '') + 'Showing ' + visible.length + ' of ' + results.length + ' entries';
+    $('#dictionary-match-note').hidden = !matches.approximate;
+    $('#dictionary-match-note').textContent = matches.approximate ? 'No exact matches. These are nearby spellings; check the word and its translations.' : '';
     $('#dictionary-empty').hidden = results.length !== 0; $('#dictionary-more').hidden = visible.length >= results.length;
     const labels = { variant: 'Regional variant', loanword: 'Loanword', clarify: 'Needs clarification' };
     $('#dictionary-grid').innerHTML = visible.map(word => `<article class="word-card"><button class="save-word ${state.saved.has(word.id) ? 'saved' : ''}" type="button" data-save="${word.id}" aria-pressed="${state.saved.has(word.id)}" aria-label="${state.saved.has(word.id) ? 'Remove' : 'Save'} ${esc(word.tutong)}">${state.saved.has(word.id) ? '♥' : '♡'}</button><h3>${esc(word.tutong)}</h3><dl><div><dt>BM</dt><dd>${esc(word.malay)}</dd></div><div><dt>EN</dt><dd>${esc(word.english)}</dd></div></dl><div class="word-foot"><span>${esc(word.cat)}</span>${word.notation ? `<span class="note">${esc(labels[word.notation] || word.notation)}</span>` : ''}</div>${word.note ? `<details class="entry-note"><summary>Entry note</summary><p>${esc(word.note)}</p></details>` : ''}</article>`).join('');
@@ -246,6 +250,19 @@
     bindEvents(); initDaily(); initTopics(); initDictionary(); initPhrases(); renderNumbers(); newQuick(); updateProgress();
     const query = new URLSearchParams(location.search).get('q');
     if (query !== null) routeTo('dictionary', { historyMode: 'replace', focus: false, query }); else routeFromLocation();
+    if (typeof BKUI !== 'undefined') BKUI.init({
+      words: WORDS, lessonSize: lessonWords.length, openSearch: query => routeTo('dictionary', { query }),
+      getProgress: () => ({ saved: [...state.saved], learned: [...state.learned], days: [...state.days], lessonIndex: state.lessonIndex, theme: document.documentElement.dataset.theme === 'night' ? 'night' : 'day' }),
+      applyProgress: data => {
+        state.saved = new Set(data.saved); state.learned = new Set(data.learned); state.days = data.days; state.lessonIndex = data.lessonIndex;
+        state.revealed = false; state.lessonMode = 'cards';
+        const writes = [store.write('bk-saved', data.saved), store.write('bk-learned', data.learned), store.write('bk-days', data.days), store.write('bk-lesson-index', data.lessonIndex), store.write('bk-theme', data.theme)];
+        document.documentElement.dataset.theme = data.theme === 'night' ? 'night' : '';
+        $('#theme-toggle').setAttribute('aria-label', data.theme === 'night' ? 'Switch to light theme' : 'Switch to dark theme');
+        updateProgress(); updateDailySave(); if (state.route === 'dictionary') renderDictionary(); if (state.route === 'learn') renderLesson();
+        return writes.every(Boolean);
+      }
+    });
     $('#copyright-year').textContent = new Date().getFullYear();
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
   }
