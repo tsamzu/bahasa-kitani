@@ -64,7 +64,7 @@ Every entry needs a unique numeric id, tutong, malay, english and cat. Keep note
 
 The service worker tries the network first for the public app files and uses its cached copy when offline. It does not cache admin pages, email contents, GitHub or third-party requests. A missing JavaScript file does not receive an HTML fallback. Old cache cleanup is restricted to Bahasa Kitani caches.
 
-Bump the VERSION in sw.js when releasing cached-file changes. A newly installed worker waits for existing tabs to close before activation. Offline availability begins after a successful online visit and cache installation; unsupported browsers can still use the online site.
+Bump the VERSION in sw.js and the version in package.json when releasing cached-file changes. Update the version suffixes on changed CSS and JavaScript URLs in index.html so a new page load receives the current assets. Online requests revalidate core files instead of accepting stale browser cache entries. A newly installed worker waits for existing tabs to close before activation. Offline availability begins after a successful online visit and cache installation; unsupported browsers can still use the online site.
 
 Progress stays in one browser on one device. Clearing site data removes it. If browser storage is blocked or corrupt, the app keeps running with progress for the current visit. No accounts, analytics or progress-sync service are used.
 

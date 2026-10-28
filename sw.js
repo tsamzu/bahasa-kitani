@@ -1,5 +1,5 @@
 /* Bump VERSION with each release that changes cached files. */
-const VERSION = '2.0.1';
+const VERSION = '2.0.2';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
 const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './data/tutong.js', './favicon.svg', './manifest.webmanifest'];
@@ -19,7 +19,7 @@ self.addEventListener('fetch', event => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {
-      const response = await fetch(event.request);
+      const response = await fetch(event.request, { cache: 'no-cache' });
       if (response.ok && response.type === 'basic') await cache.put(canonical, response.clone());
       return response;
     } catch (error) {
