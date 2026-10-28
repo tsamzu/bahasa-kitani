@@ -34,7 +34,7 @@ const NUMBERS = [
   [11,"Sebalas"],[12,"Duo balas"],[13,"Telu balas"],[14,"Pat balas"],[15,"Limo balas"],
   [16,"Enom balas"],[17,"Tuju balas"],[18,"Mari balas"],[19,"Pi'on balas"],[20,"Duo pulu"],
   [21,"Duo pulu sa"],[22,"Duo pulu duo"],[23,"Duo pulu telu"],[24,"Duo pulu pat"],[25,"Duo pulu limo"],
-  [26,"Duo pulu enom"],[27,"Duo pulu tuju"],[28,"Duo pulu mari"],[29,"Duo pulu pi'on"],[30,"Telu pulu"],
+  [26,"Duo pulu enom"],[27,"Duo pulu tuju"],[28,"Duo pulu mari"],[29,"Duo pulu pi'on"],[30,"Telu pulu"],[100,"Saratus"],[1000,"Saribu"],
 ];
 
 const PHRASES = [
