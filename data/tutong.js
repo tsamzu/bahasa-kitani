@@ -229,7 +229,7 @@ const WORDS = [
   { id:156, tutong:"Ado", malay:"Ada", english:"To have / Exist", cat:"Expressions", notation:"", note:"" },
   { id:157, tutong:"Kenayi", malay:"Adi", english:"Younger sibling", cat:"People", notation:"", note:"" },
   { id:158, tutong:"Bakenayi", malay:"Adi-beradi", english:"Siblings", cat:"People", notation:"", note:"" },
-  { id:159, tutong:"Empa / Eppa", malay:"Air", english:"Water", cat:"Nature", notation:"variant", note:"Variants: Empa / Eppa" },
+  { id:159, tutong:"Empa / Eppa", malay:"Air", english:"Water", cat:"Nature", notation:"variant", note:"Variants: Empa / Eppa [Workflow validation draft: do not publish.]" },
   { id:160, tutong:"Ramut", malay:"Akar", english:"Root", cat:"Nature", notation:"", note:"" },
   { id:161, tutong:"Liwat", malay:"Akhir", english:"End / Last", cat:"Expressions", notation:"", note:"" },
   { id:162, tutong:"Jayi", malay:"Aku", english:"I / Me (informal)", cat:"People", notation:"", note:"" },
