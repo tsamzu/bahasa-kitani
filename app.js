@@ -98,15 +98,16 @@
     $('#home-phrase-tutong').textContent = phrase.tutong; $('#home-phrase-english').textContent = phrase.english;
   }
   function newQuick() {
-    const pool = WORDS.filter(word => word.notation !== 'clarify' && word.english && word.english.length < 28 && !word.english.includes('/'));
+    const pool = WORDS.filter(word => word.notation !== 'clarify' && word.malay.trim() && word.english && word.english.length < 28 && !word.english.includes('/'));
     const word = pool[Math.floor(Math.random() * pool.length)]; $('#quick-word').textContent = word.tutong; $('#quick-feedback').textContent = '';
-    $('#quick-options').innerHTML = BK.choicesFor(word, pool).map(choice => `<button type="button" data-id="${choice.id}">${esc(choice.english)}</button>`).join('');
+    $('#quick-options').innerHTML = BK.choicesFor(word, pool).map(choice => `<button type="button" data-id="${choice.id}"><span class="quick-answer" lang="ms"><small class="quick-language">BM</small><span>${esc(choice.malay)}</span></span><span class="quick-answer" lang="en"><small class="quick-language">EN</small><span>${esc(choice.english)}</span></span></button>`).join('');
     let answered = false;
     $$('#quick-options button').forEach(button => button.addEventListener('click', () => {
       if (answered) return; answered = true; const correct = Number(button.dataset.id) === word.id;
       $$('#quick-options button').forEach(option => { option.disabled = true; if (Number(option.dataset.id) === word.id) option.classList.add('correct'); });
       if (!correct) button.classList.add('wrong');
-      $('#quick-feedback').textContent = correct ? 'Correct. Nicely done!' : `The answer is “${word.english}”.`;
+      const meaning = `${word.malay} (BM) / ${word.english} (EN)`;
+      $('#quick-feedback').textContent = correct ? `Correct. ${meaning}.` : `The answer is ${meaning}.`;
       state.learned.add(word.id); persist(); markToday();
     }));
   }

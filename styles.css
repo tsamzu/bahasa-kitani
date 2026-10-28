@@ -13,3 +13,4 @@
 @media(max-width:900px){.lesson-sidebar{order:2}}
 .feedback-form input{width:100%;border:1px solid var(--line);border-radius:9px;padding:12px;background:var(--cream);color:var(--ink);font-size:16px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+.quick-options button{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:11px;line-height:1.45}.quick-answer{display:grid;grid-template-columns:18px minmax(0,1fr);gap:5px;width:100%;align-items:baseline}.quick-language{font-size:8px;font-weight:800;letter-spacing:.06em;opacity:.75}.quick-answer>span{min-width:0;overflow-wrap:anywhere}

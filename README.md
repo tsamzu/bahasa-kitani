@@ -5,7 +5,7 @@ A living Bahasa Tutong dictionary and learning site at [bahasa-kitani.xyz](https
 ## What is included
 
 - Search across Tutong, Malay, English and entry notes; categories, sorting and saved words.
-- Daily vocabulary and an eight-word lesson, followed by a quiz, score and missed-word review.
+- Daily vocabulary, Quick Practice with paired Malay/English answers, and an eight-word lesson followed by a quiz, score and missed-word review.
 - A phrasebook and number recall practice for 1–30.
 - Progress, saved words, streaks and theme preferences stored in the visitor’s browser.
 - Responsive navigation, keyboard support, dark mode and a small offline cache.
