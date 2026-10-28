@@ -1,573 +1,178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bahasa Kitani</title>
-  <meta name="description" content="A living dictionary of Bahasa Tutong, an indigenous language of Brunei Darussalam." />
-  <!-- PWA / Home screen icon -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjQzQ2MjJEIi8+PHRleHQgeD0iOTAiIHk9IjEyOCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTEwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CPC90ZXh0Pjwvc3ZnPg==" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjQzQ2MjJEIi8+PHRleHQgeD0iOTAiIHk9IjEyOCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTEwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CPC90ZXh0Pjwvc3ZnPg==" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Bahasa Kitani" />
-  <meta name="theme-color" content="#C4622D" />
-  <!-- Load data first so WORDS/PHRASES/NUMBERS are available immediately -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123f3a">
+  <meta name="description" content="Explore and learn Bahasa Tutong through a searchable dictionary, daily lessons, flashcards and quick quizzes.">
+  <title>Bahasa Kitani — Learn Bahasa Tutong</title>
+  <link rel="canonical" href="https://bahasa-kitani.xyz/">
+  <meta property="og:title" content="Bahasa Kitani — Learn Bahasa Tutong">
+  <meta property="og:description" content="A living Tutong dictionary with Malay and English translations, daily lessons, and a phrasebook.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bahasa-kitani.xyz/">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
   <script src="data/tutong.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#F8F5F0;--surface:#FFF;--border:#E4DDD3;
-      --text:#1A1714;--muted:#A8998E;--sub:#6B6158;
-      --accent:#C4622D;--accent-l:#FAE9DE;--accent-d:#9E4B20;
-      --green:#3D6B5E;--green-l:#DFF0EB;
-      --purple:#5C4A7C;--purple-l:#EDE8F5;
-      --gold:#A07820;--gold-l:#F5EDD8;
-      --tag:#EDE9E2;--r:14px;--sidebar:230px;
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-    header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;position:sticky;top:0;z-index:300}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1320px;margin:0 auto;padding:0 1.5rem;gap:1rem}
-    .logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none;flex-shrink:0}
-    .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-style:italic;flex-shrink:0}
-    .logo-text{line-height:1.1}
-    .logo-name{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--text)}
-    .logo-sub{font-size:0.55rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent)}
-    .header-nav{display:flex;gap:1rem;align-items:center}
-    .header-nav a{font-size:0.78rem;font-weight:500;color:var(--sub);text-decoration:none;transition:color .15s;white-space:nowrap}
-    .header-nav a:hover{color:var(--accent)}
-    .cl-link{display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;background:var(--accent-l);color:var(--accent);padding:0.28rem 0.65rem;border-radius:999px;font-weight:600;border:1px solid #EDD0BC;text-decoration:none!important;transition:all .15s!important;white-space:nowrap}
-    .cl-link:hover{background:var(--accent)!important;color:#fff!important}
-    .hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0}
-    .hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all .25s}
-    .hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
-    .hamburger.open span:nth-child(2){opacity:0}
-    .hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-    .mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:0.75rem 1.25rem 1rem;z-index:299;flex-direction:column;gap:0.1rem;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-    .mobile-menu.open{display:flex}
-    .mobile-menu a{font-size:0.9rem;font-weight:500;color:var(--sub);text-decoration:none;padding:0.65rem 0.5rem;border-bottom:1px solid var(--border);transition:color .15s}
-    .mobile-menu a:last-child{border-bottom:none}
-    .mobile-menu a:hover{color:var(--accent)}
-    .page{display:flex;flex:1;max-width:1320px;margin:0 auto;width:100%}
-    .sidebar{width:var(--sidebar);flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);padding:1.5rem 1rem;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
-    .sb-label{font-size:0.63rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.55rem;padding:0 0.35rem}
-    .sb-section{margin-bottom:1.75rem}
-    .tribe-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.48rem 0.6rem;border-radius:8px;border:none;background:none;font-family:'Outfit',sans-serif;font-size:0.83rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s;text-align:left}
-    .tribe-btn:hover{background:var(--bg);color:var(--text)}
-    .tribe-btn.active{background:var(--accent-l);color:var(--accent);font-weight:600}
-    .tribe-btn .badge{font-size:0.6rem;background:var(--tag);color:var(--muted);padding:0.1rem 0.38rem;border-radius:4px}
-    .tribe-btn.active .badge{background:var(--accent);color:#fff}
-    .tribe-dim{font-size:0.72rem;color:var(--muted);font-style:italic;padding:0.3rem 0.6rem}
-    .sb-btn{display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.4rem 0.6rem;border-radius:7px;border:none;background:none;font-family:'Outfit',sans-serif;font-size:0.8rem;color:var(--sub);cursor:pointer;text-align:left;transition:all .15s;text-decoration:none}
-    .sb-btn:hover{background:var(--bg);color:var(--text)}
-    .main{flex:1;min-width:0;padding:1.5rem 1.25rem 4rem}
-    .hero{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem 1.75rem 1.75rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 75% -10%,#FAE9DE55 0%,transparent 55%),radial-gradient(ellipse at 5% 110%,#DFF0EB33 0%,transparent 50%);pointer-events:none}
-    .hero-eyebrow{font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;position:relative}
-    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,5vw,3.2rem);letter-spacing:-0.02em;line-height:1.08;margin-bottom:0.6rem;position:relative}
-    .hero h1 em{font-style:italic;color:var(--accent)}
-    .hero-desc{font-size:0.88rem;color:var(--sub);line-height:1.7;font-weight:300;max-width:520px;margin-bottom:1rem;position:relative}
-    .hero-stats{display:flex;gap:1.5rem;flex-wrap:wrap;position:relative}
-    .hstat{display:flex;align-items:baseline;gap:0.3rem}
-    .hstat-n{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--accent);font-weight:700;line-height:1}
-    .hstat-l{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.09em;font-weight:500}
-    .hstat-div{width:1px;height:24px;background:var(--border);align-self:center}
-    .hero-disclaimer{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.65rem;color:var(--gold);background:var(--gold-l);border:1px solid #E0C880;border-radius:999px;padding:0.2rem 0.65rem;margin-top:0.85rem;position:relative;flex-wrap:wrap}
-    .search-wrap{position:relative;margin-bottom:1.25rem}
-    .search-wrap svg{position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-    #search{width:100%;padding:0.85rem 1rem 0.85rem 2.6rem;border:1.5px solid var(--border);border-radius:12px;font-family:'Outfit',sans-serif;font-size:0.95rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-    #search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
-    #search::placeholder{color:var(--muted)}
-    .search-results-note{font-size:0.75rem;color:var(--muted);margin-top:0.5rem;margin-bottom:1rem;display:none}
-    .disclaimer{background:var(--gold-l);border:1px solid #E0C880;border-radius:var(--r);padding:0.85rem 1.1rem;font-size:0.78rem;color:var(--gold);line-height:1.6;margin-bottom:1.25rem}
-    .disclaimer strong{color:#7A5C10}
-    .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;margin-top:2rem}
-    .sec-head:first-of-type{margin-top:0}
-    .sec-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);display:flex;align-items:center;gap:0.5rem}
-    .view-more-btn{font-size:0.76rem;font-weight:600;color:var(--accent);background:var(--accent-l);border:1px solid #EDD0BC;border-radius:999px;padding:0.26rem 0.8rem;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;white-space:nowrap}
-    .view-more-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .numbers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:0.45rem}
-    .num-cell{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:0.5rem 0.3rem;text-align:center;transition:border-color .15s,transform .15s;cursor:default}
-    .num-cell:hover{border-color:var(--accent);transform:translateY(-1px)}
-    .num-n{font-size:1rem;font-weight:700;color:var(--accent)}
-    .num-t{font-size:0.68rem;color:var(--sub);margin-top:0.1rem}
-    .numbers-note{font-size:0.72rem;color:var(--muted);font-style:italic;margin-top:0.6rem}
-    #num-grid-more{display:none;margin-top:0.45rem}
-    .cat-preview{margin-bottom:0.5rem}
-    .cat-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.75rem}
-    .cat-more-row{display:none;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.75rem;margin-top:0.75rem}
-    .cat-more-row.open{display:grid}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;transition:box-shadow .2s,transform .2s;animation:fadeUp .3s ease both;position:relative;overflow:hidden}
-    .card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);opacity:0;transition:opacity .2s}
-    .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07);transform:translateY(-2px)}
-    .card:hover::before{opacity:1}
-    .card-word{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text);line-height:1.2;margin-bottom:0.12rem}
-    .card-div{height:1px;background:var(--border);margin:0.6rem 0}
-    .card-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.25rem}
-    .ltag{font-size:0.57rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.14rem 0.36rem;border-radius:3px;flex-shrink:0}
-    .ltag.ms{background:var(--green-l);color:var(--green)}
-    .ltag.en{background:var(--accent-l);color:var(--accent)}
-    .card-tr{font-size:0.83rem;color:var(--sub)}
-    .card-foot{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.6rem}
-    .card-note{font-size:0.68rem;color:var(--muted);font-style:italic;margin-top:0.35rem;line-height:1.4}
-    .ntag{display:inline-flex;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.14rem 0.42rem;border-radius:4px}
-    .ntag-cat{background:var(--tag);color:var(--muted)}
-    .ntag-loanword{color:#7C5C2E;background:#F5ECD8;border:1px solid #E8D5B0}
-    .ntag-clarify{color:var(--purple);background:var(--purple-l);border:1px solid #CFC5E8}
-    .ntag-variant{color:var(--green);background:var(--green-l);border:1px solid #B0D8D8}
-    .random-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.75rem;margin-bottom:1.25rem}
-    .dict-cta{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-    .dict-cta-text h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:0.25rem}
-    .dict-cta-text p{font-size:0.82rem;color:var(--muted);line-height:1.5}
-    .dict-cta-btn{display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent);color:#fff;text-decoration:none;padding:0.75rem 1.5rem;border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:600;transition:background .2s;white-space:nowrap;flex-shrink:0}
-    .dict-cta-btn:hover{background:var(--accent-d)}
-    .refresh-btn{font-size:0.75rem;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:999px;padding:0.25rem 0.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
-    .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
-    .phrase-filters{display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.85rem}
-    .pftab{padding:0.26rem 0.72rem;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-family:'Outfit',sans-serif;font-size:0.73rem;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s}
-    .pftab:hover{border-color:var(--accent);color:var(--accent)}
-    .pftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
-    .phrases-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.85rem}
-    .phrase-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;transition:box-shadow .2s}
-    .phrase-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.06)}
-    .phrase-tutong{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:0.5rem;line-height:1.35}
-    .phrase-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.22rem;font-size:0.81rem}
-    .phrase-text{color:var(--sub)}
-    .phrase-cat{display:inline-flex;margin-top:0.55rem;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;background:var(--tag);color:var(--muted);padding:0.14rem 0.42rem;border-radius:4px}
-    .feedback-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
-    .feedback-box h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.3rem}
-    .feedback-box .fb-desc{font-size:0.83rem;color:var(--sub);margin-bottom:1.1rem;line-height:1.6}
-    .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem}
-    .fb-full{grid-column:1/-1}
-    .fg{display:flex;flex-direction:column;gap:0.28rem}
-    .fg label{font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
-    .fg input,.fg select,.fg textarea{padding:0.65rem 0.85rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.85rem;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
-    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
-    .fg textarea{resize:vertical;min-height:90px}
-    .fb-submit{margin-top:0.8rem;padding:0.78rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:background .2s}
-    .fb-submit:hover{background:var(--accent-d)}
-    .fb-ok{display:none;align-items:center;gap:0.5rem;margin-top:0.7rem;font-size:0.8rem;color:var(--green);background:var(--green-l);padding:0.55rem 0.85rem;border-radius:8px;border:1px solid #B0D8D8}
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:1rem}
-    .modal-overlay.open{display:flex}
-    .modal{background:var(--surface);border-radius:16px;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;padding:1.75rem;position:relative;animation:fadeUp .25s ease}
-    .modal-close{position:absolute;top:1rem;right:1rem;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:none;cursor:pointer;font-size:0.95rem;color:var(--sub);display:flex;align-items:center;justify-content:center;transition:all .15s}
-    .modal-close:hover{background:var(--bg);color:var(--accent);border-color:var(--accent)}
-    .modal h2{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:0.3rem}
-    .modal-sub{font-size:0.78rem;color:var(--muted);margin-bottom:1.4rem}
-    .cl-entry{padding:1rem 0;border-bottom:1px solid var(--border)}
-    .cl-entry:last-child{border-bottom:none}
-    .cl-ver{display:inline-flex;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;background:var(--accent-l);color:var(--accent);padding:0.14rem 0.42rem;border-radius:4px;margin-bottom:0.35rem}
-    .cl-date{font-size:0.7rem;color:var(--muted);margin-bottom:0.28rem}
-    .cl-title{font-family:'Playfair Display',serif;font-size:0.92rem;margin-bottom:0.4rem}
-    .cl-list{list-style:none;display:flex;flex-direction:column;gap:0.2rem}
-    .cl-list li{font-size:0.78rem;color:var(--sub);display:flex;align-items:flex-start;gap:0.38rem;line-height:1.5}
-    .cl-list li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:0.48rem}
-    .cltag{display:inline-flex;font-size:0.57rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.08rem 0.3rem;border-radius:3px;flex-shrink:0;margin-top:0.05rem}
-    .cltag-add{background:var(--green-l);color:var(--green)}
-    .cltag-fix{background:var(--purple-l);color:var(--purple)}
-    .cltag-new{background:var(--accent-l);color:var(--accent)}
-    footer{background:var(--text);color:#D4CFC7;padding:2rem 1.5rem}
-    .footer-inner{max-width:1320px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
-    .footer-brand .logo-name{color:#F8F5F0;font-size:1rem}
-    .footer-tagline{font-size:0.78rem;color:#A09890;line-height:1.6;margin-top:0.55rem;max-width:260px}
-    .footer-social{display:inline-flex;align-items:center;gap:0.4rem;background:#2A2420;border:1px solid #3D3530;border-radius:7px;padding:0.45rem 0.85rem;font-size:0.78rem;font-weight:500;color:#D4CFC7;text-decoration:none;transition:all .15s;margin-top:0.9rem}
-    .footer-social:hover{background:var(--accent);border-color:var(--accent);color:#fff}
-    .footer-col h5{font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#A09890;margin-bottom:0.7rem}
-    .footer-col a{display:block;font-size:0.78rem;color:#D4CFC7;text-decoration:none;margin-bottom:0.38rem;transition:color .15s}
-    .footer-col a:hover{color:#fff}
-    .footer-bottom{max-width:1320px;margin:1.25rem auto 0;padding-top:1.25rem;border-top:1px solid #2E2825;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.6rem}
-    .footer-bottom p{font-size:0.7rem;color:#6B6158}
-    .footer-license{background:#111;border-top:1px solid #2E2825;padding:0.75rem 1.5rem}
-    .footer-license-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:0.6rem;font-size:0.7rem;color:#6B6158;line-height:1.6}
-    .footer-license-inner strong{color:#A09890;font-weight:600}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .kofi-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
-    .kofi-text h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.35rem}
-    .kofi-text p{font-size:0.82rem;color:var(--sub);line-height:1.6;max-width:420px}
-    .kofi-btn{display:inline-flex;align-items:center;gap:0.5rem;background:#FF5E5B;color:#fff;text-decoration:none;padding:0.78rem 1.4rem;border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:600;transition:background .2s;white-space:nowrap;flex-shrink:0}
-    .kofi-btn:hover{background:#e54e4b}
-    @media(max-width:900px){.sidebar{display:none}.main{padding:1.25rem 1rem 3rem}}
-    @media(max-width:640px){.header-nav{display:none}.hamburger{display:flex}.hero{padding:1.5rem 1.25rem 1.25rem}.hero-stats{gap:1rem}.hstat-div{display:none}.fb-grid{grid-template-columns:1fr}.dict-cta{flex-direction:column;align-items:flex-start}.footer-inner{flex-direction:column;gap:1.25rem}}
-  </style>
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <a class="logo" href="#">
-      <div class="logo-icon">B</div>
-      <div class="logo-text">
-        <div class="logo-name">Bahasa Kitani</div>
-        <div class="logo-sub">Dictionary</div>
-      </div>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="#home" data-route="home" aria-label="Bahasa Kitani home">
+      <span class="brand-mark">B</span>
+      <span><strong>Bahasa Kitani</strong><small>Bahasa Tutong</small></span>
     </a>
-    <nav class="header-nav">
-      <a href="#numbers-sec">Numbers</a>
-      <a href="#previews">Dictionary</a>
-      <a href="#phrasebook">Phrasebook</a>
-      <a href="#feedback">Feedback</a>
-      <a href="#" onclick="openChangelog(event)" class="cl-link">📋 Changelog</a>
+    <nav aria-label="Main navigation">
+      <button class="nav-link active" data-route="home">Home</button>
+      <button class="nav-link" data-route="learn">Learn</button>
+      <button class="nav-link" data-route="dictionary">Dictionary</button>
+      <button class="nav-link" data-route="phrases">Phrases</button>
+      <button class="nav-link" data-route="numbers">Numbers</button>
     </nav>
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="header-actions">
+      <span class="streak-pill" title="Current learning streak"><span aria-hidden="true">✦</span> <b id="header-streak">0</b> day streak</span>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42M7.06 16.94l-1.42 1.42"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span><span class="sr-only">Open navigation</span></button>
+    </div>
+  </header>
+  <div class="mobile-nav" id="mobile-nav" hidden>
+    <button data-route="home">Home</button><button data-route="learn">Learn</button><button data-route="dictionary">Dictionary</button><button data-route="phrases">Phrases</button><button data-route="numbers">Numbers</button><button data-route="community">About & feedback</button>
   </div>
-</header>
 
-<div class="mobile-menu" id="mobile-menu">
-  <a href="#numbers-sec" onclick="closeMenu()">🔢 Numbers</a>
-  <a href="#previews" onclick="closeMenu()">📚 Dictionary</a>
-  <a href="#phrasebook" onclick="closeMenu()">💬 Phrasebook</a>
-  <a href="#feedback" onclick="closeMenu()">✉️ Feedback</a>
-  <a href="#" onclick="openChangelog(event);closeMenu()">📋 Changelog</a>
-  <a href="dictionary.html" onclick="closeMenu()">🔍 Full Dictionary</a>
-  <a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener" onclick="closeMenu()" style="color:#FF5E5B;font-weight:600">☕ Support us</a>
-  <a href="admin/index.html" onclick="closeMenu()">⚙️ Admin</a>
-</div>
-
-<div class="page">
-  <aside class="sidebar">
-    <div class="sb-section">
-      <div class="sb-label">Languages</div>
-      <button class="tribe-btn active">Tutong <span class="badge" id="sb-count">—</span></button>
-      <div class="tribe-dim">Coming soon:</div>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Belait</button>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Dusun</button>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Bisaya</button>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Murut</button>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Kedayan</button>
-      <button class="tribe-btn" disabled style="opacity:.4;cursor:not-allowed">Iban</button>
-    </div>
-    <div class="sb-section">
-      <div class="sb-label">Jump to</div>
-      <a class="sb-btn" href="#numbers-sec">🔢 Numbers</a>
-      <a class="sb-btn" href="#body-preview">🧍 Body</a>
-      <a class="sb-btn" href="#animals-preview">🐾 Animals</a>
-      <a class="sb-btn" href="#food-preview">🍚 Food & Drink</a>
-      <a class="sb-btn" href="#fruits-preview">🍌 Fruits</a>
-      <a class="sb-btn" href="#actions-preview">🏃 Actions</a>
-      <a class="sb-btn" href="#dict-preview">📚 Full Dictionary</a>
-      <a class="sb-btn" href="#phrasebook">💬 Phrasebook</a>
-      <a class="sb-btn" href="#feedback">✉️ Feedback</a>
-      <a class="sb-btn" href="#" onclick="openChangelog(event)">📋 Changelog</a>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="hero">
-      <div class="hero-bg"></div>
-      <p class="hero-eyebrow">Brunei Darussalam · Indigenous Languages</p>
-      <h1>The <em>Tutong</em><br>Dictionary</h1>
-      <p class="hero-desc">A living reference for Bahasa Tutong — an indigenous language of the Tutong district of Brunei Darussalam — with translations in Bahasa Melayu and English.</p>
-      <div class="hero-stats">
-        <div class="hstat"><span class="hstat-n" id="stat-words">—</span><span class="hstat-l">Words</span></div>
-        <div class="hstat-div"></div>
-        <div class="hstat"><span class="hstat-n" id="stat-phrases">—</span><span class="hstat-l">Phrases</span></div>
-        <div class="hstat-div"></div>
-        <div class="hstat"><span class="hstat-n">3</span><span class="hstat-l">Languages</span></div>
-      </div>
-      <div class="hero-disclaimer">⚠️ Community-sourced · Some entries may need verification · <a href="#feedback" style="color:var(--gold);font-weight:600;margin-left:0.25rem">Help improve it →</a></div>
-    </div>
-
-    <div class="search-wrap" id="search-wrap">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input id="search" type="text" placeholder="Search in Tutong, Malay or English…" autocomplete="off" />
-    </div>
-    <p class="search-results-note" id="search-note"></p>
-    <div id="search-results-grid" style="display:none;margin-bottom:1.5rem"></div>
-
-    <div class="disclaimer">
-      <strong>Note:</strong> This dictionary is a community project. Some entries may contain inaccuracies or reflect regional dialect differences.
-      Entries tagged <strong>Regional Variant</strong> or <strong>Needs Clarification</strong> are still being verified.
-      The authoritative reference is the <em>Kamus Tutong-Melayu, Melayu-Tutong</em> (DBP Brunei, 1991).
-    </div>
-
-    <div id="dict-preview">
-      <div class="sec-head">
-        <div class="sec-title"><span>✨</span> Words of the Moment</div>
-        <button class="refresh-btn" onclick="renderRandom()">🔀 Shuffle</button>
-      </div>
-      <div class="random-grid" id="random-grid"></div>
-      <div class="dict-cta">
-        <div class="dict-cta-text">
-          <h3 id="cta-count">Want to see all the words?</h3>
-          <p>Search, filter by category, and browse the complete dictionary.</p>
+  <main id="main">
+    <div id="app-error" class="notice shell" role="alert" hidden>The dictionary could not load. Please refresh while connected to the internet, or <a href="mailto:sam@bahasa-kitani.xyz">let us know</a>.</div>
+    <noscript><p class="notice shell">Turn on JavaScript to use the dictionary and lessons. For help, email <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p></noscript>
+    <section class="view active" id="view-home" data-view="home">
+      <div class="hero shell">
+        <div class="hero-copy">
+          <div class="eyebrow"><span>A community dictionary</span><span>Brunei Darussalam</span></div>
+          <h1>A living language,<br><em>learnt a little each day.</em></h1>
+          <p>Search the Bahasa Tutong dictionary, practise everyday words, and build confidence with short daily lessons.</p>
+          <div class="hero-actions">
+            <button class="primary-button" type="button" data-route="learn">Start today’s lesson <span>→</span></button>
+            <button class="text-button" type="button" data-route="dictionary">Browse <b id="hero-word-count">—</b> words</button>
+          </div>
+          <p class="source-note">Community-sourced entries · Tutong, Bahasa Melayu & English<br>Translations and regional usage may vary. <a href="#community" data-route="community">Help improve the dictionary →</a></p>
         </div>
-        <a class="dict-cta-btn" href="dictionary.html">Open Full Dictionary →</a>
+        <aside class="daily-card" aria-labelledby="daily-title">
+          <div class="daily-top"><span>Word of the day</span><span id="daily-date">Today</span></div>
+          <div class="daily-body">
+            <span class="daily-category" id="daily-category">Expression</span>
+            <h2 id="daily-title">—</h2>
+            <div class="daily-rule"></div>
+            <dl><div><dt>BM</dt><dd id="daily-ms">—</dd></div><div><dt>EN</dt><dd id="daily-en">—</dd></div></dl>
+            <p id="daily-note" class="daily-note"></p>
+          </div>
+          <button class="daily-save" id="daily-save" type="button"><span aria-hidden="true">＋</span> Save this word</button>
+        </aside>
       </div>
-    </div>
 
-    <div id="numbers-sec">
-      <div class="sec-head">
-        <div class="sec-title"><span>🔢</span> Numbers 1–30</div>
-        <button class="view-more-btn" id="num-toggle" onclick="toggleNumbers()">Show all 30</button>
+      <div class="home-grid shell">
+        <section class="progress-card" aria-labelledby="progress-title">
+          <div class="card-heading"><div><span class="section-kicker">Your learning</span><h2 id="progress-title">Continue where you left off</h2></div><span class="level-pill" id="level-label">Getting started</span></div>
+          <div class="progress-rail"><span id="progress-bar"></span></div>
+          <div class="progress-labels"><span><b id="learned-count">0</b> words practised</span><span id="progress-percent">0%</span></div>
+          <div class="lesson-preview">
+            <span class="lesson-icon" aria-hidden="true">Aa</span>
+            <div><strong>Everyday essentials</strong><small>8 words · flashcards + quick check</small></div>
+            <button type="button" data-route="learn" aria-label="Open Everyday essentials lesson">→</button>
+          </div>
+          <p class="local-note" id="storage-note">Saved words and progress stay in this browser.</p>
+        </section>
+        <section class="quick-card" aria-labelledby="quick-title">
+          <span class="section-kicker">Quick practice</span><h2 id="quick-title">What does this mean?</h2>
+          <div class="quick-word" id="quick-word">—</div>
+          <div class="quick-options" id="quick-options"></div>
+          <p class="quick-feedback" id="quick-feedback" aria-live="polite"></p>
+          <button class="next-quick" id="next-quick" type="button">Try another <span>↻</span></button>
+        </section>
       </div>
-      <div class="numbers-grid" id="num-grid-main"></div>
-      <div class="numbers-grid" id="num-grid-more"></div>
-      <p class="numbers-note">Pattern: <strong>balas</strong> = belas (teens) &nbsp;·&nbsp; <strong>pulu</strong> = puluh (tens)</p>
-    </div>
 
-    <div id="previews">
-      <div id="body-preview" class="cat-preview">
-        <div class="sec-head"><div class="sec-title"><span>🧍</span> Body — Betulu</div><button class="view-more-btn" onclick="toggleCat('body')">View more</button></div>
-        <div class="cat-preview-grid" id="body-main"></div>
-        <div class="cat-more-row" id="body-more"></div>
-      </div>
-      <div id="animals-preview" class="cat-preview">
-        <div class="sec-head"><div class="sec-title"><span>🐾</span> Animals — Binatang</div><button class="view-more-btn" onclick="toggleCat('animals')">View more</button></div>
-        <div class="cat-preview-grid" id="animals-main"></div>
-        <div class="cat-more-row" id="animals-more"></div>
-      </div>
-      <div id="food-preview" class="cat-preview">
-        <div class="sec-head"><div class="sec-title"><span>🍚</span> Food & Drink</div><button class="view-more-btn" onclick="toggleCat('food')">View more</button></div>
-        <div class="cat-preview-grid" id="food-main"></div>
-        <div class="cat-more-row" id="food-more"></div>
-      </div>
-      <div id="fruits-preview" class="cat-preview">
-        <div class="sec-head"><div class="sec-title"><span>🍌</span> Fruits — Buwa Tempatan</div><button class="view-more-btn" onclick="toggleCat('fruits')">View more</button></div>
-        <div class="cat-preview-grid" id="fruits-main"></div>
-        <div class="cat-more-row" id="fruits-more"></div>
-      </div>
-      <div id="actions-preview" class="cat-preview">
-        <div class="sec-head"><div class="sec-title"><span>🏃</span> Actions</div><button class="view-more-btn" onclick="toggleCat('actions')">View more</button></div>
-        <div class="cat-preview-grid" id="actions-main"></div>
-        <div class="cat-more-row" id="actions-more"></div>
-      </div>
-    </div>
+      <section class="explore shell" aria-labelledby="explore-title">
+        <div class="section-row"><div><span class="section-kicker">Explore by topic</span><h2 id="explore-title">Start with what feels familiar</h2></div><button class="text-button" type="button" data-route="dictionary">View all categories →</button></div>
+        <div class="topic-grid" id="topic-grid"></div>
+      </section>
 
-    <div id="phrasebook">
-      <div class="sec-head"><div class="sec-title"><span>💬</span> Phrasebook</div></div>
+      <section class="phrase-strip">
+        <div class="shell phrase-strip-inner">
+          <div><span class="section-kicker light">Useful right now</span><h2>A phrase for the day</h2><p id="home-phrase-tutong">—</p><span id="home-phrase-english">—</span></div>
+          <button type="button" data-route="phrases">Explore the phrasebook <span>→</span></button>
+        </div>
+      </section>
+    </section>
+
+    <section class="view page-shell" id="view-learn" data-view="learn" hidden>
+      <div class="page-head">
+        <div><span class="section-kicker">Daily lesson</span><h1>Everyday essentials</h1><p>Eight useful words. Flip each card, then test what you remember.</p></div>
+        <div class="lesson-meter"><span id="lesson-step-label">Card 1 of 8</span><div><i id="lesson-meter-bar"></i></div></div>
+      </div>
+      <div class="learn-layout">
+        <section class="study-stage" id="study-stage" aria-label="Lesson flashcards">
+          <div class="flashcard-wrap">
+            <button class="flashcard" id="flashcard" type="button" aria-label="Reveal translation">
+              <span class="flash-label" id="flash-label">Bahasa Tutong</span>
+              <strong id="flash-word">—</strong>
+              <span class="flash-hint" id="flash-hint">Tap to reveal</span>
+              <div class="flash-answer" id="flash-answer" hidden><span><b>BM</b> <i id="flash-ms">—</i></span><span><b>EN</b> <i id="flash-en">—</i></span></div>
+            </button>
+            <div class="study-controls"><button id="lesson-prev" type="button">← Previous</button><button id="lesson-know" class="primary-button" type="button">Reveal translation <span>↻</span></button><button id="lesson-next" type="button">Next →</button></div>
+          </div>
+        </section>
+        <section class="study-stage quiz-stage" id="quiz-stage" aria-label="Lesson knowledge check" hidden>
+          <div id="quiz-content"></div>
+        </section>
+        <aside class="lesson-sidebar">
+          <span class="section-kicker">Today’s set</span><div class="lesson-word-list" id="lesson-word-list"></div>
+          <div class="lesson-tip"><strong>Small sessions work.</strong><p>Eight words at a time keeps the lesson light enough to return to tomorrow.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view page-shell" id="view-dictionary" data-view="dictionary" hidden>
+      <div class="page-head dictionary-head">
+        <div><span class="section-kicker">Living reference</span><h1>Dictionary</h1><p>Search in Tutong, Bahasa Melayu, or English.</p></div>
+        <div class="dictionary-stat"><strong id="dictionary-total">—</strong><span>entries</span></div>
+      </div>
+      <div class="search-panel">
+        <label class="search-box"><span class="sr-only">Search the dictionary</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="dictionary-search" type="search" placeholder="Try ‘water’, ‘makan’, or ‘empa’…" autocomplete="off"><kbd>/</kbd></label>
+        <div class="category-scroller" id="dictionary-categories" aria-label="Dictionary categories"></div>
+      </div>
+      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Original order</option><option value="az">Tutong A–Z</option><option value="english">English A–Z</option></select></div></div>
+      <div class="dictionary-grid" id="dictionary-grid"></div>
+      <div class="empty-state" id="dictionary-empty" hidden><strong>No matching words</strong><p>Try another spelling or choose “All”.</p></div>
+      <button class="load-button" id="dictionary-more" type="button">Load more words</button>
+    </section>
+
+    <section class="view page-shell" id="view-phrases" data-view="phrases" hidden>
+      <div class="page-head dictionary-head"><div><span class="section-kicker">Speak in context</span><h1>Phrasebook</h1><p>Useful Bahasa Tutong phrases grouped by everyday situations.</p></div><div class="dictionary-stat"><strong id="phrase-total">—</strong><span>phrases</span></div></div>
       <div class="phrase-filters" id="phrase-filters"></div>
-      <div class="phrases-grid" id="phrases-grid"></div>
-    </div>
+      <div class="phrase-grid" id="phrase-grid"></div>
+    </section>
 
-    <div id="feedback" style="margin-top:2rem">
-      <div class="sec-head"><div class="sec-title"><span>✉️</span> Send Feedback</div></div>
-      <div class="feedback-box">
-        <h3>Help us improve this dictionary</h3>
-        <p class="fb-desc">Found a mistake? Know a missing word? All feedback is reviewed and helps the whole community.</p>
-        <div class="fb-grid">
-          <div class="fg"><label>Your Name</label><input type="text" id="fb-name" placeholder="e.g. Ahmad" /></div>
-          <div class="fg"><label>Email (optional)</label><input type="email" id="fb-email" placeholder="you@email.com" /></div>
-          <div class="fg fb-full"><label>Feedback Type</label>
-            <select id="fb-type">
-              <option value="correction">Correction — fix an existing entry</option>
-              <option value="new-word">New Word — add a missing entry</option>
-              <option value="dialect">Dialect Variant — I know another form</option>
-              <option value="general">General feedback</option>
-            </select>
-          </div>
-          <div class="fg fb-full"><label>Your Message</label>
-            <textarea id="fb-message" placeholder="Describe the correction or new word..."></textarea>
-          </div>
-        </div>
-        <button class="fb-submit" onclick="submitFeedback()">Send Feedback →</button>
-        <div class="fb-ok" id="fb-ok">✓ Thank you! Your feedback has been sent.</div>
+    <section class="view page-shell" id="view-numbers" data-view="numbers" hidden>
+      <div class="page-head"><div><span class="section-kicker">Count in Tutong</span><h1>Numbers 1–30</h1><p>Explore the numbers, then hide the words to test your recall.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide Tutong words</button></div>
+      <p class="local-note">When the words are hidden, tap a number to reveal it.</p>
+      <div class="number-grid" id="number-grid"></div>
+    </section>
+
+    <section class="view page-shell" id="view-community" data-view="community" hidden>
+      <div class="page-head"><div><span class="section-kicker">A language kept together</span><h1>About & feedback</h1><p>Help make this living reference more useful for everyone.</p></div></div>
+      <div class="community-grid">
+        <article class="community-card"><h2>Bahasa Kitani</h2><p>A living reference for Bahasa Tutong, an indigenous language of Brunei Darussalam, with translations in Bahasa Melayu and English.</p><p>Entries draw on community contributions and DBP Kamus Tutong–Melayu (1991), as credited in the original dictionary. This is a community learning resource; spellings, translations, and regional usage may need further review.</p><p>Pronunciation audio will need recordings reviewed by fluent speakers.</p><p><a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener noreferrer">Support Bahasa Kitani ↗</a> · <a href="https://jomqr.my/sam" target="_blank" rel="noopener noreferrer">Sam’s socials ↗</a></p><details><summary>What’s new</summary><p>Daily vocabulary, an eight-word lesson with a quiz and review, saved words, local learning progress, numbers recall practice, mobile navigation, and dark mode.</p></details></article>
+        <form class="community-card feedback-form" id="feedback-form"><h2>Contribute a correction</h2><p>Share a new word, regional variant, or correction.</p><label for="feedback-type">Feedback type</label><select id="feedback-type"><option>Correction</option><option>New word</option><option>Regional variant</option><option>General feedback</option></select><label for="feedback-message">Your note</label><textarea id="feedback-message" rows="6" required maxlength="4000" placeholder="Include the Tutong word and its Malay or English meaning…"></textarea><button class="primary-button" type="submit">Open email draft →</button><p class="local-note" id="feedback-status" role="status">Your email app opens a draft to sam@bahasa-kitani.xyz. Review it and send when ready.</p></form>
       </div>
-    </div>
+    </section>
   </main>
-</div>
 
-<div class="modal-overlay" id="cl-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeChangelog()">✕</button>
-    <h2>Changelog</h2>
-    <p class="modal-sub">Every update to the Bahasa Kitani dictionary, newest first.</p>
-    <div class="cl-entry"><span class="cl-ver">v0.7</span><div class="cl-date">June 2025</div><div class="cl-title">Word corrections & live counter</div><ul class="cl-list"><li><span class="cltag cltag-fix">Fix</span>Word counter now updates automatically from data</li><li><span class="cltag cltag-fix">Fix</span>Ebpa removed; water is Empa / Mpa</li><li><span class="cltag cltag-fix">Fix</span>Hot corrected to Lawu only</li><li><span class="cltag cltag-add">Add</span>Ga (Ke / To) added</li></ul></div>
-    <div class="cl-entry"><span class="cl-ver">v0.6</span><div class="cl-date">June 2025</div><div class="cl-title">582 New Entries Added</div><ul class="cl-list"><li><span class="cltag cltag-add">Add</span>582 new entries added from community database</li><li><span class="cltag cltag-new">New</span>Total dictionary now 757+ words</li></ul></div>
-    <div class="cl-entry"><span class="cl-ver">v0.5</span><div class="cl-date">June 2025</div><div class="cl-title">Rebranded & Restructured</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Rebranded to Bahasa Kitani Dictionary</li><li><span class="cltag cltag-new">New</span>Admin dashboard, feedback manager, phrasebook, changelog</li></ul></div>
-    <div class="cl-entry"><span class="cl-ver">v0.1</span><div class="cl-date">June 2025</div><div class="cl-title">Initial Release</div><ul class="cl-list"><li><span class="cltag cltag-new">New</span>Launched with trilingual entries: Tutong · Malay · English</li></ul></div>
-  </div>
-
-    <!-- KO-FI SUPPORT -->
-    <div class="kofi-section">
-      <div class="kofi-text">
-        <h3>&#9749; Support Bahasa Kitani</h3>
-        <p>This dictionary is free for everyone. If it has been useful to you, consider buying us a coffee — it helps keep the server running and supports the addition of more indigenous languages.</p>
-      </div>
-      <a class="kofi-btn" href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener">&#9749; Buy us a coffee</a>
-    </div>
-
-  </main>
-</div>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="logo">
-        <div class="logo-icon">B</div>
-        <div class="logo-text">
-          <div class="logo-name">Bahasa Kitani</div>
-          <div class="logo-sub">Dictionary</div>
-        </div>
-      </div>
-      <p class="footer-tagline">Preserving indigenous languages of Brunei Darussalam for future generations.</p>
-      <a class="footer-social" href="https://jomqr.my/sam" target="_blank" rel="noopener">🔗 Follow Sam's Socials</a>
-    </div>
-    <div class="footer-col">
-      <h5>Explore</h5>
-      <a href="#numbers-sec">Numbers</a>
-      <a href="#body-preview">Body</a>
-      <a href="#animals-preview">Animals</a>
-      <a href="#food-preview">Food & Drink</a>
-      <a href="dictionary.html">Full Dictionary</a>
-      <a href="#phrasebook">Phrasebook</a>
-    </div>
-    <div class="footer-col">
-      <h5>Site</h5>
-      <a href="#feedback">Send Feedback</a>
-      <a href="#" onclick="openChangelog(event)">Changelog</a>
-      <a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener">&#9749; Support us</a>
-      <a href="admin/index.html">Admin ↗</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2025 Bahasa Kitani Dictionary · bahasa-kitani.xyz</p>
-    <p>Data sourced from community contributions and DBP Kamus Tutong-Melayu (1991).</p>
-  </div>
-</footer>
-<div class="footer-license">
-  <div class="footer-license-inner">
-    <span>📚</span>
-    <span>This dictionary is free for <strong>education and personal research only.</strong> Commercial use of any content is not permitted without written permission. · <a href="mailto:izz.zu@icloud.com" style="color:#A09890;text-decoration:underline">Contact us</a></span>
-  </div>
-</div>
-
-<script>
-// ── MOBILE MENU ──
-function toggleMenu(){var h=document.getElementById('hamburger'),m=document.getElementById('mobile-menu');h.classList.toggle('open');m.classList.toggle('open')}
-function closeMenu(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobile-menu').classList.remove('open')}
-document.addEventListener('click',function(e){var h=document.getElementById('hamburger'),m=document.getElementById('mobile-menu');if(!h.contains(e.target)&&!m.contains(e.target))closeMenu()});
-
-// ── CARD BUILDER ──
-function makeCard(w,delay){
-  var tags='<span class="ntag ntag-cat">'+w.cat+'</span>';
-  if(w.notation==='loanword')tags+='<span class="ntag ntag-loanword">Loanword</span>';
-  if(w.notation==='clarify') tags+='<span class="ntag ntag-clarify">Needs Clarification</span>';
-  if(w.notation==='variant') tags+='<span class="ntag ntag-variant">Regional Variant</span>';
-  var note=w.note?'<div class="card-note">'+w.note+'</div>':'';
-  return '<div class="card" style="animation-delay:'+(delay||0)+'s">'+
-    '<div class="card-word">'+w.tutong+'</div>'+
-    '<div class="card-div"></div>'+
-    '<div class="card-row"><span class="ltag ms">MS</span><span class="card-tr">'+w.malay+'</span></div>'+
-    '<div class="card-row"><span class="ltag en">EN</span><span class="card-tr">'+w.english+'</span></div>'+
-    '<div class="card-foot">'+tags+'</div>'+note+'</div>';
-}
-function fillGrid(id,words){document.getElementById(id).innerHTML=words.map(function(w,i){return makeCard(w,Math.min(i*.025,.3))}).join('')}
-
-// ── NUMBERS ──
-function initNumbers(){
-  document.getElementById('num-grid-main').innerHTML=NUMBERS.slice(0,10).map(function(r){return'<div class="num-cell"><div class="num-n">'+r[0]+'</div><div class="num-t">'+r[1]+'</div></div>'}).join('');
-  document.getElementById('num-grid-more').innerHTML=NUMBERS.slice(10).map(function(r){return'<div class="num-cell"><div class="num-n">'+r[0]+'</div><div class="num-t">'+r[1]+'</div></div>'}).join('');
-}
-var numsExpanded=false;
-function toggleNumbers(){numsExpanded=!numsExpanded;document.getElementById('num-grid-more').style.display=numsExpanded?'grid':'none';document.getElementById('num-toggle').textContent=numsExpanded?'Show less':'Show all 30'}
-
-// ── CATEGORY PREVIEWS ──
-var PREVIEW_CATS=[
-  {key:'body',cat:'Body',mainId:'body-main',moreId:'body-more'},
-  {key:'animals',cat:'Animals',mainId:'animals-main',moreId:'animals-more'},
-  {key:'food',cat:'Food & Drink',mainId:'food-main',moreId:'food-more'},
-  {key:'fruits',cat:'Fruits',mainId:'fruits-main',moreId:'fruits-more'},
-  {key:'actions',cat:'Actions',mainId:'actions-main',moreId:'actions-more'}
-];
-var expanded={};
-function initPreviews(){
-  PREVIEW_CATS.forEach(function(pc){
-    var words=WORDS.filter(function(w){return w.cat===pc.cat});
-    fillGrid(pc.mainId,words.slice(0,4));
-    fillGrid(pc.moreId,words.slice(4));
-    expanded[pc.key]=false;
-  });
-}
-function toggleCat(key){
-  var pc=PREVIEW_CATS.find(function(p){return p.key===key});
-  expanded[key]=!expanded[key];
-  document.getElementById(pc.moreId).classList.toggle('open',expanded[key]);
-  var btn=document.getElementById(pc.mainId).closest('.cat-preview').querySelector('.view-more-btn');
-  if(btn)btn.textContent=expanded[key]?'Show less':'View more';
-}
-
-// ── RANDOM WORDS ──
-function renderRandom(){
-  var shuffled=[].concat(WORDS).sort(function(){return Math.random()-.5}).slice(0,6);
-  document.getElementById('random-grid').innerHTML=shuffled.map(function(w,i){return makeCard(w,i*.04)}).join('');
-}
-
-// ── SEARCH ──
-document.getElementById('search').addEventListener('input',function(){
-  var q=this.value.trim();
-  var nq=q.toLowerCase().replace(/'/g,'');
-  var grid=document.getElementById('search-results-grid');
-  var note=document.getElementById('search-note');
-  if(!q){grid.style.display='none';note.style.display='none';return}
-  function norm(s){return s.toLowerCase().replace(/'/g,'')}
-  var results=WORDS.filter(function(w){return norm(w.tutong).indexOf(nq)>=0||norm(w.malay).indexOf(nq)>=0||norm(w.english).indexOf(nq)>=0});
-  note.style.display='block';
-  note.textContent=results.length?results.length+' result'+(results.length!==1?'s':'')+' for "'+this.value+'"':'No results for "'+this.value+'" — try the full dictionary';
-  if(!results.length){grid.style.display='none';return}
-  grid.style.display='grid';
-  grid.style.gridTemplateColumns='repeat(auto-fill,minmax(240px,1fr))';
-  grid.style.gap='0.75rem';
-  var val=this.value;
-  grid.innerHTML=results.slice(0,12).map(function(w,i){return makeCard(w,i*.02)}).join('');
-  if(results.length>12)grid.innerHTML+='<div style="grid-column:1/-1;text-align:center;padding:0.75rem"><a href="dictionary.html?q='+encodeURIComponent(val)+'" style="color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none">See all '+results.length+' results in the full dictionary →</a></div>';
-});
-
-// ── PHRASEBOOK ──
-var phraseTab='all';
-function initPhrases(){
-  var pf=document.getElementById('phrase-filters');
-  ['all','Food & Drink','Daily Life','Weather','Kitchen'].forEach(function(c){
-    var b=document.createElement('button');
-    b.className='pftab'+(c==='all'?' active':'');
-    b.textContent=c==='all'?'All Phrases':c;
-    b.onclick=function(){phraseTab=c;document.querySelectorAll('.pftab').forEach(function(x){x.classList.remove('active')});b.classList.add('active');renderPhrases()};
-    pf.appendChild(b);
-  });
-  renderPhrases();
-}
-function renderPhrases(){
-  var data=phraseTab==='all'?PHRASES:PHRASES.filter(function(p){return p.cat===phraseTab});
-  document.getElementById('phrases-grid').innerHTML=data.map(function(p,i){
-    return '<div class="phrase-card" style="animation:fadeUp .3s ease '+Math.min(i*.03,.3)+'s both">'+
-      '<div class="phrase-tutong">'+p.tutong+'</div>'+
-      '<div class="phrase-row"><span class="ltag ms">MS</span><span class="phrase-text">'+p.malay+'</span></div>'+
-      '<div class="phrase-row"><span class="ltag en">EN</span><span class="phrase-text">'+p.english+'</span></div>'+
-      '<span class="phrase-cat">'+p.cat+'</span></div>';
-  }).join('');
-}
-
-// ── CHANGELOG ──
-function openChangelog(e){e.preventDefault();document.getElementById('cl-modal').classList.add('open');document.body.style.overflow='hidden'}
-function closeChangelog(){document.getElementById('cl-modal').classList.remove('open');document.body.style.overflow=''}
-document.getElementById('cl-modal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeChangelog()});
-
-// ── FEEDBACK ──
-function submitFeedback(){
-  var msg=document.getElementById('fb-message').value.trim();
-  if(!msg){alert('Please enter your feedback.');return}
-  var name=document.getElementById('fb-name').value.trim()||'Anonymous';
-  var email=document.getElementById('fb-email').value.trim()||'Not provided';
-  var type=document.getElementById('fb-type').value;
-  var labels={correction:'Correction','new-word':'New Word',dialect:'Dialect Variant',general:'General'};
-  var label=labels[type];
-  window.location.href='mailto:sam@bahasa-kitani.xyz?subject='+encodeURIComponent('[Bahasa Kitani] '+label)+'&body='+encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nType: '+label+'\n\n'+msg);
-  document.getElementById('fb-ok').style.display='flex';
-  document.getElementById('fb-message').value='';
-}
-
-// ── BOOT ── tutong.js already loaded in <head> so WORDS is ready
-initNumbers();
-initPreviews();
-renderRandom();
-initPhrases();
-// Live counters — reads directly from data every time
-document.getElementById('stat-words').textContent   = WORDS.length;
-document.getElementById('stat-phrases').textContent = PHRASES.length;
-document.getElementById('sb-count').textContent     = WORDS.length;
-document.getElementById('cta-count').textContent    = 'Want to see all ' + WORDS.length + ' words?';
-</script>
+  <footer>
+    <div class="shell footer-inner"><a class="brand footer-brand" href="#home" data-route="home"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Preserving Brunei’s living languages</small></span></a><p>Free for education and personal research.<br>Commercial use requires written permission.</p><a href="#community" data-route="community">About & feedback →</a></div>
+    <div class="shell footer-bottom"><span>© <span id="copyright-year">2026</span> Bahasa Kitani</span><a href="https://github.com/tsamzu/bahasa-kitani" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a></div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
