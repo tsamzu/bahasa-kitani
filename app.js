@@ -181,6 +181,11 @@
     $('#dictionary-more').addEventListener('click', () => { state.dictionaryPage++; renderDictionary(); });
   }
   function renderDictionary() {
+    if (state.route === 'dictionary') {
+      const target = new URL(location.href), query = $('#dictionary-search').value.trim();
+      if (query) target.searchParams.set('q', query); else target.searchParams.delete('q');
+      if (target.href !== location.href) history.replaceState(null, '', target.href);
+    }
     const matches = BK.findWords(WORDS, { query: $('#dictionary-search').value, category: state.dictionaryCategory, savedOnly: state.savedOnly, saved: state.saved, sort: $('#dictionary-sort').value, language: state.dictionaryLanguage });
     const results = matches.results;
     const visible = results.slice(0, state.dictionaryPage * 48);

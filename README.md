@@ -6,7 +6,7 @@ A living Bahasa Tutong dictionary and learning site at [bahasa-kitani.xyz](https
 
 - Search with live homepage suggestions, relevance ranking, slash-separated variants, multiword matching, language filters and clearly labelled spelling suggestions. Categories, saved words and shareable query links remain available.
 - Daily vocabulary, Quick Practice with paired Malay/English answers, and an eight-word lesson followed by a quiz, score and missed-word review.
-- A phrasebook and number recall practice for 1–30.
+- A phrasebook and number recall practice, including 1–30 and additional contributed numbers.
 - Progress, saved words, streaks and theme preferences stored in the visitor’s browser, with downloadable JSON backups, preview, merge and replace restore.
 - Responsive navigation, keyboard support, dark mode and a small offline cache.
 - A feedback form that opens an email draft to sam@bahasa-kitani.xyz.

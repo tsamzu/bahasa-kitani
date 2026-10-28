@@ -1,6 +1,6 @@
 /* Pure helpers shared by the site, contributor editor and regression tests. */
 (() => {
-  const normalize = value => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’'\x60]/g, '').trim();
+  const normalize = value => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’'\x60]/g, '').replace(/\s*\/\s*/g, ' / ').trim();
   function dayKey(date = new Date()) {
     return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
   }
@@ -36,6 +36,7 @@
     return shuffle(choices, random);
   }
   const aliases = value => normalize(value).split(/\s*\/\s*/).filter(Boolean);
+  const forms = value => [...new Set([normalize(value), ...aliases(value)])].filter(Boolean);
   function editDistance(left, right, limit = 2) {
     if (Math.abs(left.length - right.length) > limit) return limit + 1;
     let previous = Array.from({ length: right.length + 1 }, (_, index) => index), before = null;
@@ -55,7 +56,7 @@
     const pool = words.filter(word => (category === 'All' || word.cat === category) && (!savedOnly || saved.has(word.id)));
     let ranked = pool.map((word, index) => {
       let score = q ? 0 : 1;
-      const values = fields.flatMap(field => aliases(word[field]).map(text => ({ text, field })));
+      const values = fields.flatMap(field => forms(word[field]).map(text => ({ text, field })));
       if (q) for (const { text, field } of values) {
         const weight = field === 'note' ? 0 : field === 'tutong' ? 6 : field === 'malay' ? 4 : 2;
         const value = text === q ? 100 : text.startsWith(q) ? 75 : text.includes(q) ? 55 : tokens.every(token => text.includes(token)) ? 40 : 0;
@@ -68,7 +69,7 @@
       approximate = true;
       const limit = q.length < 6 ? 1 : 2;
       ranked = pool.map((word, index) => {
-        const values = fields.filter(field => field !== 'note').flatMap(field => aliases(word[field]));
+        const values = fields.filter(field => field !== 'note').flatMap(field => forms(word[field]));
         let distance = limit + 1;
         for (const text of values) {
           distance = Math.min(distance, editDistance(q, text, limit));
