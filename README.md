@@ -98,3 +98,7 @@ The previous site is recoverable from commit 0cf4ea18c55d8044d7ee51c416d16a825f3
 ## Content use
 
 Free for education and personal research. Commercial use requires written permission. Contact sam@bahasa-kitani.xyz for corrections or permission requests.
+
+### Bahasa Tutong section badge
+
+The homepage learning introduction uses the B3 map-and-book badge in `assets/bahasa-tutong-badge.svg`. The main Bahasa Kitani brand and favicon remain the site identity. The badge preserves the district path from [Locator map Tutong in Brunei.svg](https://commons.wikimedia.org/wiki/File:Locator_map_Tutong_in_Brunei.svg), created by Tachymètre in 2011 and released into the public domain. Only uniform scaling, translation and colour were applied to the boundary.
