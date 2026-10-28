@@ -816,5 +816,6 @@ const WORDS = [
   { id:763, tutong:"Biru", malay:"Biru", english:"Blue", cat:"Expressions", notation:"", note:""},
   { id:764, tutong:"Butul", malay:"Botol", english:"Bottle", cat:"Food & Drink", notation:"",note:""},
   { id:765, tutong:"Bulan", malay:"Bulan", english:"Month", cat:"Time", notation:"",note:""},
+  { id:766, tutong:"Amun / Amunan", malay:"Cabar / Cabaran", english:"Challenge", cat:"Actions",notation:"",note:""},
   
 ];
