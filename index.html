@@ -13,10 +13,10 @@
   <meta property="og:url" content="https://bahasa-kitani.xyz/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.0.2">
+  <link rel="stylesheet" href="styles.css?v=2.1.0">
   <script src="data/tutong.js"></script>
   <script src="core.js" defer></script>
-  <script src="app.js?v=2.0.2" defer></script>
+  <script src="app.js?v=2.1.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -48,6 +48,17 @@
     <div id="app-error" class="notice shell" role="alert" hidden>The dictionary could not load. Please refresh while connected to the internet, or <a href="mailto:sam@bahasa-kitani.xyz">let us know</a>.</div>
     <noscript><p class="notice shell">Turn on JavaScript to use the dictionary and lessons. For help, email <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p></noscript>
     <section class="view active" id="view-home" data-view="home">
+      <section class="home-search shell" aria-labelledby="home-search-title">
+        <div class="home-search-intro"><span class="section-kicker">Dictionary</span><h2 id="home-search-title">Find a word</h2><p>Search in Tutong, Bahasa Melayu or English.</p></div>
+        <form class="home-search-form" id="home-search-form" role="search" aria-label="Homepage dictionary search" action="index.html" method="get">
+          <label class="sr-only" for="home-search-input">Search the dictionary from the homepage</label>
+          <div class="home-search-controls">
+            <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="home-search-input" type="search" name="q" placeholder="Try water, air or empa" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" maxlength="200" required></div>
+            <button class="primary-button" type="submit">Search <span aria-hidden="true">→</span></button>
+          </div>
+          <p class="local-note">Search all <b id="home-search-count">—</b> entries and their notes.</p>
+        </form>
+      </section>
       <div class="hero shell">
         <div class="hero-copy">
           <div class="eyebrow"><span>A community dictionary</span><span>Brunei Darussalam</span></div>

@@ -46,8 +46,12 @@
     $('#storage-note').textContent = store.available ? 'Saved words and progress stay in this browser.' : 'Browser storage is unavailable. You can keep learning; progress lasts for this visit.';
   }
   function closeMenu() { $('#mobile-nav').hidden = true; $('#menu-button').setAttribute('aria-expanded', 'false'); }
-  function routeTo(route, { historyMode = 'push', focus = true } = {}) {
+  function routeTo(route, { historyMode = 'push', focus = true, query } = {}) {
     const next = routes.includes(route) ? route : 'home'; state.route = next;
+    if (next === 'dictionary' && typeof query === 'string') {
+      state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.savedOnly = false;
+      $('#dictionary-search').value = query; $('#dictionary-sort').value = 'default';
+    }
     $$('.view').forEach(view => { const active = view.dataset.view === next; view.hidden = !active; view.classList.toggle('active', active); });
     $$('[data-route]').forEach(link => {
       const active = link.dataset.route === next; link.classList.toggle('active', active);
@@ -55,6 +59,7 @@
     });
     const target = new URL(location.href); target.hash = next;
     if (next !== 'dictionary') target.searchParams.delete('q');
+    else if (typeof query === 'string') target.searchParams.set('q', query);
     if (historyMode === 'push' && target.href !== location.href) history.pushState(null, '', target.href);
     if (historyMode === 'replace') history.replaceState(null, '', target.href);
     closeMenu();
@@ -67,7 +72,9 @@
   }
   function routeFromLocation() {
     const hash = location.hash.slice(1); if (hash === 'main') return;
-    routeTo(legacyRoutes[hash] || hash || 'home', { historyMode: 'none', focus: false });
+    const query = new URLSearchParams(location.search).get('q');
+    const route = legacyRoutes[hash] || hash || (query !== null ? 'dictionary' : 'home');
+    routeTo(route, { historyMode: 'none', focus: false, query: route === 'dictionary' && query !== null ? query : undefined });
   }
   function initDaily() {
     const now = new Date(); const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
@@ -163,7 +170,7 @@
     $('#finish-lesson').addEventListener('click', () => routeTo('home')); markToday(); $('#quiz-content h2').focus({ preventScroll: true });
   }
   function initDictionary() {
-    $('#dictionary-total').textContent = WORDS.length; $('#hero-word-count').textContent = WORDS.length;
+    $('#dictionary-total').textContent = WORDS.length; $('#hero-word-count').textContent = WORDS.length; $('#home-search-count').textContent = WORDS.length;
     const categories = ['All', ...new Set(WORDS.map(word => word.cat))];
     $('#dictionary-categories').innerHTML = categories.map(category => `<button type="button" data-cat="${esc(category)}">${esc(category)}</button>`).join('');
     $$('#dictionary-categories button').forEach(button => button.addEventListener('click', () => { state.dictionaryCategory = button.dataset.cat; state.dictionaryPage = 1; renderDictionary(); }));
@@ -208,6 +215,11 @@
   }
   function bindEvents() {
     $$('[data-route]').forEach(button => button.addEventListener('click', event => { event.preventDefault(); routeTo(button.dataset.route); }));
+    $('#home-search-form').addEventListener('submit', event => {
+      event.preventDefault(); const input = $('#home-search-input'); const query = input.value.trim();
+      if (!query) { input.value = ''; input.reportValidity(); return; }
+      routeTo('dictionary', { query });
+    });
     $('#menu-button').addEventListener('click', () => { const open = $('#menu-button').getAttribute('aria-expanded') === 'true'; $('#menu-button').setAttribute('aria-expanded', String(!open)); $('#mobile-nav').hidden = open; });
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && !$('#mobile-nav').hidden) { closeMenu(); $('#menu-button').focus(); }
@@ -233,7 +245,7 @@
     if (store.read('bk-theme', 'day', value => ['day', 'night'].includes(value)) === 'night') document.documentElement.dataset.theme = 'night';
     bindEvents(); initDaily(); initTopics(); initDictionary(); initPhrases(); renderNumbers(); newQuick(); updateProgress();
     const query = new URLSearchParams(location.search).get('q');
-    if (query !== null) { $('#dictionary-search').value = query; routeTo('dictionary', { historyMode: 'replace', focus: false }); } else routeFromLocation();
+    if (query !== null) routeTo('dictionary', { historyMode: 'replace', focus: false, query }); else routeFromLocation();
     $('#copyright-year').textContent = new Date().getFullYear();
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
   }
