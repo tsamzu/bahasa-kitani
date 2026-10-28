@@ -13,10 +13,11 @@
   <meta property="og:url" content="https://bahasa-kitani.xyz/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.1.0">
-  <script src="data/tutong.js?v=2.1.0"></script>
-  <script src="core.js" defer></script>
-  <script src="app.js?v=2.1.0" defer></script>
+  <link rel="stylesheet" href="styles.css?v=2.2.0">
+  <script src="data/tutong.js?v=2.2.0"></script>
+  <script src="core.js?v=2.2.0" defer></script>
+  <script src="enhancements.js?v=2.2.0" defer></script>
+  <script src="app.js?v=2.2.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -53,9 +54,10 @@
         <form class="home-search-form" id="home-search-form" role="search" aria-label="Homepage dictionary search" action="index.html" method="get">
           <label class="sr-only" for="home-search-input">Search the dictionary from the homepage</label>
           <div class="home-search-controls">
-            <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="home-search-input" type="search" name="q" placeholder="Try water, air or empa" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" maxlength="200" required></div>
+            <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="home-search-input" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="home-search-suggestions" aria-expanded="false" type="search" name="q" placeholder="Try water, air or empa" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" maxlength="200" required></div>
             <button class="primary-button" type="submit">Search <span aria-hidden="true">→</span></button>
           </div>
+          <div class="search-suggestions" id="home-search-suggestions" role="listbox" aria-label="Search suggestions" hidden></div>
           <p class="local-note">Search all <b id="home-search-count">—</b> entries and their notes.</p>
         </form>
       </section>
@@ -94,6 +96,7 @@
             <button type="button" data-route="learn" aria-label="Open Everyday essentials lesson">→</button>
           </div>
           <p class="local-note" id="storage-note">Saved words and progress stay in this browser.</p>
+          <button class="text-button backup-open" id="open-backup" type="button">Back up or restore progress</button>
         </section>
         <section class="quick-card" aria-labelledby="quick-title">
           <span class="section-kicker">Quick practice</span><h2 id="quick-title">What does this mean?</h2>
@@ -153,7 +156,8 @@
         <label class="search-box"><span class="sr-only">Search the dictionary</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="dictionary-search" type="search" placeholder="Try ‘water’, ‘makan’, or ‘empa’…" autocomplete="off"><kbd>/</kbd></label>
         <div class="category-scroller" id="dictionary-categories" aria-label="Dictionary categories"></div>
       </div>
-      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Original order</option><option value="az">Tutong A–Z</option><option value="english">English A–Z</option></select></div></div>
+      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-language" aria-label="Search language"><option value="all">All languages</option><option value="tutong">Tutong</option><option value="malay">Bahasa Melayu</option><option value="english">English</option></select><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Most relevant</option><option value="az">Tutong A–Z</option><option value="english">English A–Z</option></select></div></div>
+      <p id="dictionary-match-note" class="notice" hidden></p>
       <div class="dictionary-grid" id="dictionary-grid"></div>
       <div class="empty-state" id="dictionary-empty" hidden><strong>No matching words</strong><p>Try another spelling or choose “All”.</p></div>
       <button class="load-button" id="dictionary-more" type="button">Load more words</button>
@@ -175,7 +179,7 @@
       <div class="page-head"><div><span class="section-kicker">A language kept together</span><h1>About & feedback</h1><p>Help make this living reference more useful for everyone.</p></div></div>
       <div class="community-grid">
         <article class="community-card"><h2>Bahasa Kitani</h2><p>A living reference for Bahasa Tutong, an indigenous language of Brunei Darussalam, with translations in Bahasa Melayu and English.</p><p>Entries draw on community contributions and DBP Kamus Tutong–Melayu (1991), as credited in the original dictionary. This is a community learning resource; spellings, translations, and regional usage may need further review.</p><p>Pronunciation audio will need recordings reviewed by fluent speakers.</p><p><a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener noreferrer">Support Bahasa Kitani ↗</a> · <a href="https://jomqr.my/sam" target="_blank" rel="noopener noreferrer">Sam’s socials ↗</a></p><details><summary>What’s new</summary><p>Daily vocabulary, an eight-word lesson with a quiz and review, saved words, local learning progress, numbers recall practice, mobile navigation, and dark mode.</p></details></article>
-        <form class="community-card feedback-form" id="feedback-form"><h2>Contribute a correction</h2><p>Share a new word, regional variant, or correction.</p><label for="feedback-type">Feedback type</label><select id="feedback-type"><option>Correction</option><option>New word</option><option>Regional variant</option><option>General feedback</option></select><label for="feedback-message">Your note</label><textarea id="feedback-message" rows="6" required maxlength="4000" placeholder="Include the Tutong word and its Malay or English meaning…"></textarea><button class="primary-button" type="submit">Open email draft →</button><p class="local-note" id="feedback-status" role="status">Your email app opens a draft to sam@bahasa-kitani.xyz. Review it and send when ready.</p></form>
+        <form class="community-card feedback-form" id="feedback-form"><h2>Contribute a correction</h2><p><a class="contribute-link" href="admin/index.html">Open the contributor editor →</a></p><p>Add and edit word or phrase drafts for GitHub review, or send general feedback by email below.</p><label for="feedback-type">Feedback type</label><select id="feedback-type"><option>Correction</option><option>New word</option><option>Regional variant</option><option>General feedback</option></select><label for="feedback-message">Your note</label><textarea id="feedback-message" rows="6" required maxlength="4000" placeholder="Include the Tutong word and its Malay or English meaning…"></textarea><button class="primary-button" type="submit">Open email draft →</button><p class="local-note" id="feedback-status" role="status">Your email app opens a draft to sam@bahasa-kitani.xyz. Review it and send when ready.</p></form>
       </div>
     </section>
   </main>
@@ -184,6 +188,18 @@
     <div class="shell footer-inner"><a class="brand footer-brand" href="#home" data-route="home"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Preserving Brunei’s living languages</small></span></a><p>Free for education and personal research.<br>Commercial use requires written permission.</p><a href="#community" data-route="community">About & feedback →</a></div>
     <div class="shell footer-bottom"><span>© <span id="copyright-year">2026</span> Bahasa Kitani</span></div>
   </footer>
+
+  <dialog id="backup-dialog" aria-labelledby="backup-title">
+    <div class="backup-heading"><div><span class="section-kicker">Keep your learning</span><h2 id="backup-title">Progress backup</h2></div><button id="close-backup" class="icon-button" type="button" aria-label="Close progress backup">×</button></div>
+    <p>Save your words, practice history, lesson position and theme in a file you control.</p>
+    <button id="download-progress" class="primary-button" type="button">Download progress backup ↓</button>
+    <hr><label for="backup-file">Choose a progress backup</label><input id="backup-file" type="file" accept=".json,application/json">
+    <p id="backup-preview" class="notice" hidden></p>
+    <fieldset class="backup-modes"><legend>How should it be restored?</legend><label><input id="backup-merge" type="radio" name="backup-mode" value="merge" checked> Merge with my current progress</label><label><input id="backup-replace" type="radio" name="backup-mode" value="replace"> Replace my current progress</label></fieldset>
+    <p id="backup-replace-note" class="notice" hidden>Replace removes the progress currently in this browser and uses the selected backup instead. Download a backup first if you want to keep a copy.</p>
+    <button id="restore-progress" class="primary-button" type="button" disabled>Restore progress</button>
+    <p id="backup-status" class="local-note" role="status"></p>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

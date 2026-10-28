@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
-for (const file of ['core.js', 'app.js', 'sw.js', 'redirect.js', 'admin/admin.js', 'data/tutong.js']) new vm.Script(read(file), { filename: file });
+for (const file of ['core.js', 'contributor-core.js', 'enhancements.js', 'scripts/process-contribution.cjs', 'app.js', 'sw.js', 'redirect.js', 'admin/admin.js', 'data/tutong.js']) new vm.Script(read(file), { filename: file });
 const html = read('index.html');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(ids.length, new Set(ids).size, 'HTML IDs must be unique');
@@ -31,5 +31,14 @@ for (const key of ['WORDS', 'PHRASES']) {
 assert.equal(context.dataset.NUMBERS.length, 30);
 for (const path of ['admin/index.html', 'admin/feedback']) {
   for (const [index, match] of [...read(path).matchAll(/<script>([\s\S]*?)<\/script>/g)].entries()) new vm.Script(match[1], { filename: `${path} inline ${index}` });
+}
+
+const admin = read('admin/index.html');
+const adminIds = [...admin.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+assert.equal(adminIds.length, new Set(adminIds).size, 'Editor IDs must be unique');
+for (const match of admin.matchAll(/\b(?:src|href)="([^"#]+)"/g)) {
+  const value = match[1];
+  if (/^(https?:|mailto:|data:)/.test(value)) continue;
+  assert(existsSync(resolve(root, 'admin', value.split(/[?#]/)[0])), 'Missing editor asset: ' + value);
 }
 console.log(`Site checks passed: ${context.dataset.WORDS.length} words, ${context.dataset.PHRASES.length} phrases, 30 numbers, ${ids.length} unique HTML IDs.`);

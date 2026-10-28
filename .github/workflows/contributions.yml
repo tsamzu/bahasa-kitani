@@ -1,0 +1,69 @@
+name: Dictionary contributions
+on:
+  issues:
+    types: [labeled, closed]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/contributions.yml'
+      - 'scripts/process-contribution.cjs'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  setup:
+    if: github.event_name != 'issues'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: node scripts/process-contribution.cjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONTRIBUTION_MODE: setup
+  prepare:
+    if: github.event_name == 'issues' && github.event.label.name == 'dictionary-approved'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: dictionary-contributions
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: node scripts/process-contribution.cjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONTRIBUTION_MODE: prepare
+
+  cleanup:
+    if: github.event_name == 'issues' && github.event.action == 'closed' && contains(github.event.issue.body, '<!-- bahasa-kitani-proposal -->')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: node scripts/process-contribution.cjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONTRIBUTION_MODE: cleanup

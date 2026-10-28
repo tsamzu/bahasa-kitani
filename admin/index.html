@@ -2,27 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex"><title>Entry generator — Bahasa Kitani</title>
-  <link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../styles.css">
-  <script src="../data/tutong.js?v=2.1.0"></script><script src="../core.js" defer></script><script src="admin.js" defer></script>
+  <meta name="robots" content="noindex"><title>Contributor editor — Bahasa Kitani</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css?v=2.2.0"><link rel="stylesheet" href="editor.css?v=2.2.0">
+  <script src="../data/tutong.js?v=2.2.0"></script><script src="../core.js?v=2.2.0" defer></script>
+  <script src="../contributor-core.js?v=2.2.0" defer></script><script src="admin.js?v=2.2.0" defer></script>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Entry generator</small></span></a><a class="text-button" style="margin-left:auto" href="../index.html">Back to website →</a></header>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Contributor editor</small></span></a><a class="text-button" style="margin-left:auto" href="../index.html">Back to website →</a></header>
   <main class="page-shell">
-    <div class="page-head"><div><span class="section-kicker">Maintainer helper</span><h1>Entry generator</h1><p>Create a formatted entry, then review and publish it on GitHub.</p></div></div>
-    <p class="notice">This is a local text generator. It does not sign in to a server or change the live dictionary. Editing and publishing the repository requires your GitHub sign-in.</p>
-    <div class="community-grid">
-      <form class="community-card feedback-form" id="entry-form">
-        <label for="entry-kind">Entry type</label><select id="entry-kind"><option value="word">Word</option><option value="phrase">Phrase</option></select>
-        <p class="local-note">Next available ID: <strong id="next-entry-id">—</strong></p>
-        <label for="entry-tutong">Tutong</label><input id="entry-tutong" required maxlength="500" autocomplete="off">
-        <label for="entry-malay">Bahasa Melayu</label><input id="entry-malay" required maxlength="500" autocomplete="off">
-        <label for="entry-english">English</label><input id="entry-english" required maxlength="500" autocomplete="off">
-        <label for="entry-category">Category</label><select id="entry-category" required></select>
-        <div id="word-fields"><label for="entry-notation">Notation</label><select id="entry-notation"><option value="">None</option><option value="variant">Regional variant</option><option value="loanword">Loanword</option><option value="clarify">Needs clarification</option></select><label for="entry-note">Note</label><textarea id="entry-note" rows="3" maxlength="1500"></textarea></div>
-        <button class="primary-button" type="submit">Generate entry →</button>
-      </form>
-      <section class="community-card feedback-form"><h2>Review, copy, publish</h2><p>Check the translations and spelling with your sources. The output escapes quotes and newlines and uses an ID above the current dictionary IDs.</p><label for="entry-output">Generated JavaScript</label><textarea id="entry-output" rows="10" readonly spellcheck="false"></textarea><button id="copy-entry" class="primary-button" type="button" disabled>Copy entry</button><p id="entry-status" class="local-note" role="status">Generate a word or phrase to begin.</p><p>Paste a word before the closing ]; of WORDS, or a phrase before the closing ]; of PHRASES.</p><p><a href="https://github.com/tsamzu/bahasa-kitani/edit/main/data/tutong.js" target="_blank" rel="noopener noreferrer">Edit data/tutong.js on GitHub ↗</a></p><p>Run the site checks and review the published entry after committing.</p></section>
+    <div class="page-head"><div><span class="section-kicker">Help the dictionary grow</span><h1>Contributor editor</h1><p>Add a word or phrase, improve an existing entry, and prepare it for review.</p></div><button class="primary-button" id="new-entry" type="button">＋ New entry</button></div>
+    <p class="local-note">Drafts stay in this browser. Continue on GitHub to submit a public proposal; reviewed changes reach the dictionary after a pull request is merged.</p>
+    <div class="editor-layout">
+      <div>
+        <section class="community-card editor-search"><h2>Find an entry to edit</h2><label class="sr-only" for="existing-search">Find an existing word or phrase</label><input id="existing-search" type="search" placeholder="Search Tutong, Malay or English" autocomplete="off"><p id="existing-summary" class="local-note" aria-live="polite">Choose an entry type below, then search here to edit existing entries.</p><div id="existing-results"></div></section>
+        <form class="community-card feedback-form" id="entry-form">
+          <div class="section-row"><h2 id="editor-mode">New entry</h2><span class="level-pill" id="entry-id-label">New word</span></div>
+          <label for="entry-kind">Entry type</label><select id="entry-kind"><option value="word">Word</option><option value="phrase">Phrase</option></select>
+          <p class="local-note">Next available ID: <strong id="next-entry-id">—</strong>. New IDs are checked again during review.</p>
+          <label for="entry-tutong">Tutong</label><input id="entry-tutong" required maxlength="500" autocomplete="off">
+          <label for="entry-malay">Bahasa Melayu</label><input id="entry-malay" required maxlength="500" autocomplete="off">
+          <label for="entry-english">English</label><input id="entry-english" required maxlength="500" autocomplete="off">
+          <label for="entry-category">Category</label><select id="entry-category" required></select>
+          <div id="word-fields"><label for="entry-notation">Notation</label><select id="entry-notation"><option value="">None</option><option value="variant">Regional variant</option><option value="loanword">Loanword</option><option value="clarify">Needs clarification</option></select><label for="entry-note">Note / source</label><textarea id="entry-note" rows="3" maxlength="1500"></textarea></div>
+          <div id="duplicate-warning" class="notice" hidden></div>
+          <div class="editor-actions"><button class="primary-button" type="submit">Save draft</button><button id="generate-entry" class="text-button" type="button">Generate entry →</button></div>
+          <p id="entry-status" class="local-note" role="status">Fill in the entry, then save a draft or generate code.</p>
+        </form>
+      </div>
+      <aside class="editor-sidebar">
+        <section class="community-card"><div class="section-row"><h2>Your drafts</h2><span id="draft-count" class="level-pill">0 drafts</span></div><div id="draft-list"></div><p class="local-note">Select a draft to edit, preview or submit it. Drafts are local to this browser.</p></section>
+        <section class="community-card"><h2>Preview & review</h2><article class="word-card editor-preview" id="entry-preview" hidden><h3 id="preview-tutong"></h3><dl><div><dt>BM</dt><dd id="preview-malay" lang="ms"></dd></div><div><dt>EN</dt><dd id="preview-english" lang="en"></dd></div></dl><p id="preview-note" class="local-note"></p></article><p id="preview-placeholder">Save or generate an entry to see its preview.</p>
+          <a id="submit-proposal" class="primary-button editor-submit" target="_blank" rel="noopener noreferrer" hidden>Continue on GitHub →</a>
+          <p class="local-note">Review the prefilled proposal on GitHub and submit it there. You need a GitHub account. Returning here does not mark a draft as published.</p>
+          <details class="editor-help"><summary>How review and publishing work</summary><ol><li>Save and check your draft.</li><li>Continue on GitHub and submit the prefilled issue.</li><li>A maintainer checks it and adds <strong>dictionary-approved</strong>.</li><li>The review workflow prepares a change and posts a pull-request link.</li><li>Open that pull request, check the tests and merge it to publish.</li></ol></details>
+          <details class="editor-help" id="code-export"><summary>Code export / entry generator</summary><p class="local-note">Field names match the dictionary’s JavaScript style. Text values keep their quotation marks and safe escaping.</p><label for="entry-output">Generated JavaScript</label><textarea id="entry-output" class="code-output" rows="4" wrap="off" readonly spellcheck="false"></textarea><button id="copy-entry" class="text-button" type="button" disabled>Copy entry</button><p class="local-note">For manual publishing, paste into WORDS or PHRASES in <a href="https://github.com/tsamzu/bahasa-kitani/edit/main/data/tutong.js" target="_blank" rel="noopener noreferrer">data/tutong.js</a>, then review and commit.</p></details>
+        </section>
+      </aside>
     </div>
   </main>
 </body>
