@@ -234,7 +234,7 @@ const WORDS = [
   { id:161, tutong:"Liwat", malay:"Akhir", english:"End / Last", cat:"Expressions", notation:"", note:"" },
   { id:162, tutong:"Jayi", malay:"Aku", english:"I / Me (informal)", cat:"People", notation:"", note:"" },
   { id:163, tutong:"Apon", malay:"Ambil", english:"Take / Fetch", cat:"Actions", notation:"", note:"" },
-  { id:164, tutong:"Kuyad", malay:"Ambuk", english:"Hair bun", cat:"Body", notation:"", note:"" },
+  { id:164, tutong:"Kuyad", malay:"Ambuk", english:"Monkey", cat:"Body", notation:"", note:"" },
   { id:165, tutong:"Maap", malay:"Ampun", english:"Forgiveness / Pardon", cat:"Expressions", notation:"", note:"" },
   { id:166, tutong:"Baroi / Barui", malay:"Angin", english:"Wind", cat:"Nature", notation:"variant", note:"Variants: Baroi / Barui" },
   { id:167, tutong:"Tuas / Mungga", malay:"Angkat", english:"Lift / Raise", cat:"Actions", notation:"variant", note:"Variants: Tuas / Mungga" },
