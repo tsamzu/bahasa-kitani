@@ -52,8 +52,10 @@ test('saved progress survives storage failures, invalid JSON and invalid shapes'
   assert(good.write('saved', [26])); assert.equal(good.read('saved', [], Array.isArray)[0], 26);
 });
 test('admin IDs follow the actual corpus and preserve higher reserved counters', () => {
-  assert.equal(BK.nextEntryId(WORDS, 758), 762);
-  assert.equal(BK.nextEntryId(PHRASES, 19), 21);
-  assert.equal(BK.nextEntryId(WORDS, 800), 800);
-  assert.equal(BK.nextEntryId(WORDS, NaN), 762);
+  const nextWordId = Math.max(...WORDS.map(word => word.id)) + 1;
+  const nextPhraseId = Math.max(...PHRASES.map(phrase => phrase.id)) + 1;
+  assert.equal(BK.nextEntryId(WORDS, nextWordId - 4), nextWordId);
+  assert.equal(BK.nextEntryId(PHRASES, 0), nextPhraseId);
+  assert.equal(BK.nextEntryId(WORDS, nextWordId + 50), nextWordId + 50);
+  assert.equal(BK.nextEntryId(WORDS, NaN), nextWordId);
 });

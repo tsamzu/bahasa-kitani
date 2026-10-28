@@ -4,7 +4,7 @@ A living Bahasa Tutong dictionary and learning site at [bahasa-kitani.xyz](https
 
 ## What is included
 
-- Search across Tutong, Malay, English and entry notes; categories, sorting and saved words.
+- Search at the top of the homepage and across Tutong, Malay, English and entry notes; categories, sorting and saved words. Homepage searches open the full dictionary and keep the query in a shareable URL.
 - Daily vocabulary, Quick Practice with paired Malay/English answers, and an eight-word lesson followed by a quiz, score and missed-word review.
 - A phrasebook and number recall practice for 1–30.
 - Progress, saved words, streaks and theme preferences stored in the visitor’s browser.
@@ -56,7 +56,7 @@ A push to main publishes through Pages; the Site checks workflow reports validat
 
 ## Adding words and phrases
 
-Edit `data/tutong.js` or use the entry generator at `/admin/index.html`. The generator creates pasteable JavaScript; it does not write to GitHub or authenticate a server. Its next IDs are calculated from the actual corpus, and quotes/newlines in generated values are escaped with JSON.stringify. A new browser currently starts at word ID 762 and phrase ID 21. The former client-side password gate has been removed; no credentials are needed for generating local text. Actual repository edits require GitHub authentication.
+Edit `data/tutong.js` or use the entry generator at `/admin/index.html`. The generator creates pasteable JavaScript; it does not write to GitHub or authenticate a server. Its next IDs are calculated from the actual corpus, and quotes/newlines in generated values are escaped with JSON.stringify. Use the generated ID rather than copying the ID of an existing entry. The generator also preserves higher IDs already reserved in your browser. The former client-side password gate has been removed; no credentials are needed for generating local text. Actual repository edits require GitHub authentication.
 
 Every entry needs a unique numeric id, tutong, malay, english and cat. Keep note and notation where applicable. Valid notation values include variant, loanword, clarify or an empty string. Keep regional variants and uncertainty notes intact. After editing, run `npm test` and review the entry on the site.
 

@@ -1,6 +1,6 @@
 {
   "name": "bahasa-kitani",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "private": true,
   "description": "Bahasa Tutong community dictionary and interactive learning site",
   "engines": { "node": ">=22" },
