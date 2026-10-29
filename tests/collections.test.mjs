@@ -40,7 +40,7 @@ test('phrasebook reuses recorded phrases and greetings without treating number p
 });
 test('counting preserves recorded alternatives, checked nine and the uncertainty for eight', () => {
   const numbers = catalog.numbers.dusun;
-  assert.equal(numbers.length, 33); assert.equal(catalog.numbers.brunei.length, 0);
+  assert.equal(numbers.length, 35); assert.equal(catalog.numbers.brunei.length, 0);
   assert.equal(numbers.find(entry => entry.number === 1).word, 'Sa / Miso');
   assert.equal(numbers.find(entry => entry.number === 6).word, 'Anom / Anaom');
   const nine = numbers.find(entry => entry.number === 9);
@@ -59,4 +59,27 @@ test('a failed collection does not prevent the other collection from loading', a
   vm.runInContext(read('collections.js'), partial);
   const [first, second] = await Promise.all([partial.BKCollections.load(), partial.BKCollections.load()]);
   assert.equal(calls, 2); assert.equal(first, second); assert.deepEqual(plain(first.failed), ['brunei']); assert.equal(first.dusun.length, dusun.length);
+});
+
+test('counting milestones keep their source and do not generate unattested combinations', () => {
+  const numbers = catalog.numbers.dusun;
+  for (const [number,word] of [[100,'Sa ratus'],[1000,'Sa ribu']]) {
+    const entry = numbers.find(item => item.number === number);
+    assert.equal(entry.word,word); assert.equal(entry.status,'source');
+    assert.equal(entry.records[0].sourceUrl,'https://khazanahbahasasangjatidusun.blogspot.com/2013/05/perbandingan-bahasa-sjd-dengan-bahasa.html');
+  }
+  for (const number of [32,50,90,99,101,125,999]) assert(!numbers.some(item => item.number === number));
+});
+test('counting stages partition source records and pairs only use recorded neighbours', () => {
+  const numbers = catalog.numbers.dusun, stages = C.countingStages(numbers);
+  assert.deepEqual(plain(stages.map(stage => [stage.id,stage.entries.length])),[['basics',10],['building',23],['milestones',2]]);
+  assert.deepEqual(plain(stages.flatMap(stage => stage.entries.map(entry => entry.number))),plain(numbers.map(entry => entry.number)));
+  assert.deepEqual(plain(C.countingPairs(stages[1].entries).map(pair => pair.map(entry => entry.number))),[[20,21],[30,31],[40,41]]);
+  assert.equal(C.countingStages([]).length,0);
+});
+test('short counting checks omit disputed eight while retaining checked nine and source milestones', () => {
+  const pool = C.countingPracticePool(catalog.numbers.dusun);
+  assert(!pool.some(entry => entry.number === 8));
+  for (const number of [9,100,1000]) assert(pool.some(entry => entry.number === number));
+  assert.equal(C.countingPracticePool(catalog.numbers.tutong).length,catalog.numbers.tutong.length);
 });

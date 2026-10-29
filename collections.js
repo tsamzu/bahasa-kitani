@@ -40,6 +40,21 @@
       note: [...new Set(records.map(record => record.reviewNote).filter(Boolean))].join(' ')
     }));
   }
+  function countingStages(entries) {
+    return [
+      { id:'basics', title:'Basics: 1–10', intro:'Begin with the small numbers. Read each form, then try a short recall check.', entries:entries.filter(entry => entry.number <= 10) },
+      { id:'building', title:'Building numbers: teens & tens', intro:'Compare recorded teens and tens, and notice what changes when another unit is added.', entries:entries.filter(entry => entry.number > 10 && entry.number < 100) },
+      { id:'milestones', title:'Larger milestones: 100 & 1,000', intro:'Use these larger values as landmarks as you become familiar with counting.', entries:entries.filter(entry => entry.number >= 100) }
+    ].filter(stage => stage.entries.length);
+  }
+  function countingPairs(entries) {
+    return entries.filter(entry => entry.number >= 20 && entry.number < 100 && entry.number % 10 === 0).flatMap(entry => {
+      const next = entries.find(item => item.number === entry.number + 1);
+      return next ? [[entry, next]] : [];
+    });
+  }
+  // Explicitly disputed readings stay visible in the reference but outside scored exercises.
+  const countingPracticePool = entries => entries.filter(entry => !['needs_review','draft'].includes(entry.status));
   function build({ words, phrases, numbers, brunei = [], dusun = [] }) {
     const tutongWords = words.map(word => ({ ...word, cat: categoryName(word.cat), sourceCategory: word.cat, language: 'tutong', sourceId: 'tutong-' + word.id, status: 'existing' }));
     const bruneiWords = brunei.map(word => adapt(word, 'brunei')), dusunWords = dusun.map(word => adapt(word, 'dusun'));
@@ -79,5 +94,5 @@
     else pending.then(() => listeners.delete(onChange));
     return pending;
   }
-  globalThis.BKCollections = Object.freeze({ names, statusLabel, categoryName, progressId, reservedId, select, numberGroups, build, load });
+  globalThis.BKCollections = Object.freeze({ names, statusLabel, categoryName, progressId, reservedId, select, numberGroups, countingStages, countingPairs, countingPracticePool, build, load });
 })();

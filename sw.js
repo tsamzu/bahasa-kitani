@@ -1,5 +1,5 @@
 /* Versioned assets are reused; pages and vocabulary stay fresh. */
-const VERSION = '2.5.0';
+const VERSION = '2.6.0';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
 const CORE = ['./', './index.html', './dictionary.html', './languages.html', './redirect.js', './styles.css', './core.js', './collections.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './assets/bahasa-tutong-badge.svg', './manifest.webmanifest', './data/brunei.json', './data/dusun.json'];

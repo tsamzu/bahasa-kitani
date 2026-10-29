@@ -3178,5 +3178,39 @@
     "malayTranslationMethod": "Editorial translation of source English gloss",
     "usageNotes": "One speaker from Batang Mitus; other Dusun communities may differ.",
     "entryType": "word"
+  },
+  {
+    "id": "dusun-web-117",
+    "language": "dusun",
+    "headword": "Sa ratus",
+    "variants": [],
+    "standardMalay": "Seratus",
+    "english": "One hundred",
+    "category": "Numbers",
+    "status": "source",
+    "reviewNote": "Recorded in the Sang Jati Dusun (SJD) column of the 3 May 2013 comparison. Source-attested; spelling and regional usage still need speaker review.",
+    "sourceFile": "Khazanah Bahasa Sang Jati Dusun: Perbandingan Bahasa SJD dengan Bahasa Filipina (Tagalog), 3 May 2013",
+    "sourceUrl": "https://khazanahbahasasangjatidusun.blogspot.com/2013/05/perbandingan-bahasa-sjd-dengan-bahasa.html",
+    "sourceSection": "d) Tentang bagaimana menghitung — SJD column",
+    "usageNotes": "Selected counting milestone; compound forms are not inferred from this entry.",
+    "entryType": "word",
+    "number": 100
+  },
+  {
+    "id": "dusun-web-118",
+    "language": "dusun",
+    "headword": "Sa ribu",
+    "variants": [],
+    "standardMalay": "Seribu",
+    "english": "One thousand",
+    "category": "Numbers",
+    "status": "source",
+    "reviewNote": "Recorded in the Sang Jati Dusun (SJD) column of the 3 May 2013 comparison. Source-attested; spelling and regional usage still need speaker review.",
+    "sourceFile": "Khazanah Bahasa Sang Jati Dusun: Perbandingan Bahasa SJD dengan Bahasa Filipina (Tagalog), 3 May 2013",
+    "sourceUrl": "https://khazanahbahasasangjatidusun.blogspot.com/2013/05/perbandingan-bahasa-sjd-dengan-bahasa.html",
+    "sourceSection": "d) Tentang bagaimana menghitung — SJD column",
+    "usageNotes": "Selected counting milestone; compound forms are not inferred from this entry.",
+    "entryType": "word",
+    "number": 1000
   }
 ]

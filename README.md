@@ -125,3 +125,11 @@ An optional `audio` field accepts `{url, speaker, status:"reviewed"}`. Audio con
 ### Backup compatibility
 
 The JSON envelope remains version 1, with optional `mistakes` (word IDs) and `lists` (`{id, name, words}`) fields. Existing backups still import. Lists are validated, limited to 20 and only contain saved IDs; restore validates all IDs against the loaded catalogue. Clearing local site data removes progress; a downloaded backup can restore it on another device. There is no account or automatic cloud sync.
+
+### Counting progression and social links (2.6.0)
+
+Numbers is organised into three expandable steps: 1–10, recorded teens/tens, and larger milestones. The Dusun examples compare 20/21, 30/31 and 40/41. Source-linked records for Sa ratus (100) and Sa ribu (1,000) come from the SJD column in [the 3 May 2013 comparison](https://khazanahbahasasangjatidusun.blogspot.com/2013/05/perbandingan-bahasa-sjd-dengan-bahasa.html). They retain source-recorded status pending speaker review. Other compound values are not generated.
+
+Each populated step offers a short recall check of up to three questions. Milestones use two questions. Choices come from that step’s recorded numbers; explicit `needs_review` and `draft` readings stay outside scored checks. Starting a check hides the reference words, which can still be revealed individually as hints. Answers mark a practice day; the short session itself stays within the current visit. The existing Tutong numbers, source variants and review labels are retained.
+
+Sam’s socials link, https://jomqr.my/sam, appears in Footer links and About & feedback. External links open in a new tab with `noopener noreferrer`.

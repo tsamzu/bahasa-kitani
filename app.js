@@ -19,7 +19,7 @@
     saved: new Set(store.read('bk-saved', [], idList)), learned: new Set(store.read('bk-learned', [], idList)), mistakes: new Set(store.read('bk-mistakes', [], idList)),
     days: store.read('bk-days', [], daysList), lists: [], wordsList: 'all', wordsPage: 1,
     lessonIndex: store.read('bk-lesson-index', 0, value => Number.isInteger(value) && value >= 0 && value < lessonWords.length),
-    revealed: false, phraseCategory: 'All', numbersHidden: false,
+    revealed: false, phraseCategory: 'All', numbersHidden: false, numberQuiz: null,
     lessonMode: 'cards', quizWords: [], quizIndex: 0, quizAnswers: [], quizAnswered: false,
     practiceWords: [], practiceIndex: 0, practiceAnswers: [], practiceAnswered: false
   };
@@ -56,7 +56,7 @@
   }
   function setCollection(collection) {
     if (!isCollection(collection)) return;
-    if (collection !== state.collection) { state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.phraseCategory = 'All'; state.wordsPage = 1; }
+    if (collection !== state.collection) { state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.phraseCategory = 'All'; state.wordsPage = 1; state.numberQuiz = null; }
     state.collection = collection; store.write('bk-collection', collection);
     for (const name of ['home', 'dictionary', 'phrase', 'numbers', 'words']) $('#' + name + '-collection').value = collection;
     $('#home-search-count').textContent = BKCollections.select(catalog.words, collection).length;
@@ -309,17 +309,70 @@
     $('#phrase-grid').innerHTML = results.map((phrase, index) => '<article class="phrase-card">' + languageLabel(phrase) + '<span class="phrase-cat">' + esc(phrase.cat) + '</span><h3>' + esc(phrase.tutong) + '</h3><dl><div><dt>Standard Malay</dt><dd>' + esc(phrase.malay) + '</dd></div><div><dt>English</dt><dd>' + esc(phrase.english) + '</dd></div></dl>' + (phrase.language !== 'tutong' ? statusLabel(phrase) : '') + entryDetails(phrase) + '<button type="button" data-copy-phrase="' + index + '" aria-label="Copy phrase ' + esc(phrase.tutong) + '">Copy phrase</button></article>').join('');
     $$('[data-copy-phrase]').forEach(button => button.addEventListener('click', async () => { const phrase = results[Number(button.dataset.copyPhrase)]; try { await navigator.clipboard.writeText(phrase.tutong); toast('Phrase copied'); } catch { toast('Copy is unavailable. Select the phrase text to copy it.'); } }));
   }
+  const numberText = number => new Intl.NumberFormat('en-GB').format(number);
+  function numberTile(entry) {
+    const language = entry.language, hidden = state.numbersHidden;
+    const sourceRecords = entry.records || [], sources = [...new Map(sourceRecords.filter(record => record.sourceUrl).map(record => [record.sourceUrl,{url:record.sourceUrl,name:record.sourceFile || 'Source'}])).values()];
+    return '<article class="number-entry"><button class="number-tile" type="button" data-number="' + entry.number + '" data-number-language="' + language + '" aria-expanded="' + !hidden + '" aria-label="' + numberText(entry.number) + ', ' + esc(names[language]) + (hidden ? ', reveal word' : ', ' + esc(entry.word)) + '"><strong>' + numberText(entry.number) + '</strong><span ' + (hidden ? 'hidden' : '') + '>' + esc(entry.word) + '</span><small ' + (hidden ? '' : 'hidden') + '>Tap to reveal</small></button><div class="number-details" ' + (hidden ? 'hidden' : '') + '>' + (language !== 'tutong' ? statusLabel(entry) : '') + entryDetails({note:entry.note,sourceFile:[...new Set(sourceRecords.map(record => record.sourceFile).filter(Boolean))].join(' · '),sourceUrl:sources[0]?.url,additionalSources:sources.slice(1)}) + '</div></article>';
+  }
   function renderNumbers() {
-    $('#numbers-toggle').setAttribute('aria-pressed', String(state.numbersHidden)); $('#numbers-toggle').textContent = state.numbersHidden ? 'Show all number words' : 'Hide number words';
-    const groups = Object.entries(catalog.numbers).filter(([language, records]) => records.length && (state.collection === 'all' || state.collection === language));
+    $('#numbers-toggle').setAttribute('aria-pressed',String(state.numbersHidden)); $('#numbers-toggle').textContent = state.numbersHidden ? 'Show all number words' : 'Hide number words';
+    const container = $('#number-grid'), openStages = new Map([...container.querySelectorAll('[data-number-stage]')].map(stage => [stage.dataset.numberStage,stage.open]));
+    const groups = Object.entries(catalog.numbers).filter(([language,records]) => records.length && (state.collection === 'all' || state.collection === language));
     $('#numbers-empty').hidden = groups.length !== 0; $('#numbers-toggle').disabled = !groups.length;
-    $('#number-grid').innerHTML = groups.map(([language, records]) => '<section class="number-collection" aria-label="' + esc(BKCollections.names[language]) + ' numbers"><h2>' + esc(BKCollections.names[language]) + '<small>' + records.length + ' recorded numbers</small></h2>' + (language === 'dusun' ? '<p class="local-note">Siam and Walu’ for nine were confirmed by the maintainer. Walu for eight remains unverified. Other recorded forms may vary by speaker or region.</p>' : '') + '<div class="number-grid">' + records.map(entry => '<article class="number-entry"><button class="number-tile" type="button" data-number="' + entry.number + '" data-number-language="' + language + '" aria-expanded="' + !state.numbersHidden + '" aria-label="' + entry.number + ', ' + esc(BKCollections.names[language]) + (state.numbersHidden ? ', reveal word' : ', ' + esc(entry.word)) + '"><strong>' + entry.number + '</strong><span ' + (state.numbersHidden ? 'hidden' : '') + '>' + esc(entry.word) + '</span><small ' + (state.numbersHidden ? '' : 'hidden') + '>Tap to reveal</small></button><div class="number-details" ' + (state.numbersHidden ? 'hidden' : '') + '>' + (language !== 'tutong' ? statusLabel(entry) : '') + entryDetails({ note: entry.note, sourceFile: [...new Set(entry.records.map(record => record.sourceFile).filter(Boolean))].join(' · '), sourceUrl: entry.records.find(record => record.sourceUrl)?.sourceUrl, additionalSources: [...new Map(entry.records.filter(record => record.sourceUrl).map(record => [record.sourceUrl, { url: record.sourceUrl, name: record.sourceFile || 'Source' }])).values()].slice(1) }) + '</div></article>').join('') + '</div></section>').join('');
-    $$('[data-number]').forEach(button => button.addEventListener('click', () => {
-      if (!state.numbersHidden) return;
-      const language = button.dataset.numberLanguage, entry = catalog.numbers[language].find(record => record.number === Number(button.dataset.number)), expanded = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', String(!expanded)); button.setAttribute('aria-label', button.dataset.number + ', ' + BKCollections.names[language] + ', ' + (expanded ? 'reveal word' : entry.word));
-      button.querySelector('span').hidden = expanded; button.querySelector('small').hidden = !expanded; button.parentElement.querySelector('.number-details').hidden = expanded;
-    }));
+    container.innerHTML = groups.map(([language,records]) => {
+      const stages = BKCollections.countingStages(records);
+      return '<section class="number-collection" aria-label="' + esc(names[language]) + ' numbers"><h2>' + esc(names[language]) + '<small>' + records.length + ' recorded numbers</small></h2>' + (language === 'dusun' ? '<p class="local-note counting-scope">Selected examples through 1,000. Siam and Walu’ for nine were confirmed by the maintainer; Walu for eight still needs review. The remaining forms retain their source and review labels.</p>' : '') + stages.map((stage,index) => {
+        const key = language + ':' + stage.id, expanded = openStages.has(key) ? openStages.get(key) : stage.id !== 'building';
+        const pairs = language === 'dusun' && stage.id === 'building' ? BKCollections.countingPairs(stage.entries) : [];
+        const examples = pairs.length ? '<div class="counting-examples" ' + (state.numbersHidden ? 'hidden' : '') + '><h3>Notice how the recorded forms change</h3><p>Compare a whole ten with the next number in these source examples.</p><div>' + pairs.map(pair => '<dl>' + pair.map(entry => '<div><dt>' + numberText(entry.number) + '</dt><dd>' + esc(entry.word) + '</dd></div>').join('') + '</dl>').join('') + '</div><p class="local-note">Other tens and larger combinations still need source records or speaker review.</p></div>' : '';
+        const pool = BKCollections.countingPracticePool(stage.entries);
+        return '<details class="number-stage" data-number-stage="' + key + '" ' + (expanded ? 'open' : '') + '><summary><span class="number-step">0' + (index + 1) + '</span><span><strong>' + esc(stage.title) + '</strong><small>' + stage.entries.length + ' recorded numbers</small></span></summary><div class="number-stage-body"><p class="stage-intro">' + esc(stage.intro) + '</p>' + (language === 'dusun' && stage.id === 'milestones' ? '<p class="local-note">These milestones come from the SJD column of the 3 May 2013 Sang Jati comparison. Their source links are included below.</p>' : '') + examples + '<div class="number-grid">' + stage.entries.map(numberTile).join('') + '</div>' + (pool.length > 1 ? '<div class="number-check-start"><button class="text-button" type="button" data-start-number-check="' + stage.id + '" data-check-language="' + language + '">Quick check · ' + Math.min(3,pool.length) + ' questions →</button><small>Practise the recorded forms. Disputed readings stay outside scored checks.</small></div>' : '') + '<div class="number-check" data-number-check="' + key + '" hidden></div></div></details>';
+      }).join('') + '</section>';
+    }).join('');
+    if (state.numberQuiz) renderNumberCheck();
+  }
+  function startNumberCheck(language,stageId) {
+    const stage = BKCollections.countingStages(catalog.numbers[language] || []).find(item => item.id === stageId), pool = BKCollections.countingPracticePool(stage?.entries || []);
+    if (pool.length < 2) return;
+    const questions = BK.shuffle(pool).slice(0,3).map(entry => ({entry,choices:BK.shuffle([entry,...BK.shuffle(pool.filter(item => item.number !== entry.number)).slice(0,3)])}));
+    state.numberQuiz = {language,stageId,questions,index:0,answers:[]}; state.numbersHidden = true;
+    renderNumbers();
+    const section = $('[data-number-stage="' + language + ':' + stageId + '"]'); section.open = true;
+    section.querySelector('.number-check h3').focus({preventScroll:true}); section.querySelector('.number-check').scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+  function renderNumberCheck() {
+    const quiz = state.numberQuiz; if (!quiz) return;
+    const container = $('[data-number-check="' + quiz.language + ':' + quiz.stageId + '"]'); if (!container) return; container.hidden = false;
+    if (quiz.index >= quiz.questions.length) {
+      const correct = quiz.answers.filter(Boolean).length;
+      container.innerHTML = '<span class="section-kicker">Check complete</span><h3 tabindex="-1">' + correct + ' / ' + quiz.questions.length + '</h3><p>Revisit the recorded forms, then try another short check.</p><div class="number-check-actions"><button class="primary-button" type="button" data-start-number-check="' + quiz.stageId + '" data-check-language="' + quiz.language + '">Try again →</button><button class="text-button" type="button" data-review-number-cards>Review the cards</button></div>'; return;
+    }
+    const {entry,choices} = quiz.questions[quiz.index], answered = quiz.answers[quiz.index] !== undefined;
+    container.innerHTML = '<span class="section-kicker">Recall check · ' + (quiz.index + 1) + ' of ' + quiz.questions.length + '</span><h3 tabindex="-1">' + esc(entry.word) + '</h3>' + (quiz.language !== 'tutong' ? statusLabel(entry) : '') + '<p>Which number is this?</p><div class="quiz-choices">' + choices.map(choice => '<button type="button" data-number-answer="' + choice.number + '" ' + (answered ? 'disabled' : '') + ' class="' + (answered && choice.number === entry.number ? 'correct' : '') + '">' + numberText(choice.number) + '</button>').join('') + '</div><p class="quiz-feedback" role="status">' + (answered ? (quiz.answers[quiz.index] ? 'Correct. ' : '') + esc(entry.word) + ' is ' + numberText(entry.number) + '.' : 'Number words are hidden above. Tap a card if you need a hint.') + '</p><button class="primary-button" type="button" data-next-number-question ' + (answered ? '' : 'hidden') + '>' + (quiz.index === quiz.questions.length - 1 ? 'See results' : 'Next question') + ' →</button>';
+  }
+  function initNumbers() {
+    $('#number-grid').addEventListener('click',event => {
+      const start = event.target.closest('[data-start-number-check]'); if (start) {startNumberCheck(start.dataset.checkLanguage,start.dataset.startNumberCheck); return;}
+      const tile = event.target.closest('[data-number]');
+      if (tile && state.numbersHidden) {
+        const entry = catalog.numbers[tile.dataset.numberLanguage].find(item => item.number === Number(tile.dataset.number)), expanded = tile.getAttribute('aria-expanded') === 'true';
+        tile.setAttribute('aria-expanded',String(!expanded)); tile.setAttribute('aria-label',numberText(entry.number) + ', ' + names[entry.language] + ', ' + (expanded ? 'reveal word' : entry.word));
+        tile.querySelector('span').hidden = expanded; tile.querySelector('small').hidden = !expanded; tile.parentElement.querySelector('.number-details').hidden = expanded; return;
+      }
+      const quiz = state.numberQuiz; if (!quiz) return;
+      const answer = event.target.closest('[data-number-answer]');
+      if (answer && quiz.answers[quiz.index] === undefined) {
+        const question = quiz.questions[quiz.index], selected = Number(answer.dataset.numberAnswer);
+        if (!question.choices.some(choice => choice.number === selected)) return;
+        quiz.answers[quiz.index] = selected === question.entry.number; markToday(); renderNumberCheck();
+        const container = $('[data-number-check="' + quiz.language + ':' + quiz.stageId + '"]');
+        if (!quiz.answers[quiz.index]) container.querySelector('[data-number-answer="' + selected + '"]').classList.add('wrong');
+        container.querySelector('[data-next-number-question]').focus({preventScroll:true}); return;
+      }
+      if (event.target.closest('[data-next-number-question]') && quiz.answers[quiz.index] !== undefined) {quiz.index++; renderNumberCheck(); $('[data-number-check="' + quiz.language + ':' + quiz.stageId + '"] h3').focus({preventScroll:true});}
+      if (event.target.closest('[data-review-number-cards]')) {state.numbersHidden = false; renderNumbers();}
+    });
   }
   function wordSelection() {
     const ids = state.wordsList === 'mistakes' ? state.mistakes : state.wordsList === 'all' ? state.saved : new Set(state.lists.find(list => list.id === state.wordsList)?.words || []);
@@ -440,7 +493,7 @@
   function boot() {
     const night = store.read('bk-theme','day',value => ['day','night'].includes(value)) === 'night'; document.documentElement.dataset.theme = night ? 'night' : '';
     $('#theme-toggle').setAttribute('aria-label',night ? 'Switch to light theme' : 'Switch to dark theme');
-    bindEvents(); initDaily(); initTopics(); initDictionary(); initPhrases(); initWords(); newQuick(); updateProgress(); setCollection(state.collection); routeFromLocation();
+    bindEvents(); initDaily(); initTopics(); initDictionary(); initPhrases(); initNumbers(); initWords(); newQuick(); updateProgress(); setCollection(state.collection); routeFromLocation();
     ui = BKUI.init({
       getWords:() => catalog.words, getCollection:() => state.collection, lessonSize:lessonWords.length,
       openSearch:(query,collection) => routeTo('dictionary',{query,collection:collection || state.collection}),
