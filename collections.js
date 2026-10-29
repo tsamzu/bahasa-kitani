@@ -12,8 +12,15 @@
   }
   const statusLabel = status => statuses[status] || 'Needs review';
   const select = (entries, collection = 'all') => entries.filter(entry => collection === 'all' || entry.language === collection);
+  const categoryNames = Object.freeze({
+    'Fruits': 'Food & Drink', 'Family & People': 'People', 'Kata ganti nama / diri': 'Pronouns', 'Kata ganti nama tunjuk': 'Pronouns',
+    'Perkataan asas': 'Everyday Words', 'Kosa kata asas': 'Everyday Words', 'Kosa kata tambahan (kajian fonetik)': 'Everyday Words',
+    'Perbandingan ejaan': 'Language & Culture', 'Sebutan wilayah': 'Language & Culture', 'Kata berimbuhan': 'Word Forms', 'Istilah budaya': 'Language & Culture', 'Istilah bahasa': 'Language & Culture'
+  });
+  const categoryName = category => categoryNames[category] || category || 'Other';
   function adapt(entry, language) {
-    return { ...entry, id: progressId(language, entry.id), sourceId: entry.id, language, tutong: entry.headword, malay: entry.standardMalay || '', english: entry.english || '', cat: entry.category || 'Other', notation: '', note: [entry.reviewNote, entry.usageNotes].filter(Boolean).join(' ') };
+    const examples = entry.examples || (entry.status === 'reviewed' ? (entry.usageExamples || []).map(example => ({ text: example.text, explanation: example.userExplanation, status:'reviewed', credit:'Maintainer’s recorded example' })) : []);
+    return { ...entry, examples, id: progressId(language, entry.id), sourceId: entry.id, language, tutong: entry.headword, malay: entry.standardMalay || '', english: entry.english || '', cat: categoryName(entry.category), sourceCategory: entry.category || 'Other', notation: '', note: [entry.reviewNote, entry.usageNotes].filter(Boolean).join(' ') };
   }
   function interleave(groups) {
     const result = [];
@@ -34,7 +41,7 @@
     }));
   }
   function build({ words, phrases, numbers, brunei = [], dusun = [] }) {
-    const tutongWords = words.map(word => ({ ...word, language: 'tutong', sourceId: 'tutong-' + word.id, status: 'existing' }));
+    const tutongWords = words.map(word => ({ ...word, cat: categoryName(word.cat), sourceCategory: word.cat, language: 'tutong', sourceId: 'tutong-' + word.id, status: 'existing' }));
     const bruneiWords = brunei.map(word => adapt(word, 'brunei')), dusunWords = dusun.map(word => adapt(word, 'dusun'));
     const dictionary = interleave([tutongWords, bruneiWords, dusunWords]);
     if (new Set(dictionary.map(word => word.id)).size !== dictionary.length) throw new Error('Duplicate collection or progress IDs.');
@@ -50,7 +57,9 @@
     return { words: dictionary, phrases: phrasebook, numbers: counting };
   }
   let pending;
-  function load() {
+  const listeners = new Set(), snapshot = { brunei: [], dusun: [], failed: [], loaded: [] };
+  function load(onChange) {
+    if (onChange) { listeners.add(onChange); onChange({ ...snapshot }); }
     if (!pending) pending = Promise.all(['brunei', 'dusun'].map(async language => {
       const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 8000);
       try {
@@ -61,8 +70,14 @@
         return { language, data };
       } catch { return { language, data: [], failed: true }; }
       finally { clearTimeout(timer); }
-    })).then(results => ({ brunei: results[0].data, dusun: results[1].data, failed: results.filter(result => result.failed).map(result => result.language) }));
+    }).map(task => task.then(result => {
+      snapshot[result.language] = result.data; snapshot.loaded = [...snapshot.loaded, result.language];
+      if (result.failed) snapshot.failed = [...snapshot.failed, result.language];
+      for (const listener of listeners) listener({ ...snapshot });
+      return result;
+    }))).then(() => { listeners.clear(); return { ...snapshot }; });
+    else pending.then(() => listeners.delete(onChange));
     return pending;
   }
-  globalThis.BKCollections = Object.freeze({ names, statusLabel, progressId, reservedId, select, numberGroups, build, load });
+  globalThis.BKCollections = Object.freeze({ names, statusLabel, categoryName, progressId, reservedId, select, numberGroups, build, load });
 })();

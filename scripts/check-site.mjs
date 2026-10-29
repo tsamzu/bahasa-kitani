@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
-for (const file of ['core.js', 'collections.js', 'home-languages.js', 'languages.js', 'contributor-core.js', 'enhancements.js', 'scripts/process-contribution.cjs', 'app.js', 'sw.js', 'redirect.js', 'admin/admin.js', 'data/tutong.js']) new vm.Script(read(file), { filename: file });
+for (const file of ['core.js', 'collections.js', 'contributor-core.js', 'enhancements.js', 'scripts/process-contribution.cjs', 'app.js', 'sw.js', 'redirect.js', 'admin/admin.js', 'data/tutong.js']) new vm.Script(read(file), { filename: file });
 const html = read('index.html');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(ids.length, new Set(ids).size, 'HTML IDs must be unique');

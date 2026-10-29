@@ -7,20 +7,18 @@
   <meta name="description" content="Learn Bahasa Tutong and explore Brunei Malay and Dusun through vocabulary, translations, quizzes and word collections.">
   <title>Bahasa Kitani — Brunei's Living Languages</title>
   <link rel="canonical" href="https://bahasa-kitani.xyz/">
-  <meta property="og:title" content="Bahasa Kitani — Learn Bahasa Tutong">
+  <meta property="og:title" content="Bahasa Kitani — Brunei’s Living Languages">
   <meta property="og:description" content="Brunei’s living languages: Tutong lessons and searchable Brunei Malay and Dusun word collections.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bahasa-kitani.xyz/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.4.0">
-  <link rel="stylesheet" href="home-languages.css?v=2.3.1">
-  <script src="data/tutong.js?v=2.2.1"></script>
-  <script src="core.js?v=2.2.1" defer></script>
-  <script src="collections.js?v=2.4.0" defer></script>
-  <script src="enhancements.js?v=2.4.0" defer></script>
-  <script src="app.js?v=2.4.0" defer></script>
-  <script src="home-languages.js?v=2.4.0" defer></script>
+  <link rel="stylesheet" href="styles.css?v=2.5.0">
+  <script src="data/tutong.js?v=2.2.1" defer></script>
+  <script src="core.js?v=2.5.0" defer></script>
+  <script src="collections.js?v=2.5.0" defer></script>
+  <script src="enhancements.js?v=2.5.0" defer></script>
+  <script src="app.js?v=2.5.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -31,11 +29,9 @@
     </a>
     <nav aria-label="Main navigation">
       <button class="nav-link active" data-route="home">Home</button>
-      <a class="nav-link" href="languages.html">Languages</a>
-      <button class="nav-link" data-route="learn">Learn</button>
       <button class="nav-link" data-route="dictionary">Dictionary</button>
-      <button class="nav-link" data-route="phrases">Phrases</button>
-      <button class="nav-link" data-route="numbers">Numbers</button>
+      <button class="nav-link" data-route="learn">Learn</button>
+      <button class="nav-link" data-route="words">My Words</button>
     </nav>
     <div class="header-actions">
       <span class="streak-pill" title="Current learning streak"><span aria-hidden="true">✦</span> <b id="header-streak">0</b> day streak</span>
@@ -47,98 +43,51 @@
   </header>
   <div class="bk-site-notice" role="note"><strong>Work in progress.</strong> Bahasa Kitani is independently developed and maintained by one person. Corrections and contributions are welcome at <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</div>
   <div class="mobile-nav" id="mobile-nav" hidden>
-    <button data-route="home">Home</button><a class="bk-mobile-languages" href="languages.html">Explore languages</a><button data-route="learn">Learn</button><button data-route="dictionary">Dictionary</button><button data-route="phrases">Phrases</button><button data-route="numbers">Numbers</button><button data-route="community">About & feedback</button>
+    <button data-route="home">Home</button><button data-route="dictionary">Dictionary</button><button data-route="learn">Learn</button><button data-route="words">My Words</button><button data-route="community">About & feedback</button>
   </div>
 
   <main id="main">
     <div id="app-error" class="notice shell" role="alert" hidden>The dictionary could not load. Please refresh while connected to the internet, or <a href="mailto:sam@bahasa-kitani.xyz">let us know</a>.</div>
-    <p id="collections-load-status" class="notice shell" role="status">Loading the Brunei Malay and Dusun collections…</p>
+    <p id="collections-load-status" class="notice shell" role="status">Tutong is ready. Loading Brunei Malay and Dusun…</p>
     <noscript><p class="notice shell">Turn on JavaScript to use the dictionary and lessons. For help, email <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p></noscript>
     <section class="view active" id="view-home" data-view="home">
-<section class="bk-languages-home shell" aria-labelledby="bk-languages-title">
-  <div class="bk-languages-heading"><div><span class="section-kicker">Explore the languages</span><h2 id="bk-languages-title">Three languages. One home.</h2><p>Choose which language you are learning, or search across the three collections.</p></div><a href="languages.html" class="bk-languages-browse">Explore all languages →</a></div>
-  <div class="bk-languages-cards">
-    <a href="?lang=tutong#dictionary" data-route="dictionary" data-collection="tutong"><span>BAHASA TUTONG</span><strong>Bahasa Tutong</strong><small>Original dictionary · lessons · phrases</small><b>Explore Tutong →</b></a>
-    <a href="?lang=brunei#dictionary" data-route="dictionary" data-collection="brunei"><span>BAHASA MELAYU BRUNEI</span><strong>Melayu Brunei</strong><small>Everyday words and expressions</small><b>Explore Brunei Malay →</b></a>
-    <a href="?lang=dusun#dictionary" data-route="dictionary" data-collection="dusun"><span>BASA SANG JATI</span><strong>Dusun Brunei</strong><small>Greetings · vocabulary · counting</small><b>Explore Dusun →</b></a>
-  </div>
-  <div class="bk-global-search"><label for="bk-global-query">Search all three languages</label><input type="search" id="bk-global-query" autocomplete="off" placeholder="Try Urang, Bangas, Abuk, A'al…" aria-describedby="bk-global-help"><p id="bk-global-help">Results show which language each word belongs to and whether it has been reviewed.</p><div id="bk-global-results" aria-live="polite"></div></div>
-</section>
       <section class="home-search shell" aria-labelledby="home-search-title">
-        <div class="home-search-intro"><span class="section-kicker">Dictionary</span><h2 id="home-search-title">Find a Tutong word</h2><p>Search the Bahasa Tutong collection using Tutong, Malay or English.</p></div>
+        <div class="home-search-intro"><span class="section-kicker">Brunei’s living languages</span><h1 id="home-search-title">Every word brings us closer.</h1><p>Discover Tutong, Brunei Malay and Dusun. Search a word, then make it part of your day.</p></div>
         <form class="home-search-form" id="home-search-form" role="search" aria-label="Homepage dictionary search" action="index.html" method="get">
-          <label class="sr-only" for="home-search-input">Search the dictionary from the homepage</label>
-          <div class="home-search-controls">
-            <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="home-search-input" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="home-search-suggestions" aria-expanded="false" type="search" name="q" placeholder="Try water, air or empa" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" maxlength="200" required></div>
-            <button class="primary-button" type="submit">Search <span aria-hidden="true">→</span></button>
-          </div>
+          <div class="search-language"><label for="home-collection">Search in</label><select id="home-collection" name="lang"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select></div>
+          <label class="sr-only" for="home-search-input">Search words, Malay or English meanings</label>
+          <div class="home-search-controls"><div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="home-search-input" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="home-search-suggestions" aria-expanded="false" aria-describedby="home-search-help" type="search" name="q" placeholder="Try water, air, empa or Abuk…" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" maxlength="200" required></div><button class="primary-button" type="submit">Search <span aria-hidden="true">→</span></button></div>
           <div class="search-suggestions" id="home-search-suggestions" role="listbox" aria-label="Search suggestions" hidden></div>
-          <p class="local-note">Search all <b id="home-search-count">—</b> entries and their notes.</p>
+          <p class="local-note" id="home-search-help"><b id="home-search-count">—</b> entries · spelling suggestions, Malay and English meanings</p>
         </form>
       </section>
-      <section class="hero shell" aria-label="Learn Bahasa Tutong">
-        <div class="hero-copy">
-          <div class="language-identity">
-            <img src="assets/bahasa-tutong-badge.svg" width="80" height="80" alt="" decoding="async">
-            <div><p class="language-identity-title">Learn Bahasa Tutong</p><div class="eyebrow"><span>A community dictionary</span><span>Brunei Darussalam</span></div></div>
-          </div>
-          <h1>A living language,<br><em>learnt a little each day.</em></h1>
-          <p>Search the Bahasa Tutong dictionary, practise everyday words, and build confidence with short daily lessons.</p>
-          <div class="hero-actions">
-            <button class="primary-button" type="button" data-route="learn">Start today’s lesson <span>→</span></button>
-            <button class="text-button" type="button" data-route="dictionary" data-collection="tutong">Browse <b id="hero-word-count">—</b> words</button>
-          </div>
-          <p class="source-note">Community-sourced entries · Tutong, Bahasa Melayu & English<br>Translations and regional usage may vary. <a href="#community" data-route="community">Help improve the dictionary →</a></p>
-        </div>
+      <section class="progress-card continue-card shell" aria-labelledby="progress-title">
+        <div class="continue-intro"><div class="language-identity"><img src="assets/bahasa-tutong-badge.svg" width="64" height="64" alt="" decoding="async"><div><span class="section-kicker">Learn Bahasa Tutong</span><h2 id="progress-title">A little practice, every day.</h2></div></div><p class="local-note">Everyday essentials · 8 words · flashcards and a quick check</p></div>
+        <div class="continue-progress"><span class="level-pill" id="level-label">Getting started</span><div class="progress-rail"><span id="progress-bar"></span></div><div class="progress-labels"><span><b id="learned-count">0</b> <span id="learned-description">words practised</span></span><span id="progress-percent">0%</span></div></div>
+        <button class="primary-button" type="button" data-route="lesson">Continue learning →</button>
+      </section>
+      <div class="home-grid shell daily-grid">
         <aside class="daily-card" aria-labelledby="daily-title">
-          <div class="daily-top"><span>Word of the day</span><span id="daily-date">Today</span></div>
-          <div class="daily-body">
-            <span class="daily-category" id="daily-category">Expression</span>
-            <h2 id="daily-title">—</h2>
-            <div class="daily-rule"></div>
-            <dl><div><dt>BM</dt><dd id="daily-ms">—</dd></div><div><dt>EN</dt><dd id="daily-en">—</dd></div></dl>
-            <p id="daily-note" class="daily-note"></p>
-          </div>
+          <div class="daily-top"><span>Word of the day · Tutong</span><span id="daily-date">Today</span></div>
+          <div class="daily-body"><span class="daily-category" id="daily-category">Expression</span><h2 id="daily-title">—</h2><div class="daily-rule"></div><dl><div><dt>BM</dt><dd id="daily-ms">—</dd></div><div><dt>EN</dt><dd id="daily-en">—</dd></div></dl><p id="daily-note" class="daily-note"></p></div>
           <button class="daily-save" id="daily-save" type="button"><span aria-hidden="true">＋</span> Save this word</button>
         </aside>
-      </section>
-
-      <div class="home-grid shell">
-        <section class="progress-card" aria-labelledby="progress-title">
-          <div class="card-heading"><div><span class="section-kicker">Your learning</span><h2 id="progress-title">Continue where you left off</h2></div><span class="level-pill" id="level-label">Getting started</span></div>
-          <div class="progress-rail"><span id="progress-bar"></span></div>
-          <div class="progress-labels"><span><b id="learned-count">0</b> words practised</span><span id="progress-percent">0%</span></div>
-          <div class="lesson-preview">
-            <span class="lesson-icon" aria-hidden="true">Aa</span>
-            <div><strong>Everyday essentials</strong><small>8 words · flashcards + quick check</small></div>
-            <button type="button" data-route="learn" aria-label="Open Everyday essentials lesson">→</button>
-          </div>
-          <p class="local-note" id="storage-note">Saved words and progress stay in this browser.</p>
-          <button class="text-button backup-open" id="open-backup" type="button">Back up or restore progress</button>
-        </section>
-        <section class="quick-card" aria-labelledby="quick-title">
-          <span class="section-kicker">Quick practice</span><h2 id="quick-title">What does this mean?</h2>
-          <div class="quick-word" id="quick-word">—</div>
-          <div class="quick-options" id="quick-options"></div>
-          <p class="quick-feedback" id="quick-feedback" aria-live="polite"></p>
-          <button class="next-quick" id="next-quick" type="button">Try another <span>↻</span></button>
-        </section>
+        <section class="quick-card" aria-labelledby="quick-title"><span class="section-kicker">Quick practice · Tutong</span><h2 id="quick-title">What does this mean?</h2><div class="quick-word" id="quick-word">—</div><div class="quick-options" id="quick-options"></div><p class="quick-feedback" id="quick-feedback" aria-live="polite"></p><button class="next-quick" id="next-quick" type="button">Try another <span>↻</span></button></section>
       </div>
-
-      <section class="explore shell" aria-labelledby="explore-title">
-        <div class="section-row"><div><span class="section-kicker">Explore by topic</span><h2 id="explore-title">Start with what feels familiar</h2></div><button class="text-button" type="button" data-route="dictionary">View all categories →</button></div>
-        <div class="topic-grid" id="topic-grid"></div>
+      <section class="language-browse shell" aria-labelledby="languages-title"><div class="section-row"><div><span class="section-kicker">Explore the collections</span><h2 id="languages-title">Three languages. One home.</h2></div><button class="text-button" type="button" data-route="dictionary" data-collection="all">Browse all words →</button></div>
+        <div class="language-cards"><a href="?lang=tutong#dictionary" data-route="dictionary" data-collection="tutong"><span>Bahasa Tutong</span><strong>Tutong</strong><small><b id="hero-word-count">—</b> words · daily lessons</small><i aria-hidden="true">↗</i></a><a href="?lang=brunei#dictionary" data-route="dictionary" data-collection="brunei"><span>Bahasa Melayu Brunei</span><strong>Melayu Brunei</strong><small>Everyday words and expressions</small><i aria-hidden="true">↗</i></a><a href="?lang=dusun#dictionary" data-route="dictionary" data-collection="dusun"><span>Basa Sang Jati</span><strong>Dusun Brunei</strong><small>Vocabulary, greetings and counting</small><i aria-hidden="true">↗</i></a></div>
       </section>
-
-      <section class="phrase-strip">
-        <div class="shell phrase-strip-inner">
-          <div><span class="section-kicker light">Useful right now</span><h2>A phrase for the day</h2><p id="home-phrase-tutong">—</p><span id="home-phrase-english">—</span></div>
-          <button type="button" data-route="phrases">Explore the phrasebook <span>→</span></button>
-        </div>
-      </section>
+      <section class="explore shell" aria-labelledby="explore-title"><div class="section-row"><div><span class="section-kicker">Browse by topic</span><h2 id="explore-title">Start with the familiar.</h2></div></div><div class="topic-grid" id="topic-grid"></div></section>
     </section>
 
     <section class="view page-shell" id="view-learn" data-view="learn" hidden>
+      <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
+      <div class="page-head"><div><span class="section-kicker">Small steps, lasting words</span><h1>Learn</h1><p>Choose a short lesson, explore a phrase, or practise the words you saved.</p></div></div>
+      <div class="learn-links" aria-label="Learning activities"><article class="learning-card featured-learning"><div class="language-identity"><img src="assets/bahasa-tutong-badge.svg" width="64" height="64" alt="" decoding="async"><div><span class="section-kicker">Bahasa Tutong</span><h2>Everyday essentials</h2></div></div><p>Eight useful words. Start with flashcards, then check what you remember.</p><button class="primary-button" type="button" data-route="lesson">Open lesson →</button></article><article class="learning-card"><span class="section-kicker">Speak in context</span><h2>Phrasebook</h2><p>Greetings and expressions, with Malay and English translations and source notes.</p><button class="text-button" type="button" data-route="phrases">Explore phrases →</button></article><article class="learning-card"><span class="section-kicker">Recall practice</span><h2>Numbers &amp; counting</h2><p>Explore Tutong and Dusun numbers. Hide the words and test your memory.</p><button class="text-button" type="button" data-route="numbers">Start counting →</button></article><article class="learning-card"><span class="section-kicker">Your own vocabulary</span><h2>Practise My Words</h2><p>Build small study lists across all three languages, then revisit the words you missed.</p><button class="text-button" type="button" data-route="words">Open My Words →</button></article></div>
+    </section>
+
+    <section class="view page-shell" id="view-lesson" data-view="lesson" hidden>
+      <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
       <div class="page-head">
         <div><span class="section-kicker">Daily lesson</span><h1>Everyday essentials</h1><p>Eight useful words. Flip each card, then test what you remember.</p></div>
         <div class="lesson-meter"><span id="lesson-step-label">Card 1 of 8</span><div><i id="lesson-meter-bar"></i></div></div>
@@ -170,12 +119,11 @@
         <div><span class="section-kicker">Living reference</span><h1>Dictionary</h1><p>Explore Tutong, Brunei Malay and Dusun, with Malay and English meanings.</p></div>
         <div class="dictionary-stat"><strong id="dictionary-total">—</strong><span>entries</span></div>
       </div>
-      <div class="collection-picker"><label for="dictionary-collection">Dictionary language</label><select id="dictionary-collection" aria-label="Dictionary language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
-      <div class="search-panel">
-        <label class="search-box"><span class="sr-only">Search the dictionary</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="dictionary-search" type="search" placeholder="Try ‘water’, ‘makan’, or ‘empa’…" autocomplete="off"><kbd>/</kbd></label>
-        <div class="category-scroller" id="dictionary-categories" aria-label="Dictionary categories"></div>
-      </div>
-      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-language" aria-label="Search field"><option value="all">All text</option><option value="tutong">Headwords</option><option value="malay">Standard Malay</option><option value="english">English</option></select><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Most relevant</option><option value="az">Headword A–Z</option><option value="english">English A–Z</option></select></div></div>
+      <div class="dictionary-search-row search-panel"><label class="search-box"><span class="sr-only">Search the dictionary</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="dictionary-search" type="search" placeholder="Search a word, Malay or English meaning…" autocomplete="off" maxlength="200"><kbd>/</kbd></label><label class="compact-select"><span class="sr-only">Dictionary language</span><select id="dictionary-collection" aria-label="Dictionary language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select></label></div>
+      <details class="dictionary-filters" id="dictionary-filters"><summary>Filters <span id="filter-count" hidden>0</span></summary><div class="filter-controls"><label>Topic<select id="dictionary-category"><option value="All">All topics</option></select></label><label>Search field<select id="dictionary-language"><option value="all">All text</option><option value="tutong">Headwords</option><option value="malay">Standard Malay</option><option value="english">English</option></select></label><label>Sort by<select id="dictionary-sort"><option value="default">Most relevant</option><option value="az">Headword A–Z</option><option value="english">English A–Z</option></select></label><label>Review status<select id="dictionary-review"><option value="all">All entries</option><option value="reviewed">Community checked</option><option value="pending">Needs review</option></select></label><button id="saved-filter" type="button" aria-pressed="false">♡ Saved only <span id="saved-count">0</span></button></div></details>
+      <div class="active-filters" id="active-filters" aria-label="Active filters" hidden></div>
+      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><a href="#words" data-route="words">My Words →</a></div>
+      <p class="collection-help">Source notes and review labels are included. Some entries still need checking by speakers.</p>
       <p id="dictionary-match-note" class="notice" hidden></p>
       <div class="dictionary-grid" id="dictionary-grid"></div>
       <div class="empty-state" id="dictionary-empty" hidden><strong>No matching words</strong><p>Try another spelling or choose “All”.</p></div>
@@ -183,24 +131,39 @@
     </section>
 
     <section class="view page-shell" id="view-phrases" data-view="phrases" hidden>
+      <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
       <div class="page-head dictionary-head"><div><span class="section-kicker">Speak in context</span><h1>Phrasebook</h1><p>Everyday phrases, greetings and expressions from the three collections.</p></div><div class="dictionary-stat"><strong id="phrase-total">—</strong><span>phrases</span></div></div>
       <div class="collection-picker"><label for="phrase-collection">Phrasebook language</label><select id="phrase-collection" aria-label="Phrasebook language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
+      <label class="search-box phrase-search"><span class="sr-only">Search the phrasebook</span><input id="phrase-search" type="search" maxlength="200" placeholder="Search a phrase or meaning…"></label>
       <div class="phrase-filters" id="phrase-filters"></div>
       <p id="phrase-result-label" class="local-note" role="status"></p>
       <div class="phrase-grid" id="phrase-grid"></div><p id="phrase-empty" class="notice" hidden>No recorded phrases in this category yet. Try another language or category.</p>
     </section>
 
     <section class="view page-shell" id="view-numbers" data-view="numbers" hidden>
+      <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
       <div class="page-head"><div><span class="section-kicker">Count across languages</span><h1>Numbers &amp; counting</h1><p>Explore the numbers, then hide the words to test your recall.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide number words</button></div>
       <div class="collection-picker"><label for="numbers-collection">Numbers language</label><select id="numbers-collection" aria-label="Numbers language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
       <p class="local-note">When the words are hidden, tap a number to reveal it. Recorded variants remain separate from confirmed corrections.</p>
       <div id="number-grid" class="number-collections"></div><p id="numbers-empty" class="notice" hidden>Brunei Malay number entries have not been added to this collection yet.</p>
     </section>
 
+    <section class="view page-shell" id="view-words" data-view="words" hidden>
+      <div class="page-head"><div><span class="section-kicker">Your vocabulary, together</span><h1>My Words</h1><p>Saved words, small study lists and a little practice when you need it.</p></div><button class="text-button" id="open-backup" type="button">Back up or restore →</button></div>
+      <p class="local-note" id="storage-note">Saved words and progress stay in this browser.</p>
+      <div class="my-words-controls"><label class="search-box"><span class="sr-only">Search My Words</span><input id="words-search" type="search" maxlength="200" placeholder="Find a saved word…"></label><label class="compact-select"><span class="sr-only">My Words language</span><select id="words-collection" aria-label="My Words language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select></label><label class="compact-select"><span class="sr-only">Study list</span><select id="words-list" aria-label="Study list"><option value="all">All saved words</option><option value="mistakes">Review mistakes</option></select></label><button class="text-button" type="button" id="new-list">+ New list</button></div>
+      <form class="list-form" id="list-form" hidden><label for="list-name">Name your study list</label><input id="list-name" maxlength="50" required placeholder="For example, words for home"><button class="primary-button" type="submit">Create list</button><button class="text-button" type="button" id="cancel-list">Cancel</button></form>
+      <div class="words-toolbar"><p id="words-result-label" role="status"></p><div><button id="practice-words" class="primary-button" type="button">Practise these words →</button><button id="review-mistakes" class="text-button" type="button">Review mistakes <span id="mistake-count">0</span></button><button id="delete-list" class="text-button" type="button" hidden>Delete list</button></div></div>
+      <p id="words-list-help" class="local-note" hidden>Open “Study lists” on a word to add it to this list.</p><p id="words-availability" class="notice" role="status" hidden></p><div id="words-grid" class="saved-groups"></div>
+      <div class="empty-state" id="words-empty" hidden><strong id="words-empty-title">Your first word is a beginning.</strong><p id="words-empty-copy">Tap the heart on a dictionary entry to keep it here.</p><button class="text-button" type="button" data-route="dictionary">Explore the dictionary →</button></div>
+      <button class="load-button" id="words-more" type="button" hidden>Load more saved words</button>
+    </section>
+    <section class="view page-shell" id="view-practice" data-view="practice" hidden><div class="page-head"><div><span class="section-kicker">A little recall practice</span><h1>Practise My Words</h1><p id="practice-progress" role="status"></p></div><button class="text-button" type="button" data-route="words">Back to My Words →</button></div><section class="personal-practice" id="practice-content" aria-label="Saved word practice"></section></section>
+
     <section class="view page-shell" id="view-community" data-view="community" hidden>
       <div class="page-head"><div><span class="section-kicker">A language kept together</span><h1>About & feedback</h1><p>Help make this living reference more useful for everyone.</p></div></div>
       <div class="community-grid">
-        <article class="community-card"><h2>Bahasa Kitani</h2><p>Bahasa Kitani is an independent, solo-developed and solo-maintained work in progress. The site preserves its original Bahasa Tutong learning experience while gradually adding separate Bahasa Melayu Brunei and Dusun Brunei collections.</p><p>Vocabulary from different sources may contain spelling, meaning or regional variations. Draft entries are not presented as community-verified until checked.</p><p>Contact: <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p><p>Entries draw on community contributions and DBP Kamus Tutong–Melayu (1991), as credited in the original dictionary. This is a community learning resource; spellings, translations, and regional usage may need further review.</p><p>Pronunciation audio will need recordings reviewed by fluent speakers.</p><p><a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener noreferrer">Support Bahasa Kitani ↗</a> · <a href="https://jomqr.my/sam" target="_blank" rel="noopener noreferrer">Sam’s socials ↗</a></p><details><summary>What’s new</summary><p>Daily vocabulary, an eight-word lesson with a quiz and review, saved words, local learning progress, numbers recall practice, mobile navigation, and dark mode.</p></details></article>
+        <article class="community-card"><h2>Bahasa Kitani</h2><p>Bahasa Kitani is an independent, solo-developed and solo-maintained work in progress. The site preserves its original Bahasa Tutong learning experience while gradually adding separate Bahasa Melayu Brunei and Dusun Brunei collections.</p><p>Vocabulary from different sources may contain spelling, meaning or regional variations. Draft entries are not presented as community-verified until checked.</p><p>Contact: <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p><p>Entries draw on community contributions and DBP Kamus Tutong–Melayu (1991), as credited in the original dictionary. This is a community learning resource; spellings, translations, and regional usage may need further review.</p><p>Help add context: share an example sentence with its Malay or English meaning, or a pronunciation recording with the speaker’s permission. Examples and audio need review by fluent speakers before appearing on entries.</p><p><a href="https://ko-fi.com/tsamzu" target="_blank" rel="noopener noreferrer">Support Bahasa Kitani ↗</a> · <a href="https://jomqr.my/sam" target="_blank" rel="noopener noreferrer">Sam’s socials ↗</a></p><details><summary>What’s new</summary><p>One search across three languages, a Learn hub for lessons, phrases and counting, and My Words with study lists, practice and a review queue. Progress backups include your lists and review words.</p></details></article>
         <form class="community-card feedback-form" id="feedback-form"><h2>Contribute a correction</h2><p><a class="contribute-link" href="admin/index.html">Open the contributor editor →</a></p><p>Add and edit word or phrase drafts for GitHub review, or send general feedback by email below.</p><label for="feedback-type">Feedback type</label><select id="feedback-type"><option>Correction</option><option>New word</option><option>Regional variant</option><option>General feedback</option></select><label for="feedback-message">Your note</label><textarea id="feedback-message" rows="6" required maxlength="4000" placeholder="Mention the language, word and any suggested correction…"></textarea><button class="primary-button" type="submit">Open email draft →</button><p class="local-note" id="feedback-status" role="status">Your email app opens a draft to sam@bahasa-kitani.xyz. Review it and send when ready.</p></form>
       </div>
     </section>
@@ -213,7 +176,7 @@
 
   <dialog id="backup-dialog" aria-labelledby="backup-title">
     <div class="backup-heading"><div><span class="section-kicker">Keep your learning</span><h2 id="backup-title">Progress backup</h2></div><button id="close-backup" class="icon-button" type="button" aria-label="Close progress backup">×</button></div>
-    <p>Save your words, practice history, lesson position and theme in a file you control.</p>
+    <p>Save your words, study lists, review queue, practice history, lesson position and theme in a file you control.</p>
     <button id="download-progress" class="primary-button" type="button">Download progress backup ↓</button>
     <hr><label for="backup-file">Choose a progress backup</label><input id="backup-file" type="file" accept=".json,application/json">
     <p id="backup-preview" class="notice" hidden></p>
