@@ -4,10 +4,11 @@ An independently developed and maintained, work-in-progress collection for Brune
 
 ## What is included
 
-- Search with live homepage suggestions, relevance ranking, slash-separated variants, multiword matching, language filters and clearly labelled spelling suggestions. Categories, saved words and shareable query links remain available.
+- One indexed search across Tutong, Brunei Malay and Dusun, with keyboard suggestions, spelling variants, Malay/English meanings and shareable language/query links. Optional topic, review, saved-word and sorting controls live under Filters.
 - Daily vocabulary, Quick Practice with paired Malay/English answers, and an eight-word lesson followed by a quiz, score and missed-word review.
-- A phrasebook and number recall practice, including 1–30 and additional contributed numbers.
-- Progress, saved words, streaks and theme preferences stored in the visitor’s browser, with downloadable JSON backups, preview, merge and replace restore.
+- A Learn hub for the Tutong lesson, a searchable three-language phrasebook and Tutong/Dusun counting recall. Existing source notes and review labels remain visible.
+- My Words groups saved entries by language, supports up to 20 named study lists, and offers bilingual practice sessions of up to eight words. Missed practice words enter a persistent review queue; correct answers remove them.
+- Progress, study lists, review words, streaks and theme preferences stay in the visitor’s browser, with downloadable JSON backups, preview, merge and replace restore.
 - Responsive navigation, keyboard support, dark mode and a small offline cache.
 - A feedback form that opens an email draft to sam@bahasa-kitani.xyz.
 
@@ -21,8 +22,10 @@ The dictionary data is community-sourced. Regional spellings and translations ma
 | styles.css | Responsive light/dark styles |
 | app.js | UI, lessons, saved words and progress |
 | core.js | Search, dates, storage and quiz helpers |
-| data/tutong.js | Words, phrases and numbers; the source of truth |
-| dictionary.html and redirect.js | Compatibility for old dictionary URLs, including ?q= searches |
+| data/tutong.js | Original Tutong words, phrases and numbers |
+| data/brunei.json and data/dusun.json | Source-linked additional language records and review history |
+| collections.js | Shared adapters, standard topic labels, stable saved IDs and background loading |
+| dictionary.html, languages.html and redirect.js | Compatibility for old dictionary/language URLs, preserving search and language selection |
 | sw.js and manifest.webmanifest | Offline caching and home-screen metadata |
 | CNAME | Custom domain for GitHub Pages |
 | .nojekyll | Serve the repository as static files |
@@ -81,13 +84,13 @@ The code-export panel remains available for manually editing data/tutong.js. Pla
 
 ### Progress backup
 
-On the homepage, select **Back up or restore progress**. Download a JSON file, or choose one to preview before importing. Merge preserves current progress and adds the backup’s saved words, practice dates and learned words. Replace uses the backup instead and displays a warning first. Invalid files, unsupported versions, malformed IDs or dates, and files larger than 1 MB are rejected before state changes. Entries no longer in the dictionary are reported and skipped. Files are parsed on the device; there is no upload or account requirement.
+In **My Words**, select **Back up or restore**. Download a JSON file, or choose one to preview before importing. Merge preserves current progress and combines saved words, practice dates, learned words, review words and study-list membership. Lists with the same ID keep the current name. Replace with an older backup clears lists and the review queue because those fields were not present in that file. Replace uses the backup instead and displays a warning first. Invalid files, unsupported versions, malformed IDs or dates, and files larger than 1 MB are rejected before state changes. Entries no longer in the dictionary are reported and skipped. Files are parsed on the device; there is no upload or account requirement.
 
 ## Offline updates and local progress
 
-The service worker tries the network first for the public app files and uses its cached copy when offline. It does not cache admin pages, email contents, GitHub or third-party requests. A missing JavaScript file does not receive an HTML fallback. Old cache cleanup is restricted to Bahasa Kitani caches.
+The service worker reuses installed CSS/JavaScript when the requested release version matches its own. Pages and vocabulary try the network first and fall back to cache, keeping reviewed content current. Cached navigation falls back after three seconds on a slow connection while a late response refreshes the cache. A newer page’s versioned assets always reach the network through an older worker and do not overwrite that worker’s offline assets. It does not cache admin pages, email contents, GitHub or third-party requests. A missing JavaScript file does not receive an HTML fallback. Old cache cleanup is restricted to Bahasa Kitani caches.
 
-Bump the VERSION in sw.js and the version in package.json when releasing cached-file changes. Update the version suffixes on changed CSS and JavaScript URLs in index.html so a new page load receives the current assets. Online requests revalidate core files instead of accepting stale browser cache entries. A newly installed worker waits for existing tabs to close before activation. Offline availability begins after a successful online visit and cache installation; unsupported browsers can still use the online site.
+Bump the VERSION in sw.js and the version in package.json when releasing cached-file changes. Update the version suffixes on changed CSS and JavaScript URLs in index.html so a new page load receives the current assets. Keep release-version asset query strings aligned with the service-worker VERSION. Vocabulary data revalidates regardless of its query string. A newly installed worker waits for existing tabs to close before activation. Offline availability begins after a successful online visit and cache installation; unsupported browsers can still use the online site.
 
 Progress stays in one browser on one device. Clearing site data removes it. If browser storage is blocked or corrupt, the app keeps running with progress for the current visit. No accounts, analytics or progress-sync service are used.
 
@@ -103,18 +106,22 @@ Free for education and personal research. Commercial use requires written permis
 
 The homepage learning introduction uses the B3 map-and-book badge in `assets/bahasa-tutong-badge.svg`. The main Bahasa Kitani brand and favicon remain the site identity. The badge preserves the district path from [Locator map Tutong in Brunei.svg](https://commons.wikimedia.org/wiki/File:Locator_map_Tutong_in_Brunei.svg), created by Tachymètre in 2011 and released into the public domain. Only uniform scaling, translation and colour were applied to the boundary.
 
-## Additional language pages (v2.3.0)
-- `languages.html` adds searchable Bahasa Melayu Brunei and Brunei Dusun collections alongside the complete existing Tutong vocabulary.
-- `data/brunei.json` contains 157 draft records (18 marked as community checked); `data/dusun.json` contains 183 source-linked records, including disputed readings.
-- The homepage visibly labels languages and has an all-language search, while the original Tutong search, lessons, saved IDs and progress remain independent and unchanged.
-- Dusun number forms 8–9 are deliberately presented as **unverified** due to differing sources; this is not a definitive standardized counting list.
-- A work-in-progress and solo-maintained notice appears on the homepage and language pages, with a mailto-based contact form at sam@bahasa-kitani.xyz. The form opens the user's email client; it does not send automatically.
-- Research and web source links remain in word details. New-language entries are drafts until validated by fluent speakers.
+## Shared language collections and organisation
 
-### Main pages and language collections
+The four primary destinations are Home, Dictionary, Learn and My Words. Phrases and Numbers live under Learn; old hash routes still work. `languages.html` redirects to the main Dictionary and preserves `?lang=`, `?q=` and the old `#tutong`, `#brunei` and `#dusun` selections. There is one search implementation and one dictionary interface.
 
-Dictionary, Phrases and Numbers in `index.html` share a language selector (all, Tutong, Brunei Malay, Dusun) and retain it in the `lang` URL parameter. `collections.js` adapts `data/brunei.json` and `data/dusun.json` without changing the existing Tutong corpus. Each card keeps its language, review status and source notes. Phrasebook entries come from the recorded Dusun Greetings category and the Brunei Malay expressions `brunei-053` and `brunei-144`; no translations or phrases are generated at runtime. Counting groups recorded number variants by value; Brunei Malay counting shows an explicit empty state until number records are supplied.
+`collections.js` adapts all three datasets without changing source files, record IDs, meanings or review history. The common topic labels are presentation metadata; an original category is retained as `sourceCategory` and shown in entry notes when different. Broad source categories remain broad rather than guessing a word’s meaning. Tutong IDs stay unchanged; additional-language saved IDs derive stably from language and source ID.
 
-Additional-language saved words use stable numeric IDs derived from the source language and record ID, keeping the existing version-1 progress backup schema and Tutong IDs intact. The source datasets load once per page and fail independently, so an unavailable collection does not hide the others.
+Tutong controls initialise immediately. The two JSON collections load once per visit, publish independently as they arrive, and time out individually after eight seconds. Existing foreign saved IDs and list membership are retained during loading or failures. Backup downloads are always available; restore waits for both datasets so a temporary loading problem cannot discard saved vocabulary. No hidden route is pre-rendered at boot. Searchable forms are prepared once for each catalogue, and unchanged dictionary cards keep their DOM nodes, including expanded notes.
 
-The maintainer-approved review changelog confirms Siam and Walu' as nine. Walu without the apostrophe is still marked as needing review for eight. The main and separate language pages preserve this distinction.
+Phrasebook entries reuse recorded Tutong phrases, the Brunei Malay expressions `brunei-053` and `brunei-144`, and the Dusun Greetings records. Number variants remain grouped by value. Siam and Walu’ for nine are maintainer checked; Walu for eight still needs review. Brunei Malay counting has an explicit empty state until supplied.
+
+### Context and pronunciation
+
+Word cards can link to existing phrases containing their headword. Checked `usageExamples` (such as the maintainer’s Tah examples) are shown with the recorded explanation. No new translations are inferred. The optional `examples` field accepts `{text, malay?, english?, explanation?, status:"reviewed", credit?}`. Other statuses stay unpublished.
+
+An optional `audio` field accepts `{url, speaker, status:"reviewed"}`. Audio controls appear only for checked recordings with a speaker credit and an HTTPS URL or an `assets/audio/` MP3, OGG or WAV path. Audio loads only on demand (`preload="none"`). No recordings are currently supplied. Contributors should submit authentic recordings with the speaker’s permission for maintainer review; the Tutong contributor editor’s existing word/phrase workflow remains available.
+
+### Backup compatibility
+
+The JSON envelope remains version 1, with optional `mistakes` (word IDs) and `lists` (`{id, name, words}`) fields. Existing backups still import. Lists are validated, limited to 20 and only contain saved IDs; restore validates all IDs against the loaded catalogue. Clearing local site data removes progress; a downloaded backup can restore it on another device. There is no account or automatic cloud sync.

@@ -26,11 +26,11 @@
     return copy;
   }
   function choicesFor(word, pool, random = Math.random) {
-    const seen = new Set([normalize(word.english)]), choices = [word];
+    const seen = new Set(aliases(word.english)), seenMalay = new Set(aliases(word.malay)), choices = [word];
     for (const candidate of shuffle(pool, random)) {
       const meaning = normalize(candidate.english);
-      if (!meaning || seen.has(meaning) || normalize(candidate.tutong) === normalize(word.tutong)) continue;
-      seen.add(meaning); choices.push(candidate);
+      if (!meaning || aliases(candidate.english).some(value => seen.has(value)) || aliases(candidate.malay).some(value => seenMalay.has(value)) || normalize(candidate.tutong) === normalize(word.tutong)) continue;
+      aliases(candidate.english).forEach(value => seen.add(value)); aliases(candidate.malay).forEach(value => seenMalay.add(value)); choices.push(candidate);
       if (choices.length === 4) break;
     }
     return shuffle(choices, random);
@@ -50,14 +50,19 @@
     }
     return previous[right.length];
   }
-  function findWords(words, { query = '', category = 'All', savedOnly = false, saved = new Set(), sort = 'default', language = 'all', fuzzy = true } = {}) {
+  const indexes = new WeakMap();
+  function createSearchIndex(words) {
+    if (!indexes.has(words)) indexes.set(words, words.map((word, index) => ({ word, index, values: ['tutong', 'malay', 'english', 'note'].flatMap(field => [...new Set(forms(word[field]).concat(field === 'tutong' ? (word.variants || []).flatMap(forms) : []))].map(text => ({ text, field, tokens: text.split(/\s+/) }))) })));
+    return indexes.get(words);
+  }
+  function findWords(words, { query = '', category = 'All', savedOnly = false, saved = new Set(), sort = 'default', language = 'all', collection = 'all', review = 'all', fuzzy = true } = {}) {
     const q = normalize(query), tokens = q.split(/\s+/).filter(Boolean);
     const fields = ['tutong', 'malay', 'english'].includes(language) ? [language] : ['tutong', 'malay', 'english', 'note'];
-    const pool = words.filter(word => (category === 'All' || word.cat === category) && (!savedOnly || saved.has(word.id)));
-    let ranked = pool.map((word, index) => {
+    const pool = createSearchIndex(words).filter(({word}) => (collection === 'all' || word.language === collection) && (category === 'All' || word.cat === category) && (!savedOnly || saved.has(word.id)) && (review === 'all' || (review === 'reviewed' ? word.status === 'reviewed' : ['source', 'research', 'draft', 'needs_review'].includes(word.status))));
+    let ranked = pool.map(({word, index, values}) => {
       let score = q ? 0 : 1;
-      const values = fields.flatMap(field => forms(word[field]).map(text => ({ text, field })));
       if (q) for (const { text, field } of values) {
+        if (!fields.includes(field)) continue;
         const weight = field === 'note' ? 0 : field === 'tutong' ? 6 : field === 'malay' ? 4 : 2;
         const value = text === q ? 100 : text.startsWith(q) ? 75 : text.includes(q) ? 55 : tokens.every(token => text.includes(token)) ? 40 : 0;
         score = Math.max(score, value ? (field === 'note' ? Math.min(value, 25) : value + weight) : 0);
@@ -68,12 +73,12 @@
     if (!ranked.length && fuzzy && q.length >= 3 && q.length <= 80) {
       approximate = true;
       const limit = q.length < 6 ? 1 : 2;
-      ranked = pool.map((word, index) => {
-        const values = fields.filter(field => field !== 'note').flatMap(field => forms(word[field]));
+      ranked = pool.map(({word, index, values}) => {
         let distance = limit + 1;
-        for (const text of values) {
+        for (const {text, field, tokens: parts} of values) {
+          if (field === 'note' || !fields.includes(field)) continue;
           distance = Math.min(distance, editDistance(q, text, limit));
-          if (!q.includes(' ')) for (const token of text.split(/\s+/)) distance = Math.min(distance, editDistance(q, token, limit));
+          if (!q.includes(' ')) for (const token of parts) distance = Math.min(distance, editDistance(q, token, limit));
         }
         return { word, index, score: limit + 1 - distance };
       }).filter(item => item.score > 0);
@@ -111,7 +116,19 @@
     if (!Array.isArray(data.days) || data.days.length > 5000 || !data.days.every(day => typeof day === 'string' && dateForKey(day))) throw new Error('Invalid practice dates in backup.');
     if (!Number.isInteger(data.lessonIndex) || data.lessonIndex < 0 || data.lessonIndex >= lessonSize) throw new Error('Invalid lesson position in backup.');
     if (!['day', 'night'].includes(data.theme)) throw new Error('Invalid theme in backup.');
-    return { saved: unique(data.saved), learned: unique(data.learned), days: unique(data.days).sort(), lessonIndex: data.lessonIndex, theme: data.theme };
+    const result = { saved: unique(data.saved), learned: unique(data.learned), days: unique(data.days).sort(), lessonIndex: data.lessonIndex, theme: data.theme };
+    if (data.mistakes !== undefined) {
+      if (!Array.isArray(data.mistakes) || data.mistakes.length > 50000 || !data.mistakes.every(id => Number.isSafeInteger(id) && id > 0)) throw new Error('Invalid review words in backup.');
+      result.mistakes = unique(data.mistakes);
+    }
+    if (data.lists !== undefined) {
+      if (!Array.isArray(data.lists) || data.lists.length > 20 || new Set(data.lists.map(list => list?.id)).size !== data.lists.length) throw new Error('Invalid study lists in backup.');
+      result.lists = data.lists.map(list => {
+        if (!list || typeof list.id !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(list.id) || typeof list.name !== 'string' || !list.name.trim() || list.name.length > 50 || !Array.isArray(list.words) || list.words.length > 50000 || !list.words.every(id => Number.isSafeInteger(id) && id > 0)) throw new Error('Invalid study list in backup.');
+        return { id: list.id, name: list.name.trim(), words: unique(list.words).filter(id => result.saved.includes(id)) };
+      });
+    }
+    return result;
   }
   function createProgressBackup(data, date = new Date()) {
     return { app: 'bahasa-kitani', version: 1, exportedAt: date.toISOString(), data: cleanProgress(data) };
@@ -132,7 +149,17 @@
       saved: ids([...old.saved, ...next.saved]), learned: ids([...old.learned, ...next.learned]),
       days: unique([...old.days, ...next.days]).sort(), lessonIndex: Math.max(old.lessonIndex, next.lessonIndex), theme: old.theme
     } : { ...next, saved: ids(next.saved), learned: ids(next.learned) };
+    if (old.mistakes || next.mistakes) data.mistakes = ids(mode === 'merge' ? [...(old.mistakes || []), ...(next.mistakes || [])] : (next.mistakes || []));
+    if (old.lists || next.lists) {
+      const lists = new Map((mode === 'merge' ? old.lists || [] : []).map(list => [list.id, {...list, words: [...list.words]}]));
+      for (const list of next.lists || []) {
+        const previous = lists.get(list.id);
+        lists.set(list.id, { ...list, name: previous?.name || list.name, words: unique([...(previous?.words || []), ...list.words]) });
+      }
+      if (lists.size > 20) throw new Error('Merging would exceed 20 study lists. Remove an unused list or choose replace.');
+      data.lists = [...lists.values()].map(list => ({...list, words: ids(list.words).filter(id => data.saved.includes(id))}));
+    }
     return { data, missing };
   }
-  globalThis.BK = Object.freeze({ normalize, aliases, dayKey, dateForKey, streak, shuffle, choicesFor, editDistance, findWords, searchWords, storage, nextEntryId, createProgressBackup, parseProgressBackup, restoreProgress });
+  globalThis.BK = Object.freeze({ normalize, aliases, dayKey, dateForKey, streak, shuffle, choicesFor, editDistance, createSearchIndex, findWords, searchWords, storage, nextEntryId, createProgressBackup, parseProgressBackup, restoreProgress });
 })();
