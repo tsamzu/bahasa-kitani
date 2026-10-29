@@ -1,6 +1,6 @@
 # Bahasa Kitani
 
-A living Bahasa Tutong dictionary and learning site at [bahasa-kitani.xyz](https://bahasa-kitani.xyz), with Bahasa Melayu and English translations.
+An independently developed and maintained, work-in-progress collection for Brunei's living languages, built around the original Bahasa Tutong dictionary and learning site at [bahasa-kitani.xyz](https://bahasa-kitani.xyz), with Bahasa Melayu and English translations.
 
 ## What is included
 
@@ -102,3 +102,11 @@ Free for education and personal research. Commercial use requires written permis
 ### Bahasa Tutong section badge
 
 The homepage learning introduction uses the B3 map-and-book badge in `assets/bahasa-tutong-badge.svg`. The main Bahasa Kitani brand and favicon remain the site identity. The badge preserves the district path from [Locator map Tutong in Brunei.svg](https://commons.wikimedia.org/wiki/File:Locator_map_Tutong_in_Brunei.svg), created by Tachymètre in 2011 and released into the public domain. Only uniform scaling, translation and colour were applied to the boundary.
+
+## Additional language pages (v2.3.0)
+- `languages.html` adds searchable Bahasa Melayu Brunei and Brunei Dusun collections alongside the complete existing Tutong vocabulary.
+- `data/brunei.json` contains 157 draft records (18 marked as community checked); `data/dusun.json` contains 183 source-linked records, including disputed readings.
+- The homepage visibly labels languages and has an all-language search, while the original Tutong search, lessons, saved IDs and progress remain independent and unchanged.
+- Dusun number forms 8–9 are deliberately presented as **unverified** due to differing sources; this is not a definitive standardized counting list.
+- A work-in-progress and solo-maintained notice appears on the homepage and language pages, with a mailto-based contact form at sam@bahasa-kitani.xyz. The form opens the user's email client; it does not send automatically.
+- Research and web source links remain in word details. New-language entries are drafts until validated by fluent speakers.
