@@ -7,8 +7,8 @@
 .bk-languages-heading p{font-size:13px;color:var(--muted)}
 .bk-languages-browse{font-size:12px;font-weight:800;white-space:nowrap;color:var(--coral-d);text-underline-offset:4px}
 .bk-languages-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:23px}
-.bk-languages-cards a{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:15px;background:var(--paper);padding:22px;min-height:172px;color:var(--ink);transition:border-color .15s,transform .15s}
-.bk-languages-cards a:hover,.bk-languages-cards a:focus-visible{border-color:var(--coral);transform:translateY(-2px);text-decoration:none}
+.bk-languages-cards a{text-decoration:none;display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:15px;background:var(--paper);padding:22px;min-height:172px;color:var(--ink);transition:border-color .15s,transform .15s}
+.bk-languages-cards a:hover,.bk-languages-cards a:focus-visible{border-color:var(--coral);transform:translateY(-2px)}
 .bk-languages-cards span{font-size:9px;letter-spacing:.12em;font-weight:800;color:var(--coral-d)}
 .bk-languages-cards strong{font:500 25px var(--serif)}.bk-languages-cards small{font-size:11px;color:var(--muted);line-height:1.5}
 .bk-languages-cards b{font-size:10px;margin-top:auto;color:var(--coral-d)}
