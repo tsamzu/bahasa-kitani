@@ -13,12 +13,12 @@
   <meta property="og:url" content="https://bahasa-kitani.xyz/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.5.0">
+  <link rel="stylesheet" href="styles.css?v=2.6.0">
   <script src="data/tutong.js?v=2.2.1" defer></script>
-  <script src="core.js?v=2.5.0" defer></script>
-  <script src="collections.js?v=2.5.0" defer></script>
-  <script src="enhancements.js?v=2.5.0" defer></script>
-  <script src="app.js?v=2.5.0" defer></script>
+  <script src="core.js?v=2.6.0" defer></script>
+  <script src="collections.js?v=2.6.0" defer></script>
+  <script src="enhancements.js?v=2.6.0" defer></script>
+  <script src="app.js?v=2.6.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -83,7 +83,7 @@
     <section class="view page-shell" id="view-learn" data-view="learn" hidden>
       <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
       <div class="page-head"><div><span class="section-kicker">Small steps, lasting words</span><h1>Learn</h1><p>Choose a short lesson, explore a phrase, or practise the words you saved.</p></div></div>
-      <div class="learn-links" aria-label="Learning activities"><article class="learning-card featured-learning"><div class="language-identity"><img src="assets/bahasa-tutong-badge.svg" width="64" height="64" alt="" decoding="async"><div><span class="section-kicker">Bahasa Tutong</span><h2>Everyday essentials</h2></div></div><p>Eight useful words. Start with flashcards, then check what you remember.</p><button class="primary-button" type="button" data-route="lesson">Open lesson →</button></article><article class="learning-card"><span class="section-kicker">Speak in context</span><h2>Phrasebook</h2><p>Greetings and expressions, with Malay and English translations and source notes.</p><button class="text-button" type="button" data-route="phrases">Explore phrases →</button></article><article class="learning-card"><span class="section-kicker">Recall practice</span><h2>Numbers &amp; counting</h2><p>Explore Tutong and Dusun numbers. Hide the words and test your memory.</p><button class="text-button" type="button" data-route="numbers">Start counting →</button></article><article class="learning-card"><span class="section-kicker">Your own vocabulary</span><h2>Practise My Words</h2><p>Build small study lists across all three languages, then revisit the words you missed.</p><button class="text-button" type="button" data-route="words">Open My Words →</button></article></div>
+      <div class="learn-links" aria-label="Learning activities"><article class="learning-card featured-learning"><div class="language-identity"><img src="assets/bahasa-tutong-badge.svg" width="64" height="64" alt="" decoding="async"><div><span class="section-kicker">Bahasa Tutong</span><h2>Everyday essentials</h2></div></div><p>Eight useful words. Start with flashcards, then check what you remember.</p><button class="primary-button" type="button" data-route="lesson">Open lesson →</button></article><article class="learning-card"><span class="section-kicker">Speak in context</span><h2>Phrasebook</h2><p>Greetings and expressions, with Malay and English translations and source notes.</p><button class="text-button" type="button" data-route="phrases">Explore phrases →</button></article><article class="learning-card"><span class="section-kicker">Recall practice</span><h2>Numbers &amp; counting</h2><p>Build confidence from 1–10 to 100 and 1,000, with recorded examples and short checks.</p><button class="text-button" type="button" data-route="numbers">Start counting →</button></article><article class="learning-card"><span class="section-kicker">Your own vocabulary</span><h2>Practise My Words</h2><p>Build small study lists across all three languages, then revisit the words you missed.</p><button class="text-button" type="button" data-route="words">Open My Words →</button></article></div>
     </section>
 
     <section class="view page-shell" id="view-lesson" data-view="lesson" hidden>
@@ -142,7 +142,7 @@
 
     <section class="view page-shell" id="view-numbers" data-view="numbers" hidden>
       <nav class="learning-nav" aria-label="Learning sections"><button type="button" data-route="learn">Overview</button><button type="button" data-route="lesson">Tutong lesson</button><button type="button" data-route="phrases">Phrases</button><button type="button" data-route="numbers">Numbers</button></nav>
-      <div class="page-head"><div><span class="section-kicker">Count across languages</span><h1>Numbers &amp; counting</h1><p>Explore the numbers, then hide the words to test your recall.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide number words</button></div>
+      <div class="page-head"><div><span class="section-kicker">Count across languages</span><h1>Numbers &amp; counting</h1><p>Learn the basics, compare how numbers build, then explore 100 and 1,000.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide number words</button></div>
       <div class="collection-picker"><label for="numbers-collection">Numbers language</label><select id="numbers-collection" aria-label="Numbers language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
       <p class="local-note">When the words are hidden, tap a number to reveal it. Recorded variants remain separate from confirmed corrections.</p>
       <div id="number-grid" class="number-collections"></div><p id="numbers-empty" class="notice" hidden>Brunei Malay number entries have not been added to this collection yet.</p>
@@ -170,7 +170,7 @@
   </main>
 
   <footer>
-    <div class="shell footer-inner"><a class="brand footer-brand" href="#home" data-route="home"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Preserving Brunei’s living languages</small></span></a><p>Solo-developed and maintained · Work in progress.<br>Free for education and personal research. Commercial use requires written permission.</p><a href="#community" data-route="community">About & feedback →</a></div>
+    <div class="shell footer-inner"><a class="brand footer-brand" href="#home" data-route="home"><span class="brand-mark">B</span><span><strong>Bahasa Kitani</strong><small>Preserving Brunei’s living languages</small></span></a><p>Solo-developed and maintained · Work in progress.<br>Free for education and personal research. Commercial use requires written permission.</p><nav class="footer-links" aria-label="Footer links"><a href="#community" data-route="community">About & feedback →</a><a href="https://jomqr.my/sam" target="_blank" rel="noopener noreferrer">Sam’s socials ↗</a></nav></div>
     <div class="shell footer-bottom"><span>© <span id="copyright-year">2026</span> Bahasa Kitani</span></div>
   </footer>
 
