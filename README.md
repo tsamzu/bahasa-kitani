@@ -110,3 +110,11 @@ The homepage learning introduction uses the B3 map-and-book badge in `assets/bah
 - Dusun number forms 8–9 are deliberately presented as **unverified** due to differing sources; this is not a definitive standardized counting list.
 - A work-in-progress and solo-maintained notice appears on the homepage and language pages, with a mailto-based contact form at sam@bahasa-kitani.xyz. The form opens the user's email client; it does not send automatically.
 - Research and web source links remain in word details. New-language entries are drafts until validated by fluent speakers.
+
+### Main pages and language collections
+
+Dictionary, Phrases and Numbers in `index.html` share a language selector (all, Tutong, Brunei Malay, Dusun) and retain it in the `lang` URL parameter. `collections.js` adapts `data/brunei.json` and `data/dusun.json` without changing the existing Tutong corpus. Each card keeps its language, review status and source notes. Phrasebook entries come from the recorded Dusun Greetings category and the Brunei Malay expressions `brunei-053` and `brunei-144`; no translations or phrases are generated at runtime. Counting groups recorded number variants by value; Brunei Malay counting shows an explicit empty state until number records are supplied.
+
+Additional-language saved words use stable numeric IDs derived from the source language and record ID, keeping the existing version-1 progress backup schema and Tutong IDs intact. The source datasets load once per page and fail independently, so an unavailable collection does not hide the others.
+
+The maintainer-approved review changelog confirms Siam and Walu' as nine. Walu without the apostrophe is still marked as needing review for eight. The main and separate language pages preserve this distinction.

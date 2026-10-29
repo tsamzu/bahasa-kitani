@@ -1,6 +1,6 @@
 /* Homepage suggestions and local progress backup. */
 (() => {
-  function init({ words, lessonSize, openSearch, getProgress, applyProgress }) {
+  function init({ words, searchWords = words, lessonSize, openSearch, getProgress, applyProgress }) {
     const $ = selector => document.querySelector(selector);
     const form = $('#home-search-form'), input = $('#home-search-input'), list = $('#home-search-suggestions');
     const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
@@ -9,12 +9,12 @@
     function suggestions() {
       const query = input.value.trim();
       if (!query) { closeSuggestions(); return; }
-      const found = BK.findWords(words, { query }), matches = found.results.slice(0,6);
+      const found = BK.findWords(searchWords, { query }), matches = found.results.slice(0,6);
       active = -1; input.removeAttribute('aria-activedescendant');
       list.innerHTML = matches.length ? '<p role="presentation">' + (found.approximate ? 'Closest spellings — choose a word' : 'Suggested entries') + '</p>' + matches.map(word => '<button type="button" tabindex="-1" role="option" aria-selected="false" id="home-suggest-' + word.id + '" data-suggest="' + word.id + '"><strong>' + esc(word.tutong) + '</strong><small>' + esc(word.malay) + ' · ' + esc(word.english) + '</small></button>').join('') : '<p role="presentation">No suggestions yet. Press Search to try the full dictionary.</p>';
       list.hidden = false; input.setAttribute('aria-expanded', 'true');
       list.querySelectorAll('[data-suggest]').forEach(button => {
-        button.addEventListener('click', () => { const word = words.find(item => item.id === Number(button.dataset.suggest)); input.value = word.tutong; closeSuggestions(); openSearch(word.tutong); });
+        button.addEventListener('click', () => { const word = searchWords.find(item => item.id === Number(button.dataset.suggest)); input.value = word.tutong; closeSuggestions(); openSearch(word.tutong); });
 
       });
     }
