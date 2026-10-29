@@ -61,6 +61,7 @@ test('navigation binds before pending collections settle and existing foreign pr
     setAttribute(key,value) {this[key]=value;}
     removeAttribute(key) {delete this[key];}
     focus() {}
+    querySelectorAll() {return [];}
   }
   const ids = new Map([...read('index.html').matchAll(/\bid="([^"]+)"/g)].map(match => [match[1],new Element(match[1])]));
   const views = ['home','dictionary','learn','lesson','phrases','numbers','words','practice','community'].map(route => {const el=ids.get('view-'+route);el.dataset.view=route;return el;});
@@ -75,6 +76,10 @@ test('navigation binds before pending collections settle and existing foreign pr
   handlers.click({target:{closest:selector => selector==='[data-route]' ? nav : null},button:0,preventDefault(){}});
   assert.equal(ids.get('view-learn').hidden,false); assert.equal(ids.get('view-home').hidden,true); assert.equal(location.hash,'#learn');
   assert.deepEqual(plain(hooks.getProgress().lists),progress.lists);
+  nav.dataset.route='numbers'; nav.dataset.collection='dusun';
+  handlers.click({target:{closest:selector => selector==='[data-route]' ? nav : null},button:0,preventDefault(){}});
+  assert.equal(ids.get('numbers-empty').hidden,false);
+  assert.equal(ids.get('numbers-empty').textContent,'Loading Dusun Brunei numbers…');
 });
 
 test('legacy dictionary and language URLs retain safe query and language selection', () => {

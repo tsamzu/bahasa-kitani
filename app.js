@@ -320,6 +320,8 @@
     const container = $('#number-grid'), openStages = new Map([...container.querySelectorAll('[data-number-stage]')].map(stage => [stage.dataset.numberStage,stage.open]));
     const groups = Object.entries(catalog.numbers).filter(([language,records]) => records.length && (state.collection === 'all' || state.collection === language));
     $('#numbers-empty').hidden = groups.length !== 0; $('#numbers-toggle').disabled = !groups.length;
+    const pending = ['brunei','dusun'].includes(state.collection) && !extra.loaded.includes(state.collection);
+    $('#numbers-empty').textContent = pending ? 'Loading ' + names[state.collection] + ' numbers…' : extra.failed.includes(state.collection) ? names[state.collection] + ' could not load. Reload while connected to try again.' : state.collection === 'brunei' ? 'Brunei Malay number entries have not been added to this collection yet.' : 'No recorded numbers are available in this collection yet.';
     container.innerHTML = groups.map(([language,records]) => {
       const stages = BKCollections.countingStages(records);
       return '<section class="number-collection" aria-label="' + esc(names[language]) + ' numbers"><h2>' + esc(names[language]) + '<small>' + records.length + ' recorded numbers</small></h2>' + (language === 'dusun' ? '<p class="local-note counting-scope">Selected examples through 1,000. Siam and Walu’ for nine were confirmed by the maintainer; Walu for eight still needs review. The remaining forms retain their source and review labels.</p>' : '') + stages.map((stage,index) => {
