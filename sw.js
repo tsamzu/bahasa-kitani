@@ -1,5 +1,5 @@
 /* Bump VERSION with each release that changes cached files. */
-const VERSION = '2.4.0';
+const VERSION = '2.4.1';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
 const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './collections.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './assets/bahasa-tutong-badge.svg', './manifest.webmanifest', './languages.html', './languages.js', './languages.css', './home-languages.js', './home-languages.css', './data/brunei.json', './data/dusun.json'];
