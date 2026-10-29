@@ -1,20 +1,43 @@
-(() => {
+(async () => {
   'use strict';
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
-  if (typeof WORDS === 'undefined' || !Array.isArray(WORDS) || !WORDS.length || typeof BK === 'undefined') {
+  if (typeof WORDS === 'undefined' || !Array.isArray(WORDS) || !WORDS.length || typeof BK === 'undefined' || typeof BKCollections === 'undefined') {
     $('#app-error').hidden = false;
     return;
   }
+  const extra = await BKCollections.load();
+  const catalog = BKCollections.build({ words: WORDS, phrases: PHRASES, numbers: NUMBERS, brunei: extra.brunei, dusun: extra.dusun });
+  const isCollection = value => Object.hasOwn(BKCollections.names, value);
   const store = BK.storage(() => window.localStorage);
-  const validIds = new Set(WORDS.map(word => word.id));
+  const validIds = new Set(catalog.words.map(word => word.id));
+  const loadStatus = $('#collections-load-status');
+  loadStatus.hidden = !extra.failed.length;
+  if (extra.failed.length) {
+    loadStatus.textContent = extra.failed.map(language => BKCollections.names[language]).join(' and ') + ' could not load. The available collections still work. Reload this page to try again.';
+  }
+  function setCollection(collection) {
+    if (!isCollection(collection)) return;
+    if (collection !== state.collection) { state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.phraseCategory = 'All'; }
+    state.collection = collection;
+    for (const name of ['dictionary', 'phrase', 'numbers']) $('#' + name + '-collection').value = collection;
+  }
+  function entryDetails(word) {
+    const source = word.sourceFile || '', links = [];
+    if (word.sourceUrl && /^https:\/\//.test(word.sourceUrl)) links.push('<a href="' + esc(word.sourceUrl) + '" target="_blank" rel="noopener noreferrer">Read original source ↗</a>');
+    for (const item of word.additionalSources || []) if (/^https:\/\//.test(item.url || '')) links.push('<a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer">' + esc(item.name || 'Additional source') + ' ↗</a>');
+    if (!word.note && !source && !links.length) return '';
+    return '<details class="entry-note"><summary>' + (source ? 'Notes & sources' : 'Entry note') + '</summary>' + (word.note ? '<p>' + esc(word.note) + '</p>' : '') + (source ? '<p>Source: ' + esc(source) + (word.journalPage ? ' · p. ' + esc(word.journalPage) : '') + '</p>' : '') + links.map(link => '<p>' + link + '</p>').join('') + '</details>';
+  }
+  function languageLabel(word) { return '<span class="collection-label ' + word.language + '">' + esc(BKCollections.names[word.language]) + '</span>'; }
+  function statusLabel(word) { return '<span class="review-label ' + esc(word.status) + '">' + esc(BKCollections.statusLabel(word.status)) + '</span>'; }
   const idList = value => Array.isArray(value) && value.every(Number.isInteger);
   const daysList = value => Array.isArray(value) && value.every(key => typeof key === 'string' && BK.dateForKey(key));
   const lessonWords = [735, 733, 306, 159, 49, 117, 149, 150].map(id => WORDS.find(word => word.id === id)).filter(Boolean);
   const state = {
-    route: 'home', dictionaryCategory: 'All', dictionaryPage: 1, savedOnly: false, dictionaryLanguage: 'all',
-    saved: new Set(store.read('bk-saved', [], idList).filter(id => validIds.has(id))),
+    route: 'home', collection: 'all', dictionaryCategory: 'All', dictionaryPage: 1, savedOnly: false, dictionaryLanguage: 'all',
+    saved: new Set(store.read('bk-saved', [], idList).filter(id => validIds.has(id) || (extra.failed.length && id >= BKCollections.reservedId))),
     learned: new Set(store.read('bk-learned', [], idList).filter(id => validIds.has(id))),
     days: store.read('bk-days', [], daysList),
     lessonIndex: store.read('bk-lesson-index', 0, value => Number.isInteger(value) && value >= 0 && value < lessonWords.length),
@@ -46,8 +69,9 @@
     $('#storage-note').textContent = store.available ? 'Saved words and progress stay in this browser.' : 'Browser storage is unavailable. You can keep learning; progress lasts for this visit.';
   }
   function closeMenu() { $('#mobile-nav').hidden = true; $('#menu-button').setAttribute('aria-expanded', 'false'); }
-  function routeTo(route, { historyMode = 'push', focus = true, query } = {}) {
+  function routeTo(route, { historyMode = 'push', focus = true, query, collection } = {}) {
     const next = routes.includes(route) ? route : 'home'; state.route = next;
+    setCollection(isCollection(collection) ? collection : state.collection);
     if (next === 'dictionary' && typeof query === 'string') {
       state.dictionaryCategory = 'All'; state.dictionaryPage = 1; state.savedOnly = false;
       $('#dictionary-search').value = query; $('#dictionary-sort').value = 'default'; state.dictionaryLanguage = 'all'; $('#dictionary-language').value = 'all';
@@ -58,6 +82,7 @@
       if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
     });
     const target = new URL(location.href); target.hash = next;
+    if (state.collection === 'all') target.searchParams.delete('lang'); else target.searchParams.set('lang', state.collection);
     if (next !== 'dictionary') target.searchParams.delete('q');
     else if (typeof query === 'string') target.searchParams.set('q', query);
     if (historyMode === 'push' && target.href !== location.href) history.pushState(null, '', target.href);
@@ -65,6 +90,7 @@
     closeMenu();
     if (next === 'dictionary') renderDictionary();
     if (next === 'phrases') renderPhrases();
+    if (next === 'numbers') renderNumbers();
     if (next === 'learn') renderLesson();
     document.title = `${next === 'home' ? 'Learn Bahasa Tutong' : next === 'community' ? 'About & feedback' : next[0].toUpperCase() + next.slice(1)} — Bahasa Kitani`;
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -74,7 +100,7 @@
     const hash = location.hash.slice(1); if (hash === 'main') return;
     const query = new URLSearchParams(location.search).get('q');
     const route = legacyRoutes[hash] || hash || (query !== null ? 'dictionary' : 'home');
-    routeTo(route, { historyMode: 'none', focus: false, query: route === 'dictionary' && query !== null ? query : undefined });
+    routeTo(route, { historyMode: 'none', focus: false, query: route === 'dictionary' && query !== null ? query : undefined, collection: new URLSearchParams(location.search).get('lang') || 'all' });
   }
   function initDaily() {
     const now = new Date(); const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
@@ -98,8 +124,8 @@
     const topics = [['Food & Drink', '◒', 'Food & drink'], ['People', '☺', 'People'], ['Home', '⌂', 'At home'], ['Nature', '✦', 'Nature']];
     $('#topic-grid').innerHTML = topics.map(([category, icon, label]) => `<button class="topic-card" type="button" data-category="${esc(category)}"><span class="topic-icon" aria-hidden="true">${icon}</span><strong>${label}</strong><small>${WORDS.filter(word => word.cat === category).length} words →</small></button>`).join('');
     $$('.topic-card').forEach(button => button.addEventListener('click', () => {
-      state.dictionaryCategory = button.dataset.category; state.dictionaryPage = 1; state.savedOnly = false;
-      $('#dictionary-search').value = ''; routeTo('dictionary');
+      setCollection('tutong'); state.dictionaryCategory = button.dataset.category; state.dictionaryPage = 1; state.savedOnly = false;
+      $('#dictionary-search').value = ''; routeTo('dictionary', { collection: 'tutong' });
     }));
     const phrase = PHRASES[new Date().getDate() % PHRASES.length];
     $('#home-phrase-tutong').textContent = phrase.tutong; $('#home-phrase-english').textContent = phrase.english;
@@ -170,10 +196,11 @@
     $('#finish-lesson').addEventListener('click', () => routeTo('home')); markToday(); $('#quiz-content h2').focus({ preventScroll: true });
   }
   function initDictionary() {
-    $('#dictionary-total').textContent = WORDS.length; $('#hero-word-count').textContent = WORDS.length; $('#home-search-count').textContent = WORDS.length;
-    const categories = ['All', ...new Set(WORDS.map(word => word.cat))];
-    $('#dictionary-categories').innerHTML = categories.map(category => `<button type="button" data-cat="${esc(category)}">${esc(category)}</button>`).join('');
-    $$('#dictionary-categories button').forEach(button => button.addEventListener('click', () => { state.dictionaryCategory = button.dataset.cat; state.dictionaryPage = 1; renderDictionary(); }));
+    $('#hero-word-count').textContent = WORDS.length; $('#home-search-count').textContent = WORDS.length;
+    $('#dictionary-categories').addEventListener('click', event => {
+      const button = event.target.closest('[data-cat]'); if (!button) return;
+      state.dictionaryCategory = button.dataset.cat; state.dictionaryPage = 1; renderDictionary();
+    });
     $('#dictionary-search').addEventListener('input', () => { state.dictionaryPage = 1; renderDictionary(); });
     $('#dictionary-sort').addEventListener('change', () => { state.dictionaryPage = 1; renderDictionary(); });
     $('#dictionary-language').addEventListener('change', () => { state.dictionaryLanguage = $('#dictionary-language').value; state.dictionaryPage = 1; renderDictionary(); });
@@ -181,53 +208,71 @@
     $('#dictionary-more').addEventListener('click', () => { state.dictionaryPage++; renderDictionary(); });
   }
   function renderDictionary() {
+    const pool = BKCollections.select(catalog.words, state.collection), categories = ['All', ...new Set(pool.map(word => word.cat))];
+    if (!categories.includes(state.dictionaryCategory)) state.dictionaryCategory = 'All';
+    const container = $('#dictionary-categories'), signature = JSON.stringify(categories);
+    if (container.dataset.options !== signature) {
+      container.innerHTML = categories.map(category => '<button type="button" data-cat="' + esc(category) + '">' + esc(category) + '</button>').join(''); container.dataset.options = signature;
+    }
+    $('#dictionary-total').textContent = pool.length;
     if (state.route === 'dictionary') {
       const target = new URL(location.href), query = $('#dictionary-search').value.trim();
       if (query) target.searchParams.set('q', query); else target.searchParams.delete('q');
       if (target.href !== location.href) history.replaceState(null, '', target.href);
     }
-    const matches = BK.findWords(WORDS, { query: $('#dictionary-search').value, category: state.dictionaryCategory, savedOnly: state.savedOnly, saved: state.saved, sort: $('#dictionary-sort').value, language: state.dictionaryLanguage });
-    const results = matches.results;
-    const visible = results.slice(0, state.dictionaryPage * 48);
+    const matches = BK.findWords(pool, { query: $('#dictionary-search').value, category: state.dictionaryCategory, savedOnly: state.savedOnly, saved: state.saved, sort: $('#dictionary-sort').value, language: state.dictionaryLanguage });
+    const results = matches.results, visible = results.slice(0, state.dictionaryPage * 48);
     $$('#dictionary-categories button').forEach(button => { const active = button.dataset.cat === state.dictionaryCategory; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
     $('#saved-filter').classList.toggle('active', state.savedOnly); $('#saved-filter').setAttribute('aria-pressed', String(state.savedOnly));
-    $('#dictionary-result-label').textContent = (matches.approximate ? 'Closest spellings: ' : '') + 'Showing ' + visible.length + ' of ' + results.length + ' entries';
+    $('#dictionary-result-label').textContent = (matches.approximate ? 'Closest spellings: ' : '') + 'Showing ' + visible.length + ' of ' + results.length + ' entries · ' + BKCollections.names[state.collection];
     $('#dictionary-match-note').hidden = !matches.approximate;
     $('#dictionary-match-note').textContent = matches.approximate ? 'No exact matches. These are nearby spellings; check the word and its translations.' : '';
     $('#dictionary-empty').hidden = results.length !== 0; $('#dictionary-more').hidden = visible.length >= results.length;
     const labels = { variant: 'Regional variant', loanword: 'Loanword', clarify: 'Needs clarification' };
-    $('#dictionary-grid').innerHTML = visible.map(word => `<article class="word-card"><button class="save-word ${state.saved.has(word.id) ? 'saved' : ''}" type="button" data-save="${word.id}" aria-pressed="${state.saved.has(word.id)}" aria-label="${state.saved.has(word.id) ? 'Remove' : 'Save'} ${esc(word.tutong)}">${state.saved.has(word.id) ? '♥' : '♡'}</button><h3>${esc(word.tutong)}</h3><dl><div><dt>BM</dt><dd>${esc(word.malay)}</dd></div><div><dt>EN</dt><dd>${esc(word.english)}</dd></div></dl><div class="word-foot"><span>${esc(word.cat)}</span>${word.notation ? `<span class="note">${esc(labels[word.notation] || word.notation)}</span>` : ''}</div>${word.note ? `<details class="entry-note"><summary>Entry note</summary><p>${esc(word.note)}</p></details>` : ''}</article>`).join('');
+    $('#dictionary-grid').innerHTML = visible.map(word => '<article class="word-card">' + languageLabel(word) + '<button class="save-word ' + (state.saved.has(word.id) ? 'saved' : '') + '" type="button" data-save="' + word.id + '" aria-pressed="' + state.saved.has(word.id) + '" aria-label="' + (state.saved.has(word.id) ? 'Remove ' : 'Save ') + esc(word.tutong) + '">' + (state.saved.has(word.id) ? '♥' : '♡') + '</button><h3>' + esc(word.tutong) + '</h3><dl><div><dt>BM</dt><dd>' + esc(word.malay) + '</dd></div><div><dt>EN</dt><dd>' + esc(word.english) + '</dd></div></dl><div class="word-foot"><span>' + esc(word.cat) + '</span>' + (word.notation ? '<span class="note">' + esc(labels[word.notation] || word.notation) + '</span>' : '') + '</div>' + (word.language !== 'tutong' ? statusLabel(word) : '') + entryDetails(word) + '</article>').join('');
     $$('[data-save]').forEach(button => button.addEventListener('click', () => toggleSaved(Number(button.dataset.save)))); updateProgress();
   }
   function initPhrases() {
-    $('#phrase-total').textContent = PHRASES.length; const categories = ['All', ...new Set(PHRASES.map(phrase => phrase.cat))];
-    $('#phrase-filters').innerHTML = categories.map(category => `<button type="button" data-phrase-cat="${esc(category)}">${esc(category)}</button>`).join('');
-    $$('#phrase-filters button').forEach(button => button.addEventListener('click', () => { state.phraseCategory = button.dataset.phraseCat; renderPhrases(); }));
+    $('#phrase-filters').addEventListener('click', event => {
+      const button = event.target.closest('[data-phrase-cat]'); if (!button) return;
+      state.phraseCategory = button.dataset.phraseCat; renderPhrases();
+    });
   }
   function renderPhrases() {
-    const results = PHRASES.filter(phrase => state.phraseCategory === 'All' || phrase.cat === state.phraseCategory);
+    const pool = BKCollections.select(catalog.phrases, state.collection), categories = ['All', ...new Set(pool.map(phrase => phrase.cat))];
+    if (!categories.includes(state.phraseCategory)) state.phraseCategory = 'All';
+    const container = $('#phrase-filters'), signature = JSON.stringify(categories);
+    if (container.dataset.options !== signature) {
+      container.innerHTML = categories.map(category => '<button type="button" data-phrase-cat="' + esc(category) + '">' + esc(category) + '</button>').join(''); container.dataset.options = signature;
+    }
+    const results = pool.filter(phrase => state.phraseCategory === 'All' || phrase.cat === state.phraseCategory);
+    $('#phrase-total').textContent = pool.length; $('#phrase-empty').hidden = results.length !== 0;
+    $('#phrase-result-label').textContent = results.length + ' phrases and expressions · ' + BKCollections.names[state.collection];
     $$('#phrase-filters button').forEach(button => { const active = button.dataset.phraseCat === state.phraseCategory; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
-    $('#phrase-grid').innerHTML = results.map((phrase, index) => `<article class="phrase-card"><span class="phrase-cat">${esc(phrase.cat)}</span><h3>${esc(phrase.tutong)}</h3><dl><div><dt>Bahasa Melayu</dt><dd>${esc(phrase.malay)}</dd></div><div><dt>English</dt><dd>${esc(phrase.english)}</dd></div></dl><button type="button" data-copy-phrase="${index}" aria-label="Copy phrase ${esc(phrase.tutong)}">Copy phrase</button></article>`).join('');
+    $('#phrase-grid').innerHTML = results.map((phrase, index) => '<article class="phrase-card">' + languageLabel(phrase) + '<span class="phrase-cat">' + esc(phrase.cat) + '</span><h3>' + esc(phrase.tutong) + '</h3><dl><div><dt>Standard Malay</dt><dd>' + esc(phrase.malay) + '</dd></div><div><dt>English</dt><dd>' + esc(phrase.english) + '</dd></div></dl>' + (phrase.language !== 'tutong' ? statusLabel(phrase) : '') + entryDetails(phrase) + '<button type="button" data-copy-phrase="' + index + '" aria-label="Copy phrase ' + esc(phrase.tutong) + '">Copy phrase</button></article>').join('');
     $$('[data-copy-phrase]').forEach(button => button.addEventListener('click', async () => {
       const phrase = results[Number(button.dataset.copyPhrase)];
       try { await navigator.clipboard.writeText(phrase.tutong); toast('Phrase copied'); } catch { toast('Copy is unavailable. Select the phrase text to copy it.'); }
     }));
   }
   function renderNumbers() {
-    $('#numbers-toggle').setAttribute('aria-pressed', String(state.numbersHidden)); $('#numbers-toggle').textContent = state.numbersHidden ? 'Show all Tutong words' : 'Hide Tutong words';
-    $('#number-grid').innerHTML = NUMBERS.map(([number, word]) => `<button class="number-tile" type="button" data-number="${number}" aria-expanded="${!state.numbersHidden}" aria-label="${number}${state.numbersHidden ? ', reveal Tutong word' : `, ${esc(word)}`}"><strong>${number}</strong><span ${state.numbersHidden ? 'hidden' : ''}>${esc(word)}</span><small ${state.numbersHidden ? '' : 'hidden'}>Tap to reveal</small></button>`).join('');
+    $('#numbers-toggle').setAttribute('aria-pressed', String(state.numbersHidden)); $('#numbers-toggle').textContent = state.numbersHidden ? 'Show all number words' : 'Hide number words';
+    const groups = Object.entries(catalog.numbers).filter(([language, records]) => records.length && (state.collection === 'all' || state.collection === language));
+    $('#numbers-empty').hidden = groups.length !== 0; $('#numbers-toggle').disabled = !groups.length;
+    $('#number-grid').innerHTML = groups.map(([language, records]) => '<section class="number-collection" aria-label="' + esc(BKCollections.names[language]) + ' numbers"><h2>' + esc(BKCollections.names[language]) + '<small>' + records.length + ' recorded numbers</small></h2>' + (language === 'dusun' ? '<p class="local-note">Siam and Walu’ for nine were confirmed by the maintainer. Walu for eight remains unverified. Other recorded forms may vary by speaker or region.</p>' : '') + '<div class="number-grid">' + records.map(entry => '<article class="number-entry"><button class="number-tile" type="button" data-number="' + entry.number + '" data-number-language="' + language + '" aria-expanded="' + !state.numbersHidden + '" aria-label="' + entry.number + ', ' + esc(BKCollections.names[language]) + (state.numbersHidden ? ', reveal word' : ', ' + esc(entry.word)) + '"><strong>' + entry.number + '</strong><span ' + (state.numbersHidden ? 'hidden' : '') + '>' + esc(entry.word) + '</span><small ' + (state.numbersHidden ? '' : 'hidden') + '>Tap to reveal</small></button><div class="number-details" ' + (state.numbersHidden ? 'hidden' : '') + '>' + (language !== 'tutong' ? statusLabel(entry) : '') + entryDetails({ note: entry.note, sourceFile: [...new Set(entry.records.map(record => record.sourceFile).filter(Boolean))].join(' · '), sourceUrl: entry.records.find(record => record.sourceUrl)?.sourceUrl, additionalSources: [...new Map(entry.records.filter(record => record.sourceUrl).map(record => [record.sourceUrl, { url: record.sourceUrl, name: record.sourceFile || 'Source' }])).values()].slice(1) }) + '</div></article>').join('') + '</div></section>').join('');
     $$('[data-number]').forEach(button => button.addEventListener('click', () => {
-      if (!state.numbersHidden) return; const word = NUMBERS.find(([number]) => number === Number(button.dataset.number))[1]; const expanded = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', String(!expanded)); button.setAttribute('aria-label', `${button.dataset.number}, ${expanded ? 'reveal Tutong word' : word}`);
-      button.querySelector('span').hidden = expanded; button.querySelector('small').hidden = !expanded;
+      if (!state.numbersHidden) return;
+      const language = button.dataset.numberLanguage, entry = catalog.numbers[language].find(record => record.number === Number(button.dataset.number)), expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!expanded)); button.setAttribute('aria-label', button.dataset.number + ', ' + BKCollections.names[language] + ', ' + (expanded ? 'reveal word' : entry.word));
+      button.querySelector('span').hidden = expanded; button.querySelector('small').hidden = !expanded; button.parentElement.querySelector('.number-details').hidden = expanded;
     }));
   }
   function bindEvents() {
-    $$('[data-route]').forEach(button => button.addEventListener('click', event => { event.preventDefault(); routeTo(button.dataset.route); }));
+    $$('[data-route]').forEach(button => button.addEventListener('click', event => { event.preventDefault(); routeTo(button.dataset.route, { collection: button.dataset.collection, query: button.dataset.collection && button.dataset.route === 'dictionary' ? '' : undefined }); }));
     $('#home-search-form').addEventListener('submit', event => {
       event.preventDefault(); const input = $('#home-search-input'); const query = input.value.trim();
       if (!query) { input.value = ''; input.reportValidity(); return; }
-      routeTo('dictionary', { query });
+      routeTo('dictionary', { query, collection: 'tutong' });
     });
     $('#menu-button').addEventListener('click', () => { const open = $('#menu-button').getAttribute('aria-expanded') === 'true'; $('#menu-button').setAttribute('aria-expanded', String(!open)); $('#mobile-nav').hidden = open; });
     document.addEventListener('keydown', event => {
@@ -242,6 +287,9 @@
     $('#daily-save').addEventListener('click', () => toggleSaved(dailyWord.id)); $('#next-quick').addEventListener('click', newQuick);
     $('#flashcard').addEventListener('click', revealCard); $('#lesson-prev').addEventListener('click', () => moveLesson(-1)); $('#lesson-next').addEventListener('click', () => moveLesson(1));
     $('#lesson-know').addEventListener('click', () => state.revealed ? moveLesson(1) : revealCard());
+    for (const [name, route] of [['dictionary', 'dictionary'], ['phrase', 'phrases'], ['numbers', 'numbers']]) {
+      $('#' + name + '-collection').addEventListener('change', event => routeTo(route, { collection: event.target.value, historyMode: 'replace', focus: false }));
+    }
     $('#numbers-toggle').addEventListener('click', () => { state.numbersHidden = !state.numbersHidden; renderNumbers(); });
     $('#feedback-form').addEventListener('submit', event => {
       event.preventDefault(); const message = $('#feedback-message').value.trim(); if (!message) { $('#feedback-message').focus(); return; }
@@ -254,9 +302,9 @@
     if (store.read('bk-theme', 'day', value => ['day', 'night'].includes(value)) === 'night') document.documentElement.dataset.theme = 'night';
     bindEvents(); initDaily(); initTopics(); initDictionary(); initPhrases(); renderNumbers(); newQuick(); updateProgress();
     const query = new URLSearchParams(location.search).get('q');
-    if (query !== null) routeTo('dictionary', { historyMode: 'replace', focus: false, query }); else routeFromLocation();
+    if (query !== null) routeTo('dictionary', { historyMode: 'replace', focus: false, query, collection: new URLSearchParams(location.search).get('lang') || 'all' }); else routeFromLocation();
     if (typeof BKUI !== 'undefined') BKUI.init({
-      words: WORDS, lessonSize: lessonWords.length, openSearch: query => routeTo('dictionary', { query }),
+      words: catalog.words, searchWords: WORDS, lessonSize: lessonWords.length, openSearch: query => routeTo('dictionary', { query, collection: 'tutong' }),
       getProgress: () => ({ saved: [...state.saved], learned: [...state.learned], days: [...state.days], lessonIndex: state.lessonIndex, theme: document.documentElement.dataset.theme === 'night' ? 'night' : 'day' }),
       applyProgress: data => {
         state.saved = new Set(data.saved); state.learned = new Set(data.learned); state.days = data.days; state.lessonIndex = data.lessonIndex;

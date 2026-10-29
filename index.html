@@ -13,13 +13,14 @@
   <meta property="og:url" content="https://bahasa-kitani.xyz/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.2.2">
+  <link rel="stylesheet" href="styles.css?v=2.4.0">
   <link rel="stylesheet" href="home-languages.css?v=2.3.1">
   <script src="data/tutong.js?v=2.2.1"></script>
   <script src="core.js?v=2.2.1" defer></script>
-  <script src="enhancements.js?v=2.2.1" defer></script>
-  <script src="app.js?v=2.2.1" defer></script>
-  <script src="home-languages.js?v=2.3.0" defer></script>
+  <script src="collections.js?v=2.4.0" defer></script>
+  <script src="enhancements.js?v=2.4.0" defer></script>
+  <script src="app.js?v=2.4.0" defer></script>
+  <script src="home-languages.js?v=2.4.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -51,14 +52,15 @@
 
   <main id="main">
     <div id="app-error" class="notice shell" role="alert" hidden>The dictionary could not load. Please refresh while connected to the internet, or <a href="mailto:sam@bahasa-kitani.xyz">let us know</a>.</div>
+    <p id="collections-load-status" class="notice shell" role="status">Loading the Brunei Malay and Dusun collections…</p>
     <noscript><p class="notice shell">Turn on JavaScript to use the dictionary and lessons. For help, email <a href="mailto:sam@bahasa-kitani.xyz">sam@bahasa-kitani.xyz</a>.</p></noscript>
     <section class="view active" id="view-home" data-view="home">
 <section class="bk-languages-home shell" aria-labelledby="bk-languages-title">
   <div class="bk-languages-heading"><div><span class="section-kicker">Explore the languages</span><h2 id="bk-languages-title">Three languages. One home.</h2><p>Choose which language you are learning, or search across the three collections.</p></div><a href="languages.html" class="bk-languages-browse">Explore all languages →</a></div>
   <div class="bk-languages-cards">
-    <a href="languages.html?lang=tutong"><span>BAHASA TUTONG</span><strong>Bahasa Tutong</strong><small>Original dictionary · lessons · phrases</small><b>Explore Tutong →</b></a>
-    <a href="languages.html?lang=brunei"><span>BAHASA MELAYU BRUNEI</span><strong>Melayu Brunei</strong><small>Everyday words and expressions</small><b>Explore Brunei Malay →</b></a>
-    <a href="languages.html?lang=dusun"><span>BASA SANG JATI</span><strong>Dusun Brunei</strong><small>Greetings · vocabulary · counting</small><b>Explore Dusun →</b></a>
+    <a href="?lang=tutong#dictionary" data-route="dictionary" data-collection="tutong"><span>BAHASA TUTONG</span><strong>Bahasa Tutong</strong><small>Original dictionary · lessons · phrases</small><b>Explore Tutong →</b></a>
+    <a href="?lang=brunei#dictionary" data-route="dictionary" data-collection="brunei"><span>BAHASA MELAYU BRUNEI</span><strong>Melayu Brunei</strong><small>Everyday words and expressions</small><b>Explore Brunei Malay →</b></a>
+    <a href="?lang=dusun#dictionary" data-route="dictionary" data-collection="dusun"><span>BASA SANG JATI</span><strong>Dusun Brunei</strong><small>Greetings · vocabulary · counting</small><b>Explore Dusun →</b></a>
   </div>
   <div class="bk-global-search"><label for="bk-global-query">Search all three languages</label><input type="search" id="bk-global-query" autocomplete="off" placeholder="Try Urang, Bangas, Abuk, A'al…" aria-describedby="bk-global-help"><p id="bk-global-help">Results show which language each word belongs to and whether it has been reviewed.</p><div id="bk-global-results" aria-live="polite"></div></div>
 </section>
@@ -84,7 +86,7 @@
           <p>Search the Bahasa Tutong dictionary, practise everyday words, and build confidence with short daily lessons.</p>
           <div class="hero-actions">
             <button class="primary-button" type="button" data-route="learn">Start today’s lesson <span>→</span></button>
-            <button class="text-button" type="button" data-route="dictionary">Browse <b id="hero-word-count">—</b> words</button>
+            <button class="text-button" type="button" data-route="dictionary" data-collection="tutong">Browse <b id="hero-word-count">—</b> words</button>
           </div>
           <p class="source-note">Community-sourced entries · Tutong, Bahasa Melayu & English<br>Translations and regional usage may vary. <a href="#community" data-route="community">Help improve the dictionary →</a></p>
         </div>
@@ -165,14 +167,15 @@
 
     <section class="view page-shell" id="view-dictionary" data-view="dictionary" hidden>
       <div class="page-head dictionary-head">
-        <div><span class="section-kicker">Living reference</span><h1>Dictionary</h1><p>Search in Tutong, Bahasa Melayu, or English.</p></div>
+        <div><span class="section-kicker">Living reference</span><h1>Dictionary</h1><p>Explore Tutong, Brunei Malay and Dusun, with Malay and English meanings.</p></div>
         <div class="dictionary-stat"><strong id="dictionary-total">—</strong><span>entries</span></div>
       </div>
+      <div class="collection-picker"><label for="dictionary-collection">Dictionary language</label><select id="dictionary-collection" aria-label="Dictionary language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
       <div class="search-panel">
         <label class="search-box"><span class="sr-only">Search the dictionary</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="dictionary-search" type="search" placeholder="Try ‘water’, ‘makan’, or ‘empa’…" autocomplete="off"><kbd>/</kbd></label>
         <div class="category-scroller" id="dictionary-categories" aria-label="Dictionary categories"></div>
       </div>
-      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-language" aria-label="Search language"><option value="all">All languages</option><option value="tutong">Tutong</option><option value="malay">Bahasa Melayu</option><option value="english">English</option></select><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Most relevant</option><option value="az">Tutong A–Z</option><option value="english">English A–Z</option></select></div></div>
+      <div class="dictionary-toolbar"><p id="dictionary-result-label" aria-live="polite">Showing all entries</p><div><button id="saved-filter" type="button">♡ Saved <span id="saved-count">0</span></button><select id="dictionary-language" aria-label="Search field"><option value="all">All text</option><option value="tutong">Headwords</option><option value="malay">Standard Malay</option><option value="english">English</option></select><select id="dictionary-sort" aria-label="Sort dictionary"><option value="default">Most relevant</option><option value="az">Headword A–Z</option><option value="english">English A–Z</option></select></div></div>
       <p id="dictionary-match-note" class="notice" hidden></p>
       <div class="dictionary-grid" id="dictionary-grid"></div>
       <div class="empty-state" id="dictionary-empty" hidden><strong>No matching words</strong><p>Try another spelling or choose “All”.</p></div>
@@ -180,15 +183,18 @@
     </section>
 
     <section class="view page-shell" id="view-phrases" data-view="phrases" hidden>
-      <div class="page-head dictionary-head"><div><span class="section-kicker">Speak in context</span><h1>Phrasebook</h1><p>Useful Bahasa Tutong phrases grouped by everyday situations.</p></div><div class="dictionary-stat"><strong id="phrase-total">—</strong><span>phrases</span></div></div>
+      <div class="page-head dictionary-head"><div><span class="section-kicker">Speak in context</span><h1>Phrasebook</h1><p>Everyday phrases, greetings and expressions from the three collections.</p></div><div class="dictionary-stat"><strong id="phrase-total">—</strong><span>phrases</span></div></div>
+      <div class="collection-picker"><label for="phrase-collection">Phrasebook language</label><select id="phrase-collection" aria-label="Phrasebook language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
       <div class="phrase-filters" id="phrase-filters"></div>
-      <div class="phrase-grid" id="phrase-grid"></div>
+      <p id="phrase-result-label" class="local-note" role="status"></p>
+      <div class="phrase-grid" id="phrase-grid"></div><p id="phrase-empty" class="notice" hidden>No recorded phrases in this category yet. Try another language or category.</p>
     </section>
 
     <section class="view page-shell" id="view-numbers" data-view="numbers" hidden>
-      <div class="page-head"><div><span class="section-kicker">Count in Tutong</span><h1>Numbers &amp; counting</h1><p>Explore the numbers, then hide the words to test your recall.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide Tutong words</button></div>
-      <p class="local-note">When the words are hidden, tap a number to reveal it.</p>
-      <div class="number-grid" id="number-grid"></div>
+      <div class="page-head"><div><span class="section-kicker">Count across languages</span><h1>Numbers &amp; counting</h1><p>Explore the numbers, then hide the words to test your recall.</p></div><button class="primary-button" id="numbers-toggle" type="button" aria-pressed="false">Hide number words</button></div>
+      <div class="collection-picker"><label for="numbers-collection">Numbers language</label><select id="numbers-collection" aria-label="Numbers language"><option value="all">All languages</option><option value="tutong">Bahasa Tutong</option><option value="brunei">Melayu Brunei</option><option value="dusun">Dusun Brunei</option></select><p class="collection-help">Source notes and review status stay visible. Some entries still need checking by speakers.</p></div>
+      <p class="local-note">When the words are hidden, tap a number to reveal it. Recorded variants remain separate from confirmed corrections.</p>
+      <div id="number-grid" class="number-collections"></div><p id="numbers-empty" class="notice" hidden>Brunei Malay number entries have not been added to this collection yet.</p>
     </section>
 
     <section class="view page-shell" id="view-community" data-view="community" hidden>

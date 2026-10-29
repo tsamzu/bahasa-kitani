@@ -1,8 +1,8 @@
 /* Bump VERSION with each release that changes cached files. */
-const VERSION = '2.3.1';
+const VERSION = '2.4.0';
 const PREFIX = 'bahasa-kitani-';
 const CACHE = `${PREFIX}${VERSION}`;
-const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './assets/bahasa-tutong-badge.svg', './manifest.webmanifest', './languages.html', './languages.js', './languages.css', './home-languages.js', './home-languages.css', './data/brunei.json', './data/dusun.json'];
+const CORE = ['./', './index.html', './dictionary.html', './redirect.js', './styles.css', './core.js', './collections.js', './app.js', './enhancements.js', './data/tutong.js', './favicon.svg', './assets/bahasa-tutong-badge.svg', './manifest.webmanifest', './languages.html', './languages.js', './languages.css', './home-languages.js', './home-languages.css', './data/brunei.json', './data/dusun.json'];
 const CORE_URLS = new Set(CORE.map(path => new URL(path, self.registration.scope).href));
 
 self.addEventListener('install', event => {
